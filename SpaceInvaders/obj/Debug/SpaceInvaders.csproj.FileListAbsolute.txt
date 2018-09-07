@@ -1,0 +1,10 @@
+C:\Users\Smyba\Desktop\invaders_workspace\Space_Invaders\SpaceInvaders\obj\Debug\SpaceInvaders.csprojAssemblyReference.cache
+C:\Users\Smyba\Desktop\invaders_workspace\Space_Invaders\SpaceInvaders\obj\Debug\SpaceInvaders.csproj.CoreCompileInputs.cache
+C:\Users\Smyba\Desktop\invaders_workspace\Space_Invaders\SpaceInvaders\bin\Debug\SpaceInvaders.exe.config
+C:\Users\Smyba\Desktop\invaders_workspace\Space_Invaders\SpaceInvaders\bin\Debug\SpaceInvaders.exe
+C:\Users\Smyba\Desktop\invaders_workspace\Space_Invaders\SpaceInvaders\bin\Debug\SpaceInvaders.pdb
+C:\Users\Smyba\Desktop\invaders_workspace\Space_Invaders\SpaceInvaders\bin\Debug\AzulCoreCLRDebug.dll
+C:\Users\Smyba\Desktop\invaders_workspace\Space_Invaders\SpaceInvaders\bin\Debug\irrKlang.NET4.dll
+C:\Users\Smyba\Desktop\invaders_workspace\Space_Invaders\SpaceInvaders\obj\Debug\SpaceInvaders.csproj.CopyComplete
+C:\Users\Smyba\Desktop\invaders_workspace\Space_Invaders\SpaceInvaders\obj\Debug\SpaceInvaders.exe
+C:\Users\Smyba\Desktop\invaders_workspace\Space_Invaders\SpaceInvaders\obj\Debug\SpaceInvaders.pdb

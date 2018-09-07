@@ -68,6 +68,7 @@
     <Compile Include="Game\Game.cs" />
     <Compile Include="Image\Image.cs" />
     <Compile Include="Sprite\Sprite.cs" />
+    <Compile Include="Sprite\SpriteBase.cs" />
     <Compile Include="Sprite\SpriteBox\SpriteBox.cs" />
     <Compile Include="Texture\Texture.cs" />
     <Compile Include="UserInput\InputTest.cs" />
