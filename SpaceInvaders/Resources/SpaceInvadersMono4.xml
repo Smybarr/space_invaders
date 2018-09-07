@@ -1,0 +1,549 @@
+<?xml version="1.0" encoding="utf-8"?>
+<fontMetrics file="">
+<character key="32">
+<x>0</x>
+<y>64</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="33">
+<x>32</x>
+<y>64</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="34">
+<x>64</x>
+<y>64</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="35">
+<x>96</x>
+<y>64</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="36">
+<x>128</x>
+<y>64</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="37">
+<x>160</x>
+<y>64</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="38">
+<x>192</x>
+<y>64</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="39">
+<x>224</x>
+<y>64</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="40">
+<x>256</x>
+<y>64</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="41">
+<x>288</x>
+<y>64</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="42">
+<x>320</x>
+<y>64</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="43">
+<x>352</x>
+<y>64</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="44">
+<x>384</x>
+<y>64</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="45">
+<x>416</x>
+<y>64</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="46">
+<x>448</x>
+<y>64</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="47">
+<x>480</x>
+<y>64</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="48">
+<x>0</x>
+<y>96</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="49">
+<x>32</x>
+<y>96</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="50">
+<x>64</x>
+<y>96</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="51">
+<x>96</x>
+<y>96</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="52">
+<x>128</x>
+<y>96</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="53">
+<x>160</x>
+<y>96</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="54">
+<x>192</x>
+<y>96</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="55">
+<x>224</x>
+<y>96</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="56">
+<x>256</x>
+<y>96</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="57">
+<x>288</x>
+<y>96</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="58">
+<x>320</x>
+<y>96</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="59">
+<x>352</x>
+<y>96</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="60">
+<x>384</x>
+<y>96</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="61">
+<x>416</x>
+<y>96</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="62">
+<x>448</x>
+<y>96</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="63">
+<x>480</x>
+<y>96</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="64">
+<x>0</x>
+<y>128</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="65">
+<x>32</x>
+<y>128</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="66">
+<x>64</x>
+<y>128</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="67">
+<x>96</x>
+<y>128</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="68">
+<x>128</x>
+<y>128</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="69">
+<x>160</x>
+<y>128</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="70">
+<x>192</x>
+<y>128</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="71">
+<x>224</x>
+<y>128</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="72">
+<x>256</x>
+<y>128</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="73">
+<x>288</x>
+<y>128</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="74">
+<x>320</x>
+<y>128</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="75">
+<x>352</x>
+<y>128</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="76">
+<x>384</x>
+<y>128</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="77">
+<x>416</x>
+<y>128</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="78">
+<x>448</x>
+<y>128</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="79">
+<x>480</x>
+<y>128</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="80">
+<x>0</x>
+<y>160</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="81">
+<x>32</x>
+<y>160</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="82">
+<x>64</x>
+<y>160</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="83">
+<x>96</x>
+<y>160</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="84">
+<x>128</x>
+<y>160</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="85">
+<x>160</x>
+<y>160</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="86">
+<x>192</x>
+<y>160</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="87">
+<x>224</x>
+<y>160</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="88">
+<x>256</x>
+<y>160</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="89">
+<x>288</x>
+<y>160</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="90">
+<x>320</x>
+<y>160</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="91">
+<x>352</x>
+<y>160</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="92">
+<x>384</x>
+<y>160</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="93">
+<x>416</x>
+<y>160</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="94">
+<x>448</x>
+<y>160</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="95">
+<x>480</x>
+<y>160</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="96">
+<x>0</x>
+<y>192</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="97">
+<x>32</x>
+<y>192</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="98">
+<x>64</x>
+<y>192</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="99">
+<x>96</x>
+<y>192</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="100">
+<x>128</x>
+<y>192</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="101">
+<x>160</x>
+<y>192</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="102">
+<x>192</x>
+<y>192</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="103">
+<x>224</x>
+<y>192</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="104">
+<x>256</x>
+<y>192</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="105">
+<x>288</x>
+<y>192</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="106">
+<x>320</x>
+<y>192</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="107">
+<x>352</x>
+<y>192</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="108">
+<x>384</x>
+<y>192</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="109">
+<x>416</x>
+<y>192</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="110">
+<x>448</x>
+<y>192</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="111">
+<x>480</x>
+<y>192</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="112">
+<x>0</x>
+<y>224</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="113">
+<x>32</x>
+<y>224</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="114">
+<x>64</x>
+<y>224</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="115">
+<x>96</x>
+<y>224</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="116">
+<x>128</x>
+<y>224</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="117">
+<x>160</x>
+<y>224</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="118">
+<x>192</x>
+<y>224</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="119">
+<x>224</x>
+<y>224</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="120">
+<x>256</x>
+<y>224</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="121">
+<x>288</x>
+<y>224</y>
+<width>32</width>
+<height>32</height>
+</character>
+<character key="122">
+<x>320</x>
+<y>224</y>
+<width>32</width>
+<height>32</height>
+</character>
+</fontMetrics>
