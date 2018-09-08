@@ -72,10 +72,10 @@
     <Compile Include="Image\Image.cs" />
     <Compile Include="Sprite\Containers\CLink.cs" />
     <Compile Include="Sprite\Containers\Container.cs" />
-    <Compile Include="Sprite\Sprite.cs" />
+    <Compile Include="Sprite\GameSprite\GameSprite.cs" />
     <Compile Include="Sprite\SpriteBase.cs" />
     <Compile Include="Sprite\SpriteBatch\SpriteBatch.cs" />
-    <Compile Include="Sprite\SpriteBox\SpriteBox.cs" />
+    <Compile Include="Sprite\BoxSprite\BoxSprite.cs" />
     <Compile Include="Texture\Texture.cs" />
     <Compile Include="UserInput\InputTest.cs" />
     <Compile Include="Main.cs" />

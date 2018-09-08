@@ -67,22 +67,18 @@ namespace SpaceInvaders
 
             Debug.Assert(this.poRect != null);
         }
-
-        public Image(Name name, Texture pSrcTexture, Azul.Rect pRectCoordinates)
+        public Image(Name name, Texture pSrcTexture, float x, float y, float width, float height)
         {
-            this.Set(name, pSrcTexture, pRectCoordinates);
+            this.Set(name, pSrcTexture, x, y, width, height);
         }
-
-        public void Set(Name name, Texture pSrcTexture, Azul.Rect pRectCoordinates)
+        public void Set(Name imageName, Texture pSrcTexture, float x, float y, float width, float height)
         {
             Debug.Assert(pSrcTexture != null);
-            Debug.Assert(pRectCoordinates != null);
-
-            this.name = name;
+           
+            this.name = imageName;
             this.pTexture = pSrcTexture;
-            this.poRect.Set(pRectCoordinates);
+            this.poRect.Set(x, y, width, height);
         }
-
         public void WashNodeData()
         {
             //wash name and data;
@@ -90,8 +86,6 @@ namespace SpaceInvaders
             this.pTexture = null;
             this.poRect.Clear();
         }
-
-
 
         public void DumpNodeData()
         {
@@ -136,7 +130,6 @@ namespace SpaceInvaders
         {
             return this.pTexture.GetAzulTexture();
         }
-
         public Rect GetAzulRect()
         {
             Debug.Assert(this.poRect != null);
@@ -179,6 +172,7 @@ namespace SpaceInvaders
         // Data: unique data for this manager here
         //----------------------------------------------------------------------
 
+        //TODO Remove New Call
         private static Image pNodeRef = new Image();
 
         //singleton reference ensures only one manager is created;
@@ -211,7 +205,7 @@ namespace SpaceInvaders
             }
 
             // Add a default data node as hot pink
-            Add(Image.Name.Blank, Texture.Name.Blank, new Azul.Rect(0, 0, 128, 128));
+            Add(Image.Name.Blank, Texture.Name.Blank, 0.0f, 0.0f, 128.0f, 128.0f);
 
             Debug.WriteLine("------Image Manager Initialized-------");
         }
@@ -232,7 +226,7 @@ namespace SpaceInvaders
         // 4 Wrapper methods: baseAdd, baseFind, baseRemove, baseDump
         //----------------------------------------------------------------------
 
-        public static Image Add(Image.Name imageName, Texture.Name textName, Azul.Rect pSubRect)
+        public static Image Add(Image.Name imageName, Texture.Name textName, float x, float y, float width, float height)
         {
             ImageManager pMan = privGetInstance();
             Debug.Assert(pMan != null);
@@ -244,7 +238,7 @@ namespace SpaceInvaders
             Debug.Assert(pNode != null);
 
             //set the data
-            pNode.Set(imageName, pTexture, pSubRect);
+            pNode.Set(imageName, pTexture, x, y, width, height);
             return pNode;
         }
 

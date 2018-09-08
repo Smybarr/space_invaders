@@ -34,9 +34,9 @@ namespace SpaceInvaders
             this.name = Name.Blank;
             this.poAzulTexture = null;
         }
-        public void Set(Name name, string pTextureName)
+        public void Set(Name textureName, string pTextureName)
         {
-            this.name = name;
+            this.name = textureName;
 
             Debug.Assert(pTextureName != null);
 
@@ -133,7 +133,6 @@ namespace SpaceInvaders
         {
             /*delegate to parent manager*/
         }
-
         //public facing constructor for instantiation of the singleton instance
         public static void Create(int startReserveSize = 3, int refillSize = 1)
         {
@@ -158,11 +157,9 @@ namespace SpaceInvaders
 
             Debug.WriteLine("------Texture Manager Initialized-------");
         }
-
         //----------------------------------------------------------------------
         // Unique Private helper methods
         //----------------------------------------------------------------------
-
         private static TextureManager privGetInstance()
         {
             // Safety - this forces users to call Create() first before using class
@@ -175,7 +172,7 @@ namespace SpaceInvaders
         // 4 Wrapper methods: baseAdd, baseFind, baseRemove, baseDump
         //----------------------------------------------------------------------
 
-        public static Texture Add(Texture.Name name, string pTextureName)
+        public static Texture Add(Texture.Name textureName, string pTextureName)
         {
             TextureManager pMan = privGetInstance();
             Debug.Assert(pMan != null);
@@ -185,11 +182,11 @@ namespace SpaceInvaders
             Debug.Assert(pNode != null);
 
             // set the data
-            pNode.Set(name, pTextureName);
+            pNode.Set(textureName, pTextureName);
 
             return pNode;
         }
-        public static Texture Find(Texture.Name name)
+        public static Texture Find(Texture.Name textureName)
         {
             //get the singleton
             TextureManager pMan = privGetInstance();
@@ -204,7 +201,7 @@ namespace SpaceInvaders
             pNodeRef.WashNodeData();
 
             //find the node by name
-            pNodeRef.name = name;
+            pNodeRef.name = textureName;
 
             Texture pData = (Texture) pMan.baseFindNode(pNodeRef);
 

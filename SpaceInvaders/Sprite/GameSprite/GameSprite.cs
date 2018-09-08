@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace SpaceInvaders
 {
-    public class Sprite : SpriteBase
+    public class GameSprite : SpriteBase
     {
         /* All nodes inheriting from DLink should contain AT
          * LEAST the following components:
@@ -50,10 +50,7 @@ namespace SpaceInvaders
         }
 
         // Static Data: ------------------------------------
-
         private static Azul.Rect pPrivScreenRect = new Azul.Rect();
-
-        //DEFAULT COLOR OF SPRITE = WHITE
         private static Azul.Color defaultSpriteColor_White = new Azul.Color(1, 1, 1);
 
         // Dynamic Sprite Data: -------------------------------------------
@@ -61,9 +58,12 @@ namespace SpaceInvaders
 
         public Image pImage;
         private Azul.Color poColor;
+        private Azul.Rect poScreenRect;
         private Azul.Sprite poAzulSprite;
 
-        public Sprite()
+
+        // Constructors/Destructors: -------------------------------------------
+        public GameSprite()
         {
             //SPRITE COLOR!
             //set the default color to white
@@ -78,6 +78,9 @@ namespace SpaceInvaders
 
             Debug.Assert(pPrivScreenRect != null);
             Debug.Assert(defaultSpriteColor_White != null);
+
+            this.poScreenRect = new Azul.Rect(pPrivScreenRect);
+            Debug.Assert(poScreenRect != null);
 
             this.poAzulSprite = new Azul.Sprite(pImage.GetAzulTexture(), pImage.GetAzulRect(), pPrivScreenRect, this.poColor);
             Debug.Assert(this.poAzulSprite != null);
@@ -98,8 +101,11 @@ namespace SpaceInvaders
             Debug.Assert(pImage != null);
             this.pImage = pImage;
 
-            Debug.Assert(pScreenRect != null);
+            Debug.Assert(this.poScreenRect != null);
             Debug.Assert(this.poAzulSprite != null);
+
+            //set the screen rect
+            this.poScreenRect.Set(pScreenRect);
 
             //sprites normally take textures - here we're using the texture bound to an image object;
             this.poAzulSprite.Swap(pImage.GetAzulTexture(), pImage.GetAzulRect(), pScreenRect, this.poColor);
@@ -123,6 +129,30 @@ namespace SpaceInvaders
             this.sy = poAzulSprite.sy;
             this.angle = poAzulSprite.angle;
         }
+
+        public void Set(GameSprite.Name name, Image pImage, float x, float y, float width, float height)
+        {
+            Debug.Assert(pImage != null);
+            Debug.Assert(this.poAzulSprite != null);
+            Debug.Assert(this.poColor != null);
+            Debug.Assert(this.poScreenRect != null);
+            Debug.Assert(defaultSpriteColor_White != null);
+
+            this.pImage = pImage;
+            this.name = name;
+            this.poScreenRect.Set(x, y, width, height);
+            this.poColor.Set(defaultSpriteColor_White);
+
+            this.poAzulSprite.Swap(pImage.GetAzulTexture(), pImage.GetAzulRect(), this.poScreenRect, this.poColor);
+
+            this.x = poAzulSprite.x;
+            this.y = poAzulSprite.y;
+            this.sx = poAzulSprite.sx;
+            this.sy = poAzulSprite.sy;
+            this.angle = poAzulSprite.angle;
+
+        }
+
         public void WashNodeData()
         {
             //wash name and data;      
@@ -135,11 +165,15 @@ namespace SpaceInvaders
             Debug.Assert(pPrivScreenRect != null);
             Debug.Assert(defaultSpriteColor_White != null);
             Debug.Assert(this.poColor != null);
+            Debug.Assert(this.poScreenRect != null);
 
             //reset color to white
+            this.poScreenRect.Set(pPrivScreenRect);
             this.poColor.Set(defaultSpriteColor_White);
 
-            this.poAzulSprite.Swap(pImage.GetAzulTexture(), pImage.GetAzulRect(), pPrivScreenRect, this.poColor);
+
+
+            this.poAzulSprite.Swap(pImage.GetAzulTexture(), pImage.GetAzulRect(), this.poScreenRect, this.poColor);
             Debug.Assert(this.poAzulSprite != null);
 
             this.x = poAzulSprite.x;
@@ -158,7 +192,7 @@ namespace SpaceInvaders
             }
             else
             {
-                Sprite pTmp = (Sprite) this.pMNext;
+                GameSprite pTmp = (GameSprite) this.pMNext;
                 Debug.WriteLine("      next: {0}, hashcode: ({1})", pTmp.name, pTmp.GetHashCode());
             }
 
@@ -168,7 +202,7 @@ namespace SpaceInvaders
             }
             else
             {
-                Sprite pTmp = (Sprite) this.pMrev;
+                GameSprite pTmp = (GameSprite) this.pMrev;
                 Debug.WriteLine("      prev: {0}, hashcode: ({1})", pTmp.name, pTmp.GetHashCode());
             }
 
@@ -186,12 +220,25 @@ namespace SpaceInvaders
             Debug.WriteLine("------------------------");
         }
 
+
         //Unique functions
-        public void SwapColor(Azul.Color _pColor)
+        public void ChangeColor(Azul.Color _pColor)
         {
             Debug.Assert(_pColor != null);
+            Debug.Assert(this.poColor != null);
+            Debug.Assert(this.poAzulSprite != null);
+            this.poColor.Set(_pColor);
             this.poAzulSprite.SwapColor(_pColor);
         }
+        public void ChangeColor(float red, float green, float blue, float alpha = 1.0f)
+        {
+            Debug.Assert(this.poColor != null);
+            Debug.Assert(this.poAzulSprite != null);
+            this.poColor.Set(red, green, blue, alpha);
+            this.poAzulSprite.SwapColor(this.poColor);
+        }
+
+
         public override void Update()
         {
             this.poAzulSprite.x = this.x;
@@ -209,7 +256,7 @@ namespace SpaceInvaders
     }
 
 
-    public class SpriteManager : Manager
+    public class GameSpriteManager : Manager
     {
         /* All NodeManagers inheriting from Manager should contain AT
          * LEAST the following components:
@@ -242,19 +289,19 @@ namespace SpaceInvaders
         // Data: unique data for this manager here
         //----------------------------------------------------------------------
         
-        private static Sprite pNodeRef = new Sprite();
+        //TODO Remove New Call
+        private static GameSprite pNodeRef = new GameSprite();
         //singleton reference ensures only one manager is created;
-        private static SpriteManager pInstance = null;
+        private static GameSpriteManager pInstance = null;
 
         //----------------------------------------------------------------------
         // Constructor - Singleton Instantiation
         //----------------------------------------------------------------------
-        private SpriteManager(int startReserveSize = 3, int refillSize = 1)
+        private GameSpriteManager(int startReserveSize = 3, int refillSize = 1)
             : base(startReserveSize, refillSize)
         {
             /*delegate to parent manager*/
         }
-
         //public facing constructor for instantiation of the singleton instance
         public static void Create(int startReserveSize = 3, int refillSize = 1)
         {
@@ -269,7 +316,7 @@ namespace SpaceInvaders
             if (pInstance == null)
             {
                 //constructor can only be called here since private access
-                pInstance = new SpriteManager(startReserveSize, refillSize);
+                pInstance = new GameSpriteManager(startReserveSize, refillSize);
             }
 
             // Add a default data node
@@ -277,11 +324,7 @@ namespace SpaceInvaders
 
             Debug.WriteLine("------Sprite Manager Initialized-------");
         }
-
-        //----------------------------------------------------------------------
-        // Unique Private helper methods
-        //----------------------------------------------------------------------
-        private static SpriteManager privGetInstance()
+        private static GameSpriteManager privGetInstance()
         {
             // Safety - this forces users to call Create() first before using class
             Debug.Assert(pInstance != null);
@@ -289,30 +332,30 @@ namespace SpaceInvaders
             return pInstance;
         }
 
+
         //----------------------------------------------------------------------
         // 4 Wrapper methods: baseAdd, baseFind, baseRemove, baseDump
         //----------------------------------------------------------------------
-
-        public static Sprite Add(Sprite.Name spriteName, 
+        public static GameSprite Add(GameSprite.Name spriteName, 
             Image.Name imageName, Azul.Rect pScreenRect, Azul.Color pColor = null)
         {
-            SpriteManager pMan = SpriteManager.privGetInstance();
+            GameSpriteManager pMan = GameSpriteManager.privGetInstance();
             Debug.Assert(pMan != null);
 
             Image pImage = ImageManager.Find(imageName);
             Debug.Assert(pImage != null);
 
-            Sprite pNode = (Sprite)pMan.baseAddToFront();
+            GameSprite pNode = (GameSprite)pMan.baseAddToFront();
             Debug.Assert(pNode != null);
 
             // wash it
             pNode.Set(spriteName, pImage, pScreenRect, pColor);
             return pNode;
         }
-        public static Sprite Find(Sprite.Name name)
+        public static GameSprite Find(GameSprite.Name name)
         {
             //get the singleton
-            SpriteManager pMan = privGetInstance();
+            GameSpriteManager pMan = privGetInstance();
 
             Debug.Assert(pMan != null);
             // Compare functions only compares two Nodes
@@ -327,14 +370,14 @@ namespace SpaceInvaders
             //find the node by name
             pNodeRef.name = name;
 
-            Sprite pData = (Sprite) pMan.baseFindNode(pNodeRef);
+            GameSprite pData = (GameSprite) pMan.baseFindNode(pNodeRef);
 
             return pData;
         }
-        public static void Remove(Sprite pNode)
+        public static void Remove(GameSprite pNode)
         {
             //get the singleton
-            SpriteManager pMan = privGetInstance();
+            GameSpriteManager pMan = privGetInstance();
             Debug.Assert(pMan != null);
 
             Debug.Assert(pNode != null);
@@ -342,7 +385,7 @@ namespace SpaceInvaders
         }
         public static void Dump()
         {
-            SpriteManager pMan = privGetInstance();
+            GameSpriteManager pMan = privGetInstance();
             Debug.Assert(pMan != null);
 
             Debug.WriteLine("------ SpriteNode Manager ------");
@@ -350,17 +393,16 @@ namespace SpaceInvaders
         }
 
         //----------------------------------------------------------------------
-        // Override Abstract methods
+        // 4 Override Abstract Methods (From Base Manager)
         //----------------------------------------------------------------------
-
         protected override Boolean derivedCompareNodes(MLink pLinkA, MLink pLinkB)
         {
             // This is used in baseFindNode() 
             Debug.Assert(pLinkA != null);
             Debug.Assert(pLinkB != null);
 
-            Sprite pDataA = (Sprite) pLinkA;
-            Sprite pDataB = (Sprite) pLinkB;
+            GameSprite pDataA = (GameSprite) pLinkA;
+            GameSprite pDataB = (GameSprite) pLinkB;
 
             Boolean status = false;
 
@@ -373,7 +415,7 @@ namespace SpaceInvaders
         }
         protected override MLink derivedCreateNode()
         {
-            MLink pNode = new Sprite();
+            MLink pNode = new GameSprite();
             Debug.Assert(pNode != null);
 
             return pNode;
@@ -381,13 +423,13 @@ namespace SpaceInvaders
         protected override void derivedDumpNode(MLink pLink)
         {
             Debug.Assert(pLink != null);
-            Sprite pNode = (Sprite) pLink;
+            GameSprite pNode = (GameSprite) pLink;
             pNode.DumpNodeData();
         }
         protected override void derivedWashNode(MLink pLink)
         {
             Debug.Assert(pLink != null);
-            Sprite pNode = (Sprite) pLink;
+            GameSprite pNode = (GameSprite) pLink;
             pNode.WashNodeData();
         }
     }

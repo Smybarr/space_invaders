@@ -14,12 +14,16 @@ namespace SpaceInvaders
         private int mTotalNodeCount;
         //refill by this much when reserve pool is empty (delta grow)
         private int mRefillSize;
+        //other paramers;
+        private int mStartNumReserve;
+        private int mActiveHighCount;
 
         protected Manager(int initialReserveSize = 3, int refillReserveSize = 1)
         {
             Debug.Assert(initialReserveSize > 0);
             Debug.Assert(refillReserveSize > 0);
 
+            this.mStartNumReserve = initialReserveSize;
             //set the refill rate of reserve pool
             this.mRefillSize = refillReserveSize;
 
@@ -28,6 +32,8 @@ namespace SpaceInvaders
             this.mNumActive = 0;
             this.mNumReserve = 0;
             this.mTotalNodeCount = 0;
+
+            this.mActiveHighCount = 0;
 
             this.pActive = null;
             this.pReserve = null;
@@ -78,6 +84,11 @@ namespace SpaceInvaders
 
             // Update stats
             this.mNumActive++;
+            //update active high count if needed;
+            if (this.mNumActive > this.mActiveHighCount)
+            {
+                this.mActiveHighCount = this.mNumActive;
+            }
             this.mNumReserve--;
 
             // copy to active
@@ -147,6 +158,8 @@ namespace SpaceInvaders
             Debug.WriteLine("Num Active:            {0}", this.mNumActive);
             Debug.WriteLine("Num Reserved:          {0}", this.mNumReserve);
             Debug.WriteLine("Refill ReserveList By: {0}", this.mRefillSize);
+            Debug.WriteLine("Initial Reserved:      {0}", this.mStartNumReserve);
+            Debug.WriteLine("Active High Count:     {0}", this.mActiveHighCount);
             Debug.WriteLine("------------------------------\n");
         }
         protected void debugPrintLists()

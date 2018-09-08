@@ -52,8 +52,8 @@ namespace SpaceInvaders
             TextureManager.Create();
             ImageManager.Create();
 
-            SpriteManager.Create();
-            SpriteBoxManager.Create();
+            GameSpriteManager.Create();
+            BoxSpriteManager.Create();
 
             SpriteBatchManager.Create();
 
@@ -69,8 +69,9 @@ namespace SpaceInvaders
 
             //load images from texture sheets above. input = coordinates on tga sheets
             //SquidOpen
-            Azul.Rect textCoordinates = new Azul.Rect(548.0f, 18.0f, 248.0f, 135.0f);         
-            ImageManager.Add(Image.Name.SquidOpen, Texture.Name.GameSprites, textCoordinates);
+            Azul.Rect si = new Azul.Rect(548.0f, 18.0f, 248.0f, 135.0f);
+
+            ImageManager.Add(Image.Name.SquidOpen, Texture.Name.GameSprites, si.x, si.y, si.width, si.height);
             
             ////SquidClosed
             //textCoordinates.Set(548.0f, 170.0f, 248.0f, 135.0f);
@@ -87,14 +88,14 @@ namespace SpaceInvaders
             Azul.Rect box_pos_size = new Azul.Rect(300.0f, 400.0f, 33.0f, 33.0f);
 
             //squidOpen
-            SpriteManager.Add(Sprite.Name.Squid, Image.Name.SquidOpen, position_size);
+            GameSpriteManager.Add(GameSprite.Name.Squid, Image.Name.SquidOpen, position_size);
 
             ////squidClosed
             //SpriteManager.Add(Sprite.Name.Squid, Image.Name.SquidClosed, position_size);
 
             //-----------------------------------------------
             //sprite box
-            SpriteBoxManager.Add(SpriteBox.Name.Box, box_pos_size);
+            BoxSpriteManager.Add(BoxSprite.Name.Box, box_pos_size);
 
             //-----------------------------------------------
             //sprite batch
@@ -103,11 +104,11 @@ namespace SpaceInvaders
 
 
 
-            pSB_Aliens.Attach(Sprite.Name.Squid);
+            pSB_Aliens.Attach(GameSprite.Name.Squid);
             //pSB_Aliens.Attach(Sprite.Name.Crab);
             //pSB_Aliens.Attach(Sprite.Name.Octopus);
 
-            pSB_Boxes.Attach(SpriteBox.Name.Box);
+            pSB_Boxes.Attach(BoxSprite.Name.Box);
 
             Debug.WriteLine("\n\nLoad Content Complete\n----------------------------------\n");
                        
@@ -134,11 +135,11 @@ namespace SpaceInvaders
 
             //-----------------------------------------------
             //sprites/spriteboxes
-            Sprite pSquid = SpriteManager.Find(Sprite.Name.Squid);
+            GameSprite pSquid = GameSpriteManager.Find(GameSprite.Name.Squid);
             pSquid.Update();
 
             //sprite boxes
-            SpriteBox pBox = SpriteBoxManager.Find(SpriteBox.Name.Box);
+            BoxSprite pBox = BoxSpriteManager.Find(BoxSprite.Name.Box);
             pBox.Update();
 
         }
