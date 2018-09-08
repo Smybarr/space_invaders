@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace SpaceInvaders.SpriteBox
 {
-    public class SpriteBox : DLink
+    public class SpriteBox : SpriteBase
     {
         /* All nodes inheriting from DLink should contain AT
          * LEAST the following components:
@@ -22,13 +22,35 @@ namespace SpaceInvaders.SpriteBox
             Blank,
         }
 
-        public Name name;
 
+        // Static Data: ------------------------------------
+
+        private static Azul.Rect pPrivScreenRect = new Azul.Rect(0, 0, 1, 1);
+        private static Azul.Color pWhiteAzulColor = new Azul.Color(1, 1, 1);
+
+        // Data: -------------------------------------------
+        public Name name;
+        public Azul.Color poLineColor;
+        private Azul.SpriteBox poAzulSpriteBox;
 
 
         public SpriteBox()
         {
             this.name = Name.Blank;
+            Debug.Assert(pPrivScreenRect != null);
+            Debug.Assert(pWhiteAzulColor != null);
+
+            this.poLineColor = new Azul.Color(pWhiteAzulColor);
+            Debug.Assert(this.poLineColor != null);
+
+            this.poAzulSpriteBox = new Azul.SpriteBox(pPrivScreenRect, this.poLineColor);
+            Debug.Assert(this.poAzulSpriteBox != null);
+
+            this.x = poAzulSpriteBox.x;
+            this.y = poAzulSpriteBox.y;
+            this.sx = poAzulSpriteBox.sx;
+            this.sy = poAzulSpriteBox.sy;
+            this.angle = poAzulSpriteBox.angle;
 
         }
 
@@ -72,6 +94,22 @@ namespace SpaceInvaders.SpriteBox
 
             // Print Unique Node Data:         
             
+        }
+
+        public override void Update()
+        {
+            this.poAzulSpriteBox.x = this.x;
+            this.poAzulSpriteBox.y = this.y;
+            this.poAzulSpriteBox.sx = this.sx;
+            this.poAzulSpriteBox.sy = this.sy;
+            this.poAzulSpriteBox.angle = this.angle;
+
+            this.poAzulSpriteBox.Update();
+        }
+
+        public override void Draw()
+        {
+            this.poAzulSpriteBox.Render();
         }
     }
 

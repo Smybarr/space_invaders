@@ -47,6 +47,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="AzulCoreCLRDebug">
       <HintPath>Resources\AzulCoreCLRDebug.dll</HintPath>
@@ -99,8 +102,21 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>rmdir /S /Q Debug
+rmdir /S /Q Release
+rmdir /S /Q ipch
+rmdir /S /Q .vs
+del /F /S /A:H *.suo
+del /F /S *.sdf
+del /F /S *.suo
+del /F *.db
+for /d %25%25D in (*) do (
+	echo %25%25~fD
+	rmdir /S /Q %25%25~D\Debug
+	rmdir /S /Q %25%25~D\Release
+	rmdir /S /Q %25%25~D\bin
+	rmdir /S /Q %25%25~D\obj
+)</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
