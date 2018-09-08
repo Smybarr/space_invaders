@@ -4,7 +4,7 @@ using Azul;
 
 namespace SpaceInvaders
 {
-    public class Image : DLink
+    public class Image : MLink
     {
         /* All nodes inheriting from DLink should contain AT
          * LEAST the following components:
@@ -97,23 +97,23 @@ namespace SpaceInvaders
         {
             // we are using HASH code as its unique identifier 
             Debug.WriteLine("Image: {0}, hashcode: ({1})", this.name, this.GetHashCode());
-            if (this.pNext == null)
+            if (this.pMNext == null)
             {
                 Debug.WriteLine("      next: null");
             }
             else
             {
-                Image pTmp = (Image) this.pNext;
+                Image pTmp = (Image) this.pMNext;
                 Debug.WriteLine("      next: {0}, hashcode: ({1})", pTmp.name, pTmp.GetHashCode());
             }
 
-            if (this.pPrev == null)
+            if (this.pMrev == null)
             {
                 Debug.WriteLine("      prev: null");
             }
             else
             {
-                Image pTmp = (Image) this.pPrev;
+                Image pTmp = (Image) this.pMrev;
                 Debug.WriteLine("      prev: {0}, hashcode: ({1})", pTmp.name, pTmp.GetHashCode());
             }
 
@@ -293,7 +293,7 @@ namespace SpaceInvaders
         // Override Abstract methods
         //----------------------------------------------------------------------
 
-        protected override Boolean derivedCompareNodes(DLink pLinkA, DLink pLinkB)
+        protected override Boolean derivedCompareNodes(MLink pLinkA, MLink pLinkB)
         {
             // This is used in baseFindNode() 
             Debug.Assert(pLinkA != null);
@@ -312,22 +312,22 @@ namespace SpaceInvaders
             return status;
         }
 
-        protected override DLink derivedCreateNode()
+        protected override MLink derivedCreateNode()
         {
-            DLink pNode = new Image();
+            MLink pNode = new Image();
             Debug.Assert(pNode != null);
 
             return pNode;
         }
 
-        protected override void derivedDumpNode(DLink pLink)
+        protected override void derivedDumpNode(MLink pLink)
         {
             Debug.Assert(pLink != null);
             Image pNode = (Image) pLink;
             pNode.DumpNodeData();
         }
 
-        protected override void derivedWashNode(DLink pLink)
+        protected override void derivedWashNode(MLink pLink)
         {
             Debug.Assert(pLink != null);
             Image pNode = (Image) pLink;

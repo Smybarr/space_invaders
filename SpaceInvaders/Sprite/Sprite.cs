@@ -54,7 +54,7 @@ namespace SpaceInvaders
         private static Azul.Rect pPrivScreenRect = new Azul.Rect();
 
         //DEFAULT COLOR OF SPRITE = WHITE
-        private static Azul.Color pWhiteAzulColor = new Azul.Color(1, 1, 1);
+        private static Azul.Color defaultSpriteColor_White = new Azul.Color(1, 1, 1);
 
         // Dynamic Sprite Data: -------------------------------------------
         public Name name;
@@ -67,7 +67,7 @@ namespace SpaceInvaders
         {
             //SPRITE COLOR!
             //set the default color to white
-            this.poColor = new Azul.Color(pWhiteAzulColor);
+            this.poColor = new Azul.Color(defaultSpriteColor_White);
             Debug.Assert(this.poColor != null);
 
             //default field values
@@ -77,7 +77,7 @@ namespace SpaceInvaders
             Debug.Assert(this.pImage != null);
 
             Debug.Assert(pPrivScreenRect != null);
-            Debug.Assert(pWhiteAzulColor != null);
+            Debug.Assert(defaultSpriteColor_White != null);
 
             this.poAzulSprite = new Azul.Sprite(pImage.GetAzulTexture(), pImage.GetAzulRect(), pPrivScreenRect, this.poColor);
             Debug.Assert(this.poAzulSprite != null);
@@ -89,10 +89,12 @@ namespace SpaceInvaders
             this.angle = poAzulSprite.angle;
 
         }
-        public void Set(Name name, Image pImage, Azul.Rect pScreenRect, Azul.Color pColor)
+        public void Set(Name spriteName, Image pImage, Azul.Rect pScreenRect, Azul.Color pColor)
         {
-            this.name = name;
+            //set the name
+            this.name = spriteName;
 
+            //set the image
             Debug.Assert(pImage != null);
             this.pImage = pImage;
 
@@ -103,16 +105,18 @@ namespace SpaceInvaders
             this.poAzulSprite.Swap(pImage.GetAzulTexture(), pImage.GetAzulRect(), pScreenRect, this.poColor);
             Debug.Assert(this.poAzulSprite != null);
 
+            //set a default color or a specified color input via pColor
             if (pColor == null)
             {
                 //this.poAzulSprite.Swap(pImage.GetAzulTexture(), pImage.GetAzulRect(), pScreenRect, pPrivColor);
-                this.poColor.Set(pWhiteAzulColor);
+                this.poColor.Set(defaultSpriteColor_White);
             }
             else
             {
                 this.poColor.Set(pColor);
             }
 
+            //set the coordinates (aligned with the AzulSprite object)
             this.x = poAzulSprite.x;
             this.y = poAzulSprite.y;
             this.sx = poAzulSprite.sx;
@@ -129,11 +133,11 @@ namespace SpaceInvaders
             Debug.Assert(this.pImage != null);
 
             Debug.Assert(pPrivScreenRect != null);
-            Debug.Assert(pWhiteAzulColor != null);
+            Debug.Assert(defaultSpriteColor_White != null);
             Debug.Assert(this.poColor != null);
 
             //reset color to white
-            this.poColor.Set(pWhiteAzulColor);
+            this.poColor.Set(defaultSpriteColor_White);
 
             this.poAzulSprite.Swap(pImage.GetAzulTexture(), pImage.GetAzulRect(), pPrivScreenRect, this.poColor);
             Debug.Assert(this.poAzulSprite != null);
@@ -148,23 +152,23 @@ namespace SpaceInvaders
         {
             // we are using HASH code as its unique identifier 
             Debug.WriteLine("Sprite: {0}, hashcode: ({1})", this.name, this.GetHashCode());
-            if (this.pNext == null)
+            if (this.pMNext == null)
             {
                 Debug.WriteLine("      next: null");
             }
             else
             {
-                Sprite pTmp = (Sprite) this.pNext;
+                Sprite pTmp = (Sprite) this.pMNext;
                 Debug.WriteLine("      next: {0}, hashcode: ({1})", pTmp.name, pTmp.GetHashCode());
             }
 
-            if (this.pPrev == null)
+            if (this.pMrev == null)
             {
                 Debug.WriteLine("      prev: null");
             }
             else
             {
-                Sprite pTmp = (Sprite) this.pPrev;
+                Sprite pTmp = (Sprite) this.pMrev;
                 Debug.WriteLine("      prev: {0}, hashcode: ({1})", pTmp.name, pTmp.GetHashCode());
             }
 
@@ -349,7 +353,7 @@ namespace SpaceInvaders
         // Override Abstract methods
         //----------------------------------------------------------------------
 
-        protected override Boolean derivedCompareNodes(DLink pLinkA, DLink pLinkB)
+        protected override Boolean derivedCompareNodes(MLink pLinkA, MLink pLinkB)
         {
             // This is used in baseFindNode() 
             Debug.Assert(pLinkA != null);
@@ -367,20 +371,20 @@ namespace SpaceInvaders
 
             return status;
         }
-        protected override DLink derivedCreateNode()
+        protected override MLink derivedCreateNode()
         {
-            DLink pNode = new Sprite();
+            MLink pNode = new Sprite();
             Debug.Assert(pNode != null);
 
             return pNode;
         }
-        protected override void derivedDumpNode(DLink pLink)
+        protected override void derivedDumpNode(MLink pLink)
         {
             Debug.Assert(pLink != null);
             Sprite pNode = (Sprite) pLink;
             pNode.DumpNodeData();
         }
-        protected override void derivedWashNode(DLink pLink)
+        protected override void derivedWashNode(MLink pLink)
         {
             Debug.Assert(pLink != null);
             Sprite pNode = (Sprite) pLink;

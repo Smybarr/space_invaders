@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace SpaceInvaders.SpriteBox
+namespace SpaceInvaders
 {
     public class SpriteBox : SpriteBase
     {
@@ -26,7 +26,7 @@ namespace SpaceInvaders.SpriteBox
         // Static Data: ------------------------------------
 
         private static Azul.Rect pPrivScreenRect = new Azul.Rect(0, 0, 1, 1);
-        private static Azul.Color pWhiteAzulColor = new Azul.Color(1, 1, 1);
+        private static Azul.Color defaultBoxColor_Red = new Azul.Color(1, 0, 0);
 
         // Data: -------------------------------------------
         public Name name;
@@ -37,10 +37,11 @@ namespace SpaceInvaders.SpriteBox
         public SpriteBox()
         {
             this.name = Name.Blank;
-            Debug.Assert(pPrivScreenRect != null);
-            Debug.Assert(pWhiteAzulColor != null);
 
-            this.poLineColor = new Azul.Color(pWhiteAzulColor);
+            Debug.Assert(pPrivScreenRect != null);
+            Debug.Assert(defaultBoxColor_Red != null);
+
+            this.poLineColor = new Azul.Color(defaultBoxColor_Red);
             Debug.Assert(this.poLineColor != null);
 
             this.poAzulSpriteBox = new Azul.SpriteBox(pPrivScreenRect, this.poLineColor);
@@ -54,41 +55,80 @@ namespace SpaceInvaders.SpriteBox
 
         }
 
-        public SpriteBox(Name name)
-        {
-            this.name = name;
-        }
         public void WashNodeData()
         {
             //wash name and data;
             this.name = Name.Blank;
+
+            Debug.Assert(pPrivScreenRect != null);
+            Debug.Assert(defaultBoxColor_Red != null);
+            Debug.Assert(this.poLineColor != null);
+
+            this.poLineColor.Set(defaultBoxColor_Red);
+
+            this.poAzulSpriteBox.Swap(pPrivScreenRect, this.poLineColor);
+            Debug.Assert(this.poAzulSpriteBox != null);
+
+            this.x = poAzulSpriteBox.x;
+            this.y = poAzulSpriteBox.y;
+            this.sx = poAzulSpriteBox.sx;
+            this.sy = poAzulSpriteBox.sy;
+            this.angle = poAzulSpriteBox.angle;
         }
-        public void Set(Name name)
+        public void Set(Name boxName, Azul.Rect pScreenRect, Azul.Color pColor)
         {
-            this.name = name;
-            
+            //null checks
+            Debug.Assert(pScreenRect != null);
+            Debug.Assert(this.poAzulSpriteBox != null);
+            Debug.Assert(defaultBoxColor_Red != null);
+
+            //set the name
+            this.name = boxName;
+
+            Debug.Assert(pPrivScreenRect != null);
+
+            //set either a default color or a color input;
+            if (pColor == null)
+            {
+                //set to static red (default)
+                this.poLineColor.Set(defaultBoxColor_Red);
+            }
+            else
+            {
+                this.poLineColor.Set(pColor);
+            }
+
+            this.poAzulSpriteBox.Swap(pScreenRect, this.poLineColor);
+            Debug.Assert(this.poAzulSpriteBox != null);
+
+            this.x = poAzulSpriteBox.x;
+            this.y = poAzulSpriteBox.y;
+            this.sx = poAzulSpriteBox.sx;
+            this.sy = poAzulSpriteBox.sy;
+            this.angle = poAzulSpriteBox.angle;
+
         }
         public void DumpNodeData()
         {
             // we are using HASH code as its unique identifier 
             Debug.WriteLine("SpriteBox: {0}, hashcode: ({1})", this.name, this.GetHashCode());
-            if (this.pNext == null)
+            if (this.pMNext == null)
             {
                 Debug.WriteLine("      next: null");
             }
             else
             {
-                SpriteBox pTmp = (SpriteBox) this.pNext;
+                SpriteBox pTmp = (SpriteBox) this.pMNext;
                 Debug.WriteLine("      next: {0}, hashcode: ({1})", pTmp.name, pTmp.GetHashCode());
             }
 
-            if (this.pPrev == null)
+            if (this.pMrev == null)
             {
                 Debug.WriteLine("      prev: null");
             }
             else
             {
-                SpriteBox pTmp = (SpriteBox) this.pPrev;
+                SpriteBox pTmp = (SpriteBox) this.pMrev;
                 Debug.WriteLine("      prev: {0}, hashcode: ({1})", pTmp.name, pTmp.GetHashCode());
             }
 
@@ -109,7 +149,13 @@ namespace SpaceInvaders.SpriteBox
 
         public override void Draw()
         {
-            this.poAzulSpriteBox.Render();
+            //only draw sprite boxes if render flag is true;
+            if (SpriteBatchManager.renderBoxes)
+            {
+                this.poAzulSpriteBox.Render();
+            }
+
+
         }
     }
 
@@ -144,28 +190,14 @@ namespace SpaceInvaders.SpriteBox
          *
          */
 
-        //----------------------------------------------------------------------
-        // Data: unique data for this manager here
-        //----------------------------------------------------------------------
-
-        //UNIQUE NODE DATA---------------------
-        //private static SpriteBoxNode pNodeRef = new SpriteBoxNode();
-
-        //---------------------
-
-        //singleton reference ensures only one manager is created;
+        private static SpriteBox pNodeRef = new SpriteBox();
         private static SpriteBoxManager pInstance = null;
 
-        //----------------------------------------------------------------------
-        // Constructor - Singleton Instantiation
-        //----------------------------------------------------------------------
         private SpriteBoxManager(int startReserveSize = 3, int refillSize = 1)
             : base(startReserveSize, refillSize)
         {
             /*delegate to parent manager*/
         }
-
-
         //public facing constructor for instantiation of the singleton instance
         public static void Create(int startReserveSize = 3, int refillSize = 1)
         {
@@ -186,11 +218,6 @@ namespace SpaceInvaders.SpriteBox
             // Add a default data node?
 
         }
-
-        //----------------------------------------------------------------------
-        // Unique Private helper methods
-        //----------------------------------------------------------------------
-
         private static SpriteBoxManager privGetInstance()
         {
             // Safety - this forces users to call Create() first before using class
@@ -204,18 +231,16 @@ namespace SpaceInvaders.SpriteBox
         //----------------------------------------------------------------------
 
         //EDIT THE FOLLOWING METHODS---------------------
-        public static SpriteBox Add(SpriteBox.Name name)
+        public static SpriteBox Add(SpriteBox.Name name, Azul.Rect pScreenRect, Azul.Color pColor = null)
         {
             SpriteBoxManager pMan = privGetInstance();
             Debug.Assert(pMan != null);
 
-            SpriteBox pNode = (SpriteBox) pMan.baseAddToFront();
-
+            SpriteBox pNode = (SpriteBox)pMan.baseAddToFront();
             Debug.Assert(pNode != null);
 
             // set the data
-
-            pNode.Set(name);
+            pNode.Set(name, pScreenRect, pColor);
 
             return pNode;
         }
@@ -230,8 +255,6 @@ namespace SpaceInvaders.SpriteBox
             // So:  Use a reference node
             //      fill in the needed data
             //      use in the Compare() function
-
-            SpriteBox pNodeRef = new SpriteBox();
             Debug.Assert(pNodeRef != null);
             pNodeRef.WashNodeData();
 
@@ -264,7 +287,7 @@ namespace SpaceInvaders.SpriteBox
         // Override Abstract methods
         //----------------------------------------------------------------------
 
-        protected override Boolean derivedCompareNodes(DLink pLinkA, DLink pLinkB)
+        protected override Boolean derivedCompareNodes(MLink pLinkA, MLink pLinkB)
         {
             // This is used in baseFindNode() 
             Debug.Assert(pLinkA != null);
@@ -283,22 +306,22 @@ namespace SpaceInvaders.SpriteBox
             return status;
         }
 
-        protected override DLink derivedCreateNode()
+        protected override MLink derivedCreateNode()
         {
-            DLink pNode = new SpriteBox();
+            MLink pNode = new SpriteBox();
             Debug.Assert(pNode != null);
 
             return pNode;
         }
 
-        protected override void derivedDumpNode(DLink pLink)
+        protected override void derivedDumpNode(MLink pLink)
         {
             Debug.Assert(pLink != null);
             SpriteBox pNode = (SpriteBox) pLink;
             pNode.DumpNodeData();
         }
 
-        protected override void derivedWashNode(DLink pLink)
+        protected override void derivedWashNode(MLink pLink)
         {
             Debug.Assert(pLink != null);
             SpriteBox pNode = (SpriteBox) pLink;

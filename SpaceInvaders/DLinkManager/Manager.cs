@@ -6,8 +6,8 @@ namespace SpaceInvaders
     public abstract class Manager
     {
         //heads of active/reserve lists
-        private DLink pActive;
-        private DLink pReserve;
+        protected MLink pActive;
+        private MLink pReserve;
         //node counts
         private int mNumActive;
         private int mNumReserve;
@@ -41,7 +41,7 @@ namespace SpaceInvaders
             Debug.Assert(this.mNumReserve == initialReserveSize);
             Debug.Assert(this.pReserve != null);
             //check for proper linkage - headNode.pPrev = null;
-            Debug.Assert(this.pReserve.pPrev == null);
+            Debug.Assert(this.pReserve.pMrev == null);
 
         }
         private void privFillReservedPool(int count)
@@ -55,15 +55,15 @@ namespace SpaceInvaders
             // Preload the reserve
             for (int i = 0; i < count; i++)
             {
-                DLink pNode = this.derivedCreateNode();
+                MLink pNode = this.derivedCreateNode();
                 Debug.Assert(pNode != null);
 
                 //add each newly created node to front of reserve list
-                DLink.AddToFront(ref this.pReserve, pNode);
+                MLink.AddToFront(ref this.pReserve, pNode);
             }
         }
 
-        protected DLink baseAddToFront()
+        protected MLink baseAddToFront()
         {
             // Are there any nodes on the Reserve list?
             if (this.pReserve == null)
@@ -73,7 +73,7 @@ namespace SpaceInvaders
             }
 
             // Always take from the reserve list
-            DLink pNode = DLink.PullFromFront(ref this.pReserve);
+            MLink pNode = MLink.PullFromFront(ref this.pReserve);
             Debug.Assert(pNode != null);
 
             // Update stats
@@ -81,7 +81,7 @@ namespace SpaceInvaders
             this.mNumReserve--;
 
             // copy to active
-            DLink.AddToFront(ref this.pActive, pNode);
+            MLink.AddToFront(ref this.pActive, pNode);
 
             //Debug.WriteLine("Base Add Node called");
 
@@ -89,10 +89,10 @@ namespace SpaceInvaders
             return pNode;
 
         }
-        protected DLink baseFindNode(DLink pNodeRef)
+        protected MLink baseFindNode(MLink pNodeRef)
         {
             // search the active list
-            DLink pLink = this.pActive;
+            MLink pLink = this.pActive;
 
             // Walk through the nodes
             while (pLink != null)
@@ -102,30 +102,30 @@ namespace SpaceInvaders
                     // found it
                     break;
                 }
-                pLink = pLink.pNext;
+                pLink = pLink.pMNext;
             }
 
             //Debug.WriteLine("Base Find Node called");
 
             return pLink;
         }
-        protected void baseRemoveNode(DLink targetNode)
+        protected void baseRemoveNode(MLink targetNode)
         {
             //make sure node exists
             Debug.Assert(targetNode != null);
 
             // Don't do the work here...
             // abstract/delegate it to DLink 
-            DLink.RemoveNode(ref this.pActive, targetNode);
+            MLink.RemoveNode(ref this.pActive, targetNode);
 
             // wash node before returning to reserve list
             this.derivedWashNode(targetNode);
-            Debug.Assert(targetNode.pNext == null);
-            Debug.Assert(targetNode.pPrev == null);
+            Debug.Assert(targetNode.pMNext == null);
+            Debug.Assert(targetNode.pMrev == null);
 
 
             // add pulled node to the reserve list
-            DLink.AddToFront(ref this.pReserve, targetNode);
+            MLink.AddToFront(ref this.pReserve, targetNode);
 
             // stats update
             this.mNumActive--;
@@ -155,7 +155,7 @@ namespace SpaceInvaders
             Debug.WriteLine("------ Active List: ---------------------------\n");
 
             //print starting with active head;
-            DLink pNode = this.pActive;
+            MLink pNode = this.pActive;
 
             int i = 0;
             while (pNode != null)
@@ -163,7 +163,7 @@ namespace SpaceInvaders
                 Debug.WriteLine("active index {0}: -------------", i);
                 this.derivedDumpNode(pNode);
                 i++;
-                pNode = pNode.pNext;
+                pNode = pNode.pMNext;
             }
             Debug.WriteLine("");
             Debug.WriteLine("------ END OF ACTIVE LIST: ---------------------------\n");
@@ -179,7 +179,7 @@ namespace SpaceInvaders
                 Debug.WriteLine("reserve index {0}:  -------------", i);
                 this.derivedDumpNode(pNode);
                 i++;
-                pNode = pNode.pNext;
+                pNode = pNode.pMNext;
             }
 
             Debug.WriteLine("");
@@ -190,10 +190,10 @@ namespace SpaceInvaders
         // Abstract methods - derived classes must implement
         //----------------------------------------------------------------------
 
-        abstract protected Boolean derivedCompareNodes(DLink pLinkA, DLink pLinkB);
-        abstract protected DLink derivedCreateNode();
-        abstract protected void derivedDumpNode(DLink pLink);
-        abstract protected void derivedWashNode(DLink pLink);
+        abstract protected Boolean derivedCompareNodes(MLink pLinkA, MLink pLinkB);
+        abstract protected MLink derivedCreateNode();
+        abstract protected void derivedDumpNode(MLink pLink);
+        abstract protected void derivedWashNode(MLink pLink);
 
     }
 }

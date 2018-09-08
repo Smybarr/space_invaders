@@ -4,30 +4,30 @@ using System.Diagnostics;
 
 namespace SpaceInvaders
 {
-    public abstract class DLink
+    public abstract class MLink
     {
-        public DLink pNext;
-        public DLink pPrev;
+        public MLink pMNext;
+        public MLink pMrev;
 
-        protected DLink()
+        protected MLink()
         {
             this.ClearNodeLinks();
         }
         public void ClearNodeLinks()
         {
-            this.pNext = null;
-            this.pPrev = null;
+            this.pMNext = null;
+            this.pMrev = null;
         }
 
-        public static void AddToFront(ref DLink pHead, DLink newNode)
+        public static void AddToFront(ref MLink pHead, MLink newNode)
         {
             Debug.Assert(newNode != null);
 
             //2 scenarios: empty list or head not null;
             if (pHead == null)
             {
-                newNode.pNext = null;
-                newNode.pPrev = null;
+                newNode.pMNext = null;
+                newNode.pMrev = null;
 
                 pHead = newNode;
                 //Debug.WriteLine("First node added to list");
@@ -36,10 +36,10 @@ namespace SpaceInvaders
             {
                 //push to front
                 //fix the links
-                newNode.pPrev = null;
-                newNode.pNext = pHead;
+                newNode.pMrev = null;
+                newNode.pMNext = pHead;
 
-                pHead.pPrev = newNode;
+                pHead.pMrev = newNode;
 
                 //set head reference as newNode;
                 pHead = newNode;
@@ -50,20 +50,20 @@ namespace SpaceInvaders
 
             Debug.Assert(pHead != null);
         }
-        public static DLink PullFromFront(ref DLink pHead)
+        public static MLink PullFromFront(ref MLink pHead)
         {
             // There should always be something on list
             Debug.Assert(pHead != null);
 
             // return node
-            DLink pNode = pHead;
+            MLink pNode = pHead;
 
             // Update head (OK if it points to NULL)
-            pHead = pHead.pNext;
+            pHead = pHead.pMNext;
 
             if (pHead != null)
             {
-                pHead.pPrev = null;
+                pHead.pMrev = null;
             }
 
             // remove any lingering links/data
@@ -73,24 +73,24 @@ namespace SpaceInvaders
 
             return pNode;
         }
-        public static void RemoveNode(ref DLink pHead, DLink targetNode)
+        public static void RemoveNode(ref MLink pHead, MLink targetNode)
         {
             // protection
             Debug.Assert(targetNode != null);
 
             // 4 different conditions... 
-            if (targetNode.pPrev != null)
+            if (targetNode.pMrev != null)
             {	// middle or last node
-                targetNode.pPrev.pNext = targetNode.pNext;
+                targetNode.pMrev.pMNext = targetNode.pMNext;
             }
             else
             {  // first
-                pHead = targetNode.pNext;
+                pHead = targetNode.pMNext;
             }
 
-            if (targetNode.pNext != null)
+            if (targetNode.pMNext != null)
             {	// middle node
-                targetNode.pNext.pPrev = targetNode.pPrev;
+                targetNode.pMNext.pMrev = targetNode.pMrev;
             }
 
             //Debug.WriteLine("DLink.Remove Node called");

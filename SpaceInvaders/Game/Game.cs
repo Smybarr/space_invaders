@@ -5,7 +5,6 @@ namespace SpaceInvaders
 {
     class SpaceInvaders : Azul.Game
     {
- 
         //-----------------------------------------------------------------------------
         // Game::Initialize()
         //		Allows the engine to perform any initialization it needs to before 
@@ -33,7 +32,6 @@ namespace SpaceInvaders
             Debug.WriteLine("Width:\t{0}\nHeight:\t{1}\n\n", this.GetScreenWidth(), this.GetScreenHeight());
 
 
-
             Debug.WriteLine("\n\nInitialization Complete\n----------------------------------\n\n");
         }
 
@@ -49,9 +47,15 @@ namespace SpaceInvaders
             Debug.WriteLine("Load Content");
             Debug.WriteLine("----------------------------------\n");
 
+            //-----------------------------------------------
+            //Manager Load
             TextureManager.Create();
             ImageManager.Create();
+
             SpriteManager.Create();
+            SpriteBoxManager.Create();
+
+            SpriteBatchManager.Create();
 
             //-----------------------------------------------
             //textures
@@ -68,10 +72,9 @@ namespace SpaceInvaders
             Azul.Rect textCoordinates = new Azul.Rect(548.0f, 18.0f, 248.0f, 135.0f);         
             ImageManager.Add(Image.Name.SquidOpen, Texture.Name.GameSprites, textCoordinates);
             
-            //SquidClosed
+            ////SquidClosed
             //textCoordinates.Set(548.0f, 170.0f, 248.0f, 135.0f);
             //ImageManager.Add(Image.Name.SquidClosed, Texture.Name.GameSprites, textCoordinates);
-
 
             //-----------------------------------------------
             //sprites
@@ -80,14 +83,31 @@ namespace SpaceInvaders
             float spriteHeight = 35.0f;
 
             //this rect dictates where to render the sprites in the game window
-            //Azul.Rect position_size = new Azul.Rect(500.0f, 900.0f, spriteWidth, spriteHeight);
             Azul.Rect position_size = new Azul.Rect(300.0f, 400.0f, spriteWidth, spriteHeight);
+            Azul.Rect box_pos_size = new Azul.Rect(300.0f, 400.0f, 33.0f, 33.0f);
+
             //squidOpen
             SpriteManager.Add(Sprite.Name.Squid, Image.Name.SquidOpen, position_size);
-            
-            //squidClosed
+
+            ////squidClosed
             //SpriteManager.Add(Sprite.Name.Squid, Image.Name.SquidClosed, position_size);
 
+            //-----------------------------------------------
+            //sprite box
+            SpriteBoxManager.Add(SpriteBox.Name.Box, box_pos_size);
+
+            //-----------------------------------------------
+            //sprite batch
+            SpriteBatch pSB_Aliens = SpriteBatchManager.Add(SpriteBatch.Name.GameSprites);
+            SpriteBatch pSB_Boxes = SpriteBatchManager.Add(SpriteBatch.Name.SpriteBoxes);
+
+
+
+            pSB_Aliens.Attach(Sprite.Name.Squid);
+            //pSB_Aliens.Attach(Sprite.Name.Crab);
+            //pSB_Aliens.Attach(Sprite.Name.Octopus);
+
+            pSB_Boxes.Attach(SpriteBox.Name.Box);
 
             Debug.WriteLine("\n\nLoad Content Complete\n----------------------------------\n");
                        
@@ -97,6 +117,8 @@ namespace SpaceInvaders
             //TextureManager.Dump();
             //ImageManager.Dump();
             //SpriteManager.Dump();
+            //SpriteBoxManager.Dump();
+            //SpriteBatchManager.Dump();
         }
 
         //-----------------------------------------------------------------------------
@@ -111,13 +133,13 @@ namespace SpaceInvaders
             //MouseTest();
 
             //-----------------------------------------------
-            //sprites
-
-            //find the sprite created above and call update on it;
-            //eventually SpriteManager will automatically update all active sprites
+            //sprites/spriteboxes
             Sprite pSquid = SpriteManager.Find(Sprite.Name.Squid);
             pSquid.Update();
 
+            //sprite boxes
+            SpriteBox pBox = SpriteBoxManager.Find(SpriteBox.Name.Box);
+            pBox.Update();
 
         }
 
@@ -131,13 +153,7 @@ namespace SpaceInvaders
         {
             //-----------------------------------------------
             //sprites
-
-            //find the sprite created above and call draw on it to reflect any changes
-            //      to coordinate data;
-            //eventually SpriteManager will automatically draw all active sprites
-            Sprite pSquid = SpriteManager.Find(Sprite.Name.Squid);
-            pSquid.Draw();
-
+            SpriteBatchManager.Draw();
         }
 
         //-----------------------------------------------------------------------------
