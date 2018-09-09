@@ -101,13 +101,13 @@ namespace SpaceInvaders
                 Debug.WriteLine("      next: {0}, hashcode: ({1})", pTmp.name, pTmp.GetHashCode());
             }
 
-            if (this.pMrev == null)
+            if (this.pMPrev == null)
             {
                 Debug.WriteLine("      prev: null");
             }
             else
             {
-                Image pTmp = (Image) this.pMrev;
+                Image pTmp = (Image) this.pMPrev;
                 Debug.WriteLine("      prev: {0}, hashcode: ({1})", pTmp.name, pTmp.GetHashCode());
             }
 

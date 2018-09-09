@@ -7,7 +7,7 @@ namespace SpaceInvaders
     public abstract class MLink
     {
         public MLink pMNext;
-        public MLink pMrev;
+        public MLink pMPrev;
 
         protected MLink()
         {
@@ -16,7 +16,7 @@ namespace SpaceInvaders
         public void ClearNodeLinks()
         {
             this.pMNext = null;
-            this.pMrev = null;
+            this.pMPrev = null;
         }
 
         public static void AddToFront(ref MLink pHead, MLink newNode)
@@ -27,7 +27,7 @@ namespace SpaceInvaders
             if (pHead == null)
             {
                 newNode.pMNext = null;
-                newNode.pMrev = null;
+                newNode.pMPrev = null;
 
                 pHead = newNode;
                 //Debug.WriteLine("First node added to list");
@@ -36,10 +36,10 @@ namespace SpaceInvaders
             {
                 //push to front
                 //fix the links
-                newNode.pMrev = null;
+                newNode.pMPrev = null;
                 newNode.pMNext = pHead;
 
-                pHead.pMrev = newNode;
+                pHead.pMPrev = newNode;
 
                 //set head reference as newNode;
                 pHead = newNode;
@@ -63,7 +63,7 @@ namespace SpaceInvaders
 
             if (pHead != null)
             {
-                pHead.pMrev = null;
+                pHead.pMPrev = null;
             }
 
             // remove any lingering links/data
@@ -79,9 +79,9 @@ namespace SpaceInvaders
             Debug.Assert(targetNode != null);
 
             // 4 different conditions... 
-            if (targetNode.pMrev != null)
+            if (targetNode.pMPrev != null)
             {	// middle or last node
-                targetNode.pMrev.pMNext = targetNode.pMNext;
+                targetNode.pMPrev.pMNext = targetNode.pMNext;
             }
             else
             {  // first
@@ -90,7 +90,7 @@ namespace SpaceInvaders
 
             if (targetNode.pMNext != null)
             {	// middle node
-                targetNode.pMNext.pMrev = targetNode.pMrev;
+                targetNode.pMNext.pMPrev = targetNode.pMPrev;
             }
 
             //Debug.WriteLine("DLink.Remove Node called");

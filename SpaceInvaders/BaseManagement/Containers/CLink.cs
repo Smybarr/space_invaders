@@ -4,6 +4,7 @@ using System.Diagnostics;
 
 namespace SpaceInvaders
 {
+    //CLink = Circular Link(?) or Container Link?
     public abstract class CLink
     {
         public CLink pCNext;

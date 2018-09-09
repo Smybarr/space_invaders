@@ -66,17 +66,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DLinkManager\DLink.cs" />
-    <Compile Include="DLinkManager\Manager.cs" />
+    <Compile Include="BaseManagement\DLink.cs" />
+    <Compile Include="BaseManagement\Manager.cs" />
+    <Compile Include="BaseManagement\SLink.cs" />
     <Compile Include="Game\Game.cs" />
     <Compile Include="Image\Image.cs" />
-    <Compile Include="Sprite\Containers\CLink.cs" />
-    <Compile Include="Sprite\Containers\Container.cs" />
+    <Compile Include="Image\ImageHolder.cs" />
+    <Compile Include="Sprite\AnimatedSprite.cs" />
+    <Compile Include="BaseManagement\Containers\CLink.cs" />
+    <Compile Include="BaseManagement\Containers\Container.cs" />
     <Compile Include="Sprite\GameSprite\GameSprite.cs" />
     <Compile Include="Sprite\SpriteBase.cs" />
     <Compile Include="Sprite\SpriteBatch\SpriteBatch.cs" />
     <Compile Include="Sprite\BoxSprite\BoxSprite.cs" />
     <Compile Include="Texture\Texture.cs" />
+    <Compile Include="BaseManagement\Command.cs" />
+    <Compile Include="TimerEvents\TimerEvent.cs" />
+    <Compile Include="TimerEvents\TimerEventManager.cs" />
     <Compile Include="UserInput\InputTest.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

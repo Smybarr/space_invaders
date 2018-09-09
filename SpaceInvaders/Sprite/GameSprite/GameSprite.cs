@@ -196,13 +196,13 @@ namespace SpaceInvaders
                 Debug.WriteLine("      next: {0}, hashcode: ({1})", pTmp.name, pTmp.GetHashCode());
             }
 
-            if (this.pMrev == null)
+            if (this.pMPrev == null)
             {
                 Debug.WriteLine("      prev: null");
             }
             else
             {
-                GameSprite pTmp = (GameSprite) this.pMrev;
+                GameSprite pTmp = (GameSprite) this.pMPrev;
                 Debug.WriteLine("      prev: {0}, hashcode: ({1})", pTmp.name, pTmp.GetHashCode());
             }
 
@@ -221,7 +221,17 @@ namespace SpaceInvaders
         }
 
 
-        //Unique functions
+        //Modify functions
+        public void ChangeImage(Image pNewImage)
+        {
+            Debug.Assert(this.poAzulSprite != null);
+            Debug.Assert(pNewImage != null);
+            this.pImage = pNewImage;
+
+            this.poAzulSprite.SwapTexture(this.pImage.GetAzulTexture());
+            this.poAzulSprite.SwapTextureRect(this.pImage.GetAzulRect());
+        }
+
         public void ChangeColor(Azul.Color _pColor)
         {
             Debug.Assert(_pColor != null);
@@ -350,6 +360,20 @@ namespace SpaceInvaders
 
             // wash it
             pNode.Set(spriteName, pImage, pScreenRect, pColor);
+            return pNode;
+        }
+        public static GameSprite Add(GameSprite.Name spriteName, Image.Name imageName, float x, float y, float width, float height)
+        {
+            GameSpriteManager pMan = GameSpriteManager.privGetInstance();
+            Debug.Assert(pMan != null);
+
+            Image pImage = ImageManager.Find(imageName);
+            Debug.Assert(pImage != null);
+
+            GameSprite pNode = (GameSprite)pMan.baseAddToFront();
+            Debug.Assert(pNode != null);
+
+            pNode.Set(spriteName, pImage, x, y, width, height);
             return pNode;
         }
         public static GameSprite Find(GameSprite.Name name)

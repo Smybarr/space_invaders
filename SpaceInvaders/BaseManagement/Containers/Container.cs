@@ -176,8 +176,5 @@ namespace SpaceInvaders
         abstract protected void derivedDumpNode(CLink pLink);
         abstract protected void derivedWashNode(CLink pLink);
 
-
-
-
     }
 }

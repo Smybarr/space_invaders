@@ -47,7 +47,7 @@ namespace SpaceInvaders
             Debug.Assert(this.mNumReserve == initialReserveSize);
             Debug.Assert(this.pReserve != null);
             //check for proper linkage - headNode.pPrev = null;
-            Debug.Assert(this.pReserve.pMrev == null);
+            Debug.Assert(this.pReserve.pMPrev == null);
 
         }
         private void privFillReservedPool(int count)
@@ -132,7 +132,7 @@ namespace SpaceInvaders
             // wash node before returning to reserve list
             this.derivedWashNode(targetNode);
             Debug.Assert(targetNode.pMNext == null);
-            Debug.Assert(targetNode.pMrev == null);
+            Debug.Assert(targetNode.pMPrev == null);
 
 
             // add pulled node to the reserve list

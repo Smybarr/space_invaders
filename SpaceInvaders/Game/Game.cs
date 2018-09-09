@@ -57,6 +57,8 @@ namespace SpaceInvaders
 
             SpriteBatchManager.Create();
 
+            TimerEventManager.Create();
+
             //-----------------------------------------------
             //textures
 
@@ -73,9 +75,9 @@ namespace SpaceInvaders
 
             ImageManager.Add(Image.Name.SquidOpen, Texture.Name.GameSprites, si.x, si.y, si.width, si.height);
             
-            ////SquidClosed
-            //textCoordinates.Set(548.0f, 170.0f, 248.0f, 135.0f);
-            //ImageManager.Add(Image.Name.SquidClosed, Texture.Name.GameSprites, textCoordinates);
+            //SquidClosed
+            si.Set(548.0f, 170.0f, 248.0f, 135.0f);
+            ImageManager.Add(Image.Name.SquidClosed, Texture.Name.GameSprites, si.x, si.y, si.width, si.height);
 
             //-----------------------------------------------
             //sprites
@@ -90,8 +92,8 @@ namespace SpaceInvaders
             //squidOpen
             GameSpriteManager.Add(GameSprite.Name.Squid, Image.Name.SquidOpen, position_size);
 
-            ////squidClosed
-            //SpriteManager.Add(Sprite.Name.Squid, Image.Name.SquidClosed, position_size);
+            //squidClosed
+            GameSpriteManager.Add(GameSprite.Name.Squid, Image.Name.SquidClosed, position_size);
 
             //-----------------------------------------------
             //sprite box
@@ -109,6 +111,22 @@ namespace SpaceInvaders
             //pSB_Aliens.Attach(Sprite.Name.Octopus);
 
             pSB_Boxes.Attach(BoxSprite.Name.Box);
+
+
+
+
+
+
+            // Create an animation sprite
+            AnimationSprite pAnimSprite = new AnimationSprite(GameSprite.Name.Squid);
+
+            // attach several images to cycle
+            pAnimSprite.Attach(Image.Name.SquidOpen);
+            pAnimSprite.Attach(Image.Name.SquidClosed);
+
+            // add AnimationSprite to timer
+            TimerEventManager.Add(TimerEvent.Name.SpriteAnimation, pAnimSprite, 1.5f);
+
 
             Debug.WriteLine("\n\nLoad Content Complete\n----------------------------------\n");
                        
@@ -132,6 +150,10 @@ namespace SpaceInvaders
         {
             //KeyboardTest();
             //MouseTest();
+
+
+            // Fire off the timer events
+            TimerEventManager.Update(this.GetTime());
 
             //-----------------------------------------------
             //sprites/spriteboxes

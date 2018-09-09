@@ -175,13 +175,13 @@ namespace SpaceInvaders
                 Debug.WriteLine("      next: {0}, hashcode: ({1})", pTmp.name, pTmp.GetHashCode());
             }
 
-            if (this.pMrev == null)
+            if (this.pMPrev == null)
             {
                 Debug.WriteLine("      prev: null");
             }
             else
             {
-                BoxSprite pTmp = (BoxSprite) this.pMrev;
+                BoxSprite pTmp = (BoxSprite) this.pMPrev;
                 Debug.WriteLine("      prev: {0}, hashcode: ({1})", pTmp.name, pTmp.GetHashCode());
             }
 
@@ -199,7 +199,6 @@ namespace SpaceInvaders
 
             this.poAzulSpriteBox.Update();
         }
-
         public override void Draw()
         {
             //only draw sprite boxes if render flag is true;
