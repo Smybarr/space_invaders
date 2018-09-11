@@ -69,6 +69,8 @@
     <Compile Include="BaseManagement\DLink.cs" />
     <Compile Include="BaseManagement\Manager.cs" />
     <Compile Include="BaseManagement\SLink.cs" />
+    <Compile Include="DebugPrinter\DebugPrinter.cs" />
+    <Compile Include="DestructorManagement\Death.cs" />
     <Compile Include="Game\Game.cs" />
     <Compile Include="Image\Image.cs" />
     <Compile Include="Image\ImageHolder.cs" />
@@ -76,6 +78,8 @@
     <Compile Include="BaseManagement\Containers\CLink.cs" />
     <Compile Include="BaseManagement\Containers\Container.cs" />
     <Compile Include="Sprite\GameSprite\GameSprite.cs" />
+    <Compile Include="Sprite\ProxySprite\ProxySprite.cs" />
+    <Compile Include="Sprite\ProxySprite\ProxySpriteManager.cs" />
     <Compile Include="Sprite\SpriteBase.cs" />
     <Compile Include="Sprite\SpriteBatch\SBNode.cs" />
     <Compile Include="Sprite\SpriteBatch\SpriteBatch.cs" />

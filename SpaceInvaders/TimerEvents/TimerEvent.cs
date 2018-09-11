@@ -27,17 +27,21 @@ namespace SpaceInvaders
             this.deltaTime = 0.0f;
         }
 
+        ~TimerEvent()
+        {
+#if (TRACK_DESTRUCTOR)
+            Debug.WriteLine("~TimeEvent():{0} ", this.GetHashCode());
+#endif
+            this.name = TimerEvent.Name.Blank;
+            this.pCommand = null;
+        }
+
         public void Wash()
         {
             this.name = Name.Blank;
             this.pCommand = null;
             this.triggerTime = 0.0f;
             this.deltaTime = 0.0f;
-        }
-        ~TimerEvent()
-        {
-            this.name = Name.Blank;
-            this.pCommand = null;
         }
 
         public void Set(Name eventName, Command pCommand, float deltaTimeToTrigger)
@@ -69,6 +73,8 @@ namespace SpaceInvaders
 
         public void Dump()
         {
+            //this.MLinkDump();
+
             // we are using HASH code as its unique identifier 
             Debug.WriteLine("   {0} ({1})", this.name, this.GetHashCode());
             if (this.pMNext == null)

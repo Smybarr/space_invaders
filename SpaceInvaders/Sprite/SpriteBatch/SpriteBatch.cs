@@ -20,15 +20,29 @@ namespace SpaceInvaders
 
 
         private Name name;
-        private SBNodeManager pSBNodeManRef;
+        private SBNodeManager pSBNodeMan;
 
         public SpriteBatch()
             : base()
         {
             //set the default blank name and create a new SBNodeManager
             this.name = Name.Blank;
-            this.pSBNodeManRef = new SBNodeManager();
-            Debug.Assert(this.pSBNodeManRef != null);
+            this.pSBNodeMan = new SBNodeManager();
+            Debug.Assert(this.pSBNodeMan != null);
+        }
+        ~SpriteBatch()
+        {
+#if (TRACK_DESTRUCTOR)
+            Debug.WriteLine("~SpriteBatch():{0} ", this.GetHashCode());
+#endif
+            this.name = SpriteBatch.Name.Blank;
+            this.pSBNodeMan = null;
+        }
+
+        public void Destroy()
+        {
+            Debug.Assert(this.pSBNodeMan != null);
+            this.pSBNodeMan.Destroy();
         }
 
         public void Set(Name spriteBatchName, int startReserveSize = 3, int refillSize = 1)
@@ -38,7 +52,7 @@ namespace SpaceInvaders
             Debug.Assert(startReserveSize > 0);
             Debug.Assert(refillSize > 0);
 
-            this.pSBNodeManRef.Set(spriteBatchName, startReserveSize, refillSize);
+            this.pSBNodeMan.Set(spriteBatchName, startReserveSize, refillSize);
         }
 
         public void SetName(Name spriteBatchName)
@@ -53,33 +67,41 @@ namespace SpaceInvaders
 
         public SBNodeManager GetSBNodeManager()
         {
-            return this.pSBNodeManRef;
+            return this.pSBNodeMan;
         }
 
         public SBNode Attach(GameSprite.Name name)
         {
-            SBNode pSBNode = this.pSBNodeManRef.Attach(name);
+            SBNode pSBNode = this.pSBNodeMan.Attach(name);
 
             return pSBNode;
         }
-
         public SBNode Attach(BoxSprite.Name name)
         {
-            SBNode pSBNode = this.pSBNodeManRef.Attach(name);
+            SBNode pSBNode = this.pSBNodeMan.Attach(name);
 
+            return pSBNode;
+        }
+        public SBNode Attach(ProxySprite pNode)
+        {
+            // Go to Man, get a node from reserve, add to active, return it
+            Debug.Assert(this.pSBNodeMan != null);
+            SBNode pSBNode = this.pSBNodeMan.Add(pNode);
             return pSBNode;
         }
 
         public void WashSpriteBatchData()
         {
-            //wash name and data;
+            //wash name;
             this.name = Name.Blank;
+            // make sure it still exists
+            Debug.Assert(this.pSBNodeMan != null);
         }
 
         public void DumpSpriteBatchData()
         {
-            Debug.WriteLine("------ SpriteBatch ------");
-
+            Debug.WriteLine("------ SpriteBatch: {0} ------", this.name);
+            this.pSBNodeMan.DumpSBNodeData();
             //---------------------
         }
 
@@ -116,7 +138,7 @@ namespace SpaceInvaders
          */
 
         public static Boolean renderBoxes = true;
-        private static SpriteBatch pBatchRef = new SpriteBatch();
+        private static SpriteBatch pSpriteBatchRef = new SpriteBatch();
         private static SpriteBatchManager pInstance = null;
 
         //----------------------------------------------------------------------
@@ -152,6 +174,34 @@ namespace SpaceInvaders
             Debug.Assert(pInstance != null);
 
             return pInstance;
+        }
+
+        ~SpriteBatchManager()
+        {
+#if (TRACK_DESTRUCTOR)
+            Debug.WriteLine("~SpriteBatchMan():{0} ", this.GetHashCode());
+#endif
+            SpriteBatchManager.pSpriteBatchRef = null;
+            SpriteBatchManager.pInstance = null;
+        }
+        public static void Destroy()
+        {
+            // Get the instance
+            SpriteBatchManager pMan = SpriteBatchManager.privGetInstance();
+            Debug.WriteLine("--->SpriteBatch.Destroy()");
+            pMan.baseDestroy();
+
+#if (TRACK_DESTRUCTOR)
+            Debug.WriteLine("     {0} ({1})", SpriteBatchMan.pSpriteBatchRef, SpriteBatchMan.pSpriteBatchRef.GetHashCode());
+            Debug.WriteLine("     {0} ({1})", SpriteBatchMan.pInstance, SpriteBatchMan.pInstance.GetHashCode());
+#endif
+            SpriteBatchManager.pSpriteBatchRef = null;
+            SpriteBatchManager.pInstance = null;
+        }
+
+        public SpriteBatch GetActive()
+        {
+            return (SpriteBatch)this.baseGetActive();
         }
 
         //Draw function draws all sprite batches and is called in Game.Draw();
@@ -190,16 +240,6 @@ namespace SpaceInvaders
         }
 
 
-        //----------------------------------------------------------------------
-        // 4 Wrapper methods: baseAdd, baseFind, baseRemove, baseDump
-        //----------------------------------------------------------------------
-
-
-        public SpriteBatch GetActive()
-        {
-            return (SpriteBatch)this.baseGetActive();
-        }
-
         public static SpriteBatch Add(SpriteBatch.Name name, int startReserveSize = 3, int refillSize = 1)
         {
             SpriteBatchManager pMan = SpriteBatchManager.privGetInstance();
@@ -224,13 +264,13 @@ namespace SpaceInvaders
             // So:  Use a reference node
             //      fill in the needed data
             //      use in the Compare() function
-            Debug.Assert(pBatchRef != null);
-            pBatchRef.WashSpriteBatchData();
+            Debug.Assert(pSpriteBatchRef != null);
+            pSpriteBatchRef.WashSpriteBatchData();
 
             //find the node by name
-            pBatchRef.SetName(name);
+            pSpriteBatchRef.SetName(name);
 
-            SpriteBatch pData = (SpriteBatch)pMan.baseFindNode(pBatchRef);
+            SpriteBatch pData = (SpriteBatch)pMan.baseFindNode(pSpriteBatchRef);
 
             return pData;
         }
@@ -255,6 +295,12 @@ namespace SpaceInvaders
         //----------------------------------------------------------------------
         // 4 Override Abstract Methods (From Base Manager)
         //----------------------------------------------------------------------
+        protected override void derivedDestroyNode(MLink pLink)
+        {
+            SpriteBatch pNode = (SpriteBatch)pLink;
+            Debug.Assert(pNode != null);
+            pNode.Destroy();
+        }
         protected override Boolean derivedCompareNodes(MLink pLinkA, MLink pLinkB)
         {
             // This is used in baseFindNode() 

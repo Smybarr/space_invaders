@@ -71,6 +71,16 @@ namespace SpaceInvaders
         {
             this.Set(name, pSrcTexture, x, y, width, height);
         }
+        ~Image()
+        {
+#if (TRACK_DESTRUCTOR)
+            Debug.WriteLine("~Image():{0} ", this.GetHashCode());
+#endif
+            this.name = Name.Blank;
+            this.pTexture = null;
+            this.poRect = null;
+        }
+
         public void Set(Name imageName, Texture pSrcTexture, float x, float y, float width, float height)
         {
             Debug.Assert(pSrcTexture != null);
@@ -90,6 +100,8 @@ namespace SpaceInvaders
         public void DumpNodeData()
         {
             // we are using HASH code as its unique identifier 
+            //this.MLinkDump();
+
             Debug.WriteLine("Image: {0}, hashcode: ({1})", this.name, this.GetHashCode());
             if (this.pMNext == null)
             {
@@ -112,7 +124,8 @@ namespace SpaceInvaders
             }
 
             // Print Unique Node Data:         
-            Debug.WriteLine("   Rect: x: {0}  y:{1}  w:{2}  h:{3}", this.poRect.x, this.poRect.y, this.poRect.width, this.poRect.height);
+            DebugPrinter.PrintAzulRect(this.poRect);
+
             if (this.pTexture == null)
             {
                 Debug.WriteLine("   Texture: null");
@@ -181,9 +194,8 @@ namespace SpaceInvaders
         // Data: unique data for this manager here
         //----------------------------------------------------------------------
 
-        //TODO Remove New Call
-        private static Image pNodeRef = new Image();
-
+        //TODO Remove New Call?
+        private static Image pImageRef = new Image();
         //singleton reference ensures only one manager is created;
         private static ImageManager pInstance = null;
 
@@ -195,7 +207,6 @@ namespace SpaceInvaders
         {
             /*delegate to parent manager*/
         }
-
         //public facing constructor for instantiation of the singleton instance
         public static void Create(int startReserveSize = 3, int refillSize = 1)
         {
@@ -218,17 +229,35 @@ namespace SpaceInvaders
 
             Debug.WriteLine("------Image Manager Initialized-------");
         }
-
-        //----------------------------------------------------------------------
-        // Unique Private helper methods
-        //----------------------------------------------------------------------
-
         private static ImageManager privGetInstance()
         {
             // Safety - this forces users to call Create() first before using class
             Debug.Assert(pInstance != null);
 
             return pInstance;
+        }
+
+        ~ImageManager()
+        {
+#if(TRACK_DESTRUCTOR)
+            Debug.WriteLine("~ImageMan():{0}", this.GetHashCode());
+#endif
+            ImageManager.pImageRef = null;
+            ImageManager.pInstance = null;
+        }
+        public static void Destroy()
+        {
+            // Get the instance
+            ImageManager pMan = ImageManager.privGetInstance();
+            Debug.WriteLine("--->ImageMan.Destroy()");
+            pMan.baseDestroy();
+
+#if (TRACK_DESTRUCTOR)
+            Debug.WriteLine("     {0} ({1})", ImageManager.pImageRef, ImageManager.pImageRef.GetHashCode());
+            Debug.WriteLine("     {0} ({1})", ImageManager.pInstance, ImageManager.pInstance.GetHashCode());
+#endif
+            ImageManager.pImageRef = null;
+            ImageManager.pInstance = null;
         }
 
         //----------------------------------------------------------------------
@@ -250,7 +279,6 @@ namespace SpaceInvaders
             pNode.Set(imageName, pTexture, x, y, width, height);
             return pNode;
         }
-
         public static Image Find(Image.Name name)
         {
             //get the singleton
@@ -262,17 +290,16 @@ namespace SpaceInvaders
             // So:  Use a reference node
             //      fill in the needed data
             //      use in the Compare() function
-            Debug.Assert(pNodeRef != null);
-            pNodeRef.WashNodeData();
+            Debug.Assert(pImageRef != null);
+            pImageRef.WashNodeData();
 
             //find the node by name
-            pNodeRef.SetName(name);
+            pImageRef.SetName(name);
 
-            Image pData = (Image) pMan.baseFindNode(pNodeRef);
+            Image pData = (Image) pMan.baseFindNode(pImageRef);
 
             return pData;
         }
-
         public static void Remove(Image pNode)
         {
             //get the singleton
@@ -282,7 +309,6 @@ namespace SpaceInvaders
             Debug.Assert(pNode != null);
             pMan.baseRemoveNode(pNode);
         }
-
         public static void Dump()
         {
             ImageManager pMan = privGetInstance();
@@ -314,7 +340,6 @@ namespace SpaceInvaders
 
             return status;
         }
-
         protected override MLink derivedCreateNode()
         {
             MLink pNode = new Image();
@@ -322,14 +347,12 @@ namespace SpaceInvaders
 
             return pNode;
         }
-
         protected override void derivedDumpNode(MLink pLink)
         {
             Debug.Assert(pLink != null);
             Image pNode = (Image) pLink;
             pNode.DumpNodeData();
         }
-
         protected override void derivedWashNode(MLink pLink)
         {
             Debug.Assert(pLink != null);

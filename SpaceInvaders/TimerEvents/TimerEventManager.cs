@@ -44,7 +44,31 @@ namespace SpaceInvaders
 
             return pInstance;
         }
-        
+
+        ~TimerEventManager()
+        {
+#if (TRACK_DESTRUCTOR)
+            Debug.WriteLine("~TimerMan():{0} ", this.GetHashCode());
+#endif
+            TimerEventManager.pTimerEventRef = null;
+            TimerEventManager.pInstance = null;
+        }
+        public static void Destroy()
+        {
+            // Get the instance
+            TimerEventManager pMan = TimerEventManager.privGetInstance();
+            Debug.WriteLine("--->TimerMan.Destroy()");
+            pMan.baseDestroy();
+
+#if (TRACK_DESTRUCTOR)
+            Debug.WriteLine("     {0} ({1})", TimerMan.pTimerEventRef, TimerMan.pTimerEventRef.GetHashCode());
+            Debug.WriteLine("     {0} ({1})", TimerMan.pInstance, TimerMan.pInstance.GetHashCode());
+#endif
+            TimerEventManager.pTimerEventRef = null;
+            TimerEventManager.pInstance = null;
+        }
+
+
         //----------------------------------------------------------------------
         // Methods
         //----------------------------------------------------------------------

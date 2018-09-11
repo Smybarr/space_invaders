@@ -34,6 +34,16 @@ namespace SpaceInvaders
             this.name = Name.Blank;
             this.poAzulTexture = null;
         }
+        ~Texture()
+        {
+#if (TRACK_DESTRUCTOR)
+            Debug.WriteLine("~Texture():{0} ", this.GetHashCode());
+#endif
+            this.name = Texture.Name.Blank;
+            this.poAzulTexture = null;
+        }
+
+
         public void Set(Name textureName, string pTextureName)
         {
             this.name = textureName;
@@ -62,6 +72,8 @@ namespace SpaceInvaders
         public void DumpNodeData()
         {
             // we are using HASH code as its unique identifier 
+            //this.MLinkDump();
+
             Debug.WriteLine("Texture: {0}, hashcode: ({1})", this.name, this.GetHashCode());
             if (this.pMNext == null)
             {
@@ -130,7 +142,7 @@ namespace SpaceInvaders
         // Data: unique data for this manager here
         //----------------------------------------------------------------------
 
-        private static Texture pNodeRef = new Texture();
+        private static Texture pTextureRef = new Texture();
         //singleton reference ensures only one manager is created;
         private static TextureManager pInstance = null;
 
@@ -166,9 +178,6 @@ namespace SpaceInvaders
 
             Debug.WriteLine("------Texture Manager Initialized-------");
         }
-        //----------------------------------------------------------------------
-        // Unique Private helper methods
-        //----------------------------------------------------------------------
         private static TextureManager privGetInstance()
         {
             // Safety - this forces users to call Create() first before using class
@@ -177,9 +186,28 @@ namespace SpaceInvaders
             return pInstance;
         }
 
-        //----------------------------------------------------------------------
-        // 4 Wrapper methods: baseAdd, baseFind, baseRemove, baseDump
-        //----------------------------------------------------------------------
+        ~TextureManager()
+        {
+#if (TRACK_DESTRUCTOR)
+            Debug.WriteLine("~TextureMan():{0} ", this.GetHashCode());
+#endif
+            TextureManager.pTextureRef = null;
+            TextureManager.pInstance = null;
+        }
+        public static void Destroy()
+        {
+            // Get the instance
+            TextureManager pMan = TextureManager.privGetInstance();
+            Debug.WriteLine("--->TextureMan.Destroy()");
+            pMan.baseDestroy();
+#if (TRACK_DESTRUCTOR)
+            Debug.WriteLine("     {0} ({1})", TextureMan.pTextureRef, TextureMan.pTextureRef.GetHashCode());
+            Debug.WriteLine("     {0} ({1})", TextureMan.pInstance, TextureMan.pInstance.GetHashCode());
+#endif
+            TextureManager.pTextureRef = null;
+            TextureManager.pInstance = null;
+        }
+
 
         public static Texture Add(Texture.Name textureName, string pTextureName)
         {
@@ -206,13 +234,13 @@ namespace SpaceInvaders
             // So:  Use a reference node
             //      fill in the needed data
             //      use in the Compare() function
-            Debug.Assert(pNodeRef != null);
-            pNodeRef.WashNodeData();
+            Debug.Assert(pTextureRef != null);
+            pTextureRef.WashNodeData();
 
             //find the node by name
-            pNodeRef.SetName(textureName);
+            pTextureRef.SetName(textureName);
 
-            Texture pData = (Texture) pMan.baseFindNode(pNodeRef);
+            Texture pData = (Texture) pMan.baseFindNode(pTextureRef);
 
             return pData;
         }

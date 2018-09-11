@@ -22,6 +22,13 @@ namespace SpaceInvaders
         {
             this.pSpriteBase = null;
         }
+        ~SBNode()
+        {
+#if (TRACK_DESTRUCTOR)
+            Debug.WriteLine("~SBNode():{0} ", this.GetHashCode());
+#endif
+            this.pSpriteBase = null;
+        }
 
         public void Set(GameSprite.Name targetSpriteName, Boolean render = true)
         {
@@ -36,9 +43,33 @@ namespace SpaceInvaders
             this.pSpriteBase = BoxSpriteManager.Find(targetBoxName);
             Debug.Assert(this.pSpriteBase != null);
         }
+        public void Set(ProxySprite pNode)
+        {
+            // associate it
+            Debug.Assert(pNode != null);
+            this.pSpriteBase = pNode;
+            Debug.Assert(this.pSpriteBase != null);
+        }
+
         public void WashNodeData()
         {
             this.pSpriteBase = null;
+        }
+
+        public void Dump()
+        {
+            Debug.WriteLine("SBNode: ({0})", this.GetHashCode());
+            this.MLinkDump();
+
+            // Data:
+            if (this.pSpriteBase != null)
+            {
+                Debug.WriteLine("      pSpriteBase: {0} ({1})", this.pSpriteBase.GetSpriteName(), this.pSpriteBase.GetHashCode());
+            }
+            else
+            {
+                Debug.WriteLine("      pSpriteBase: null ");
+            }
         }
 
     }
@@ -80,6 +111,7 @@ namespace SpaceInvaders
 
         //UNIQUE NODE DATA---------------------
         private static SBNode pSBNodeRef = new SBNode();
+        //name reference to parent sprite batch;
         private SpriteBatch.Name spriteBatchName;
 
         //----------------------------------------------------------------------
@@ -92,6 +124,33 @@ namespace SpaceInvaders
 
 
         }
+
+        ~SBNodeManager()
+        {
+#if (TRACK_DESTRUCTOR)
+            Debug.WriteLine("~SBNodeMan():{0} ", this.GetHashCode());
+#endif
+            SBNodeManager.pSBNodeRef = null;
+            this.spriteBatchName = SpriteBatch.Name.Blank;
+        }
+
+        public void Destroy()
+        {
+            // Get the instance
+            Debug.WriteLine("      SBNodeManager.Destroy()");
+            this.baseDestroy();
+
+#if (TRACK_DESTRUCTOR)
+            if (SBNodeMan.pSBNodeRef != null)
+            {
+                Debug.WriteLine("     {0} ({1})", SBNodeMan.pSBNodeRef, SBNodeMan.pSBNodeRef.GetHashCode());
+            }
+#endif
+            SBNodeManager.pSBNodeRef = null;
+
+        }
+
+
 
         public void Wash()
         {
@@ -107,6 +166,8 @@ namespace SpaceInvaders
 
             this.baseSetReserve(reserveNum, reserveGrow);
         }
+
+
         public SBNode GetActive()
         {
             return (SBNode)this.baseGetActive();
@@ -138,12 +199,28 @@ namespace SpaceInvaders
             return pSpriteBatchNode;
         }
 
+        public SBNode Add(ProxySprite pNode)
+        {
+            // Go to Man, get a node from reserve, add to active, return it
+            SBNode pSBNode = (SBNode)this.baseAddToFront();
+            Debug.Assert(pSBNode != null);
+
+            // Initialize SpriteBatchNode
+            pSBNode.Set(pNode);
+
+            return pSBNode;
+        }
         public void Remove(SBNode pNode)
         {
             Debug.Assert(pNode != null);
             this.baseRemoveNode(pNode);
         }
 
+        public void DumpSBNodeData()
+        {
+            Debug.WriteLine("      ------ (SBNodeMan) ------");
+            this.baseDumpAll();
+        }
         //----------------------------------------------------------------------
         // Override Abstract methods
         //----------------------------------------------------------------------
@@ -181,7 +258,7 @@ namespace SpaceInvaders
         {
             Debug.Assert(pLink != null);
             SBNode pNode = (SBNode) pLink;
-            //pNode.DumpNodeData();
+            pNode.Dump();
         }
         protected override void derivedWashNode(MLink pLink)
         {

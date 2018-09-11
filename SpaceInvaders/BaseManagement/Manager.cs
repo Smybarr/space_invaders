@@ -80,7 +80,57 @@ namespace SpaceInvaders
                 this.privFillReservedPool(reserveNum - this.mNumReserve);
             }
         }
+        ~Manager()
+        {
+#if(TRACK_DESTRUCTOR)
+            Debug.WriteLine("      ~Manager():{0}", this.GetHashCode());
+#endif
+            this.pActive = null;
+            this.pReserve = null;
+        }
 
+        protected void baseDestroy()
+        {
+            // search for the name
+            MLink pNode;
+            MLink pTmpNode;
+
+            // Active List
+            pNode = this.pActive;
+            while (pNode != null)
+            {
+                // walking through the list
+                pTmpNode = pNode;
+                pNode = pNode.pMNext;
+
+                // node to cleanup
+                Debug.Assert(pTmpNode != null);
+                this.derivedDestroyNode(pTmpNode);
+                MLink.RemoveNode(ref this.pActive, pTmpNode);
+                pTmpNode = null;
+
+                this.mNumActive--;
+                this.mTotalNodeCount--;
+            }
+
+            // Reserve List
+            pNode = this.pReserve;
+            while (pNode != null)
+            {
+                // walking through the list
+                pTmpNode = pNode;
+                pNode = pNode.pMNext;
+
+                // node to cleanup
+                Debug.Assert(pTmpNode != null);
+                this.derivedDestroyNode(pTmpNode);
+                MLink.RemoveNode(ref this.pReserve, pTmpNode);
+                pTmpNode = null;
+
+                this.mNumReserve--;
+                this.mTotalNodeCount--;
+            }
+        }
         public MLink baseGetActive()
         {
             return this.pActive;
@@ -258,5 +308,10 @@ namespace SpaceInvaders
         abstract protected void derivedDumpNode(MLink pLink);
         abstract protected void derivedWashNode(MLink pLink);
 
+
+        virtual protected void derivedDestroyNode(MLink pLink)
+        {
+            // default: do nothing
+        }
     }
 }

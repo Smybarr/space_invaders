@@ -4,6 +4,7 @@ using System.Diagnostics;
 
 namespace SpaceInvaders
 {
+    //MLink as in 'ManagerLink' - filename still DLink to denote Double Link List structure;
     public abstract class MLink
     {
         public MLink pMNext;
@@ -13,6 +14,16 @@ namespace SpaceInvaders
         {
             this.ClearNodeLinks();
         }
+        ~MLink()
+        {
+#if(TRACK_DESTRUCTOR)
+            Debug.WriteLine("      ~MLink():{0}", this.GetHashCode());
+#endif
+            this.pMNext = null;
+            this.pMPrev = null;
+        }
+
+
         public void ClearNodeLinks()
         {
             this.pMNext = null;
@@ -92,14 +103,6 @@ namespace SpaceInvaders
             }
 
         }
-
-        //virtual functions are inherited and redefined by child classes
-        //allows specific functionality unique to context of child class
-        virtual protected float derivedCompareValue()
-        {
-            Debug.Assert(false);
-            return 0.0f;
-        }
         public static MLink PullFromFront(ref MLink pHead)
         {
             // There should always be something on list
@@ -146,6 +149,38 @@ namespace SpaceInvaders
             //Debug.WriteLine("DLink.Remove Node called");
 
         }
+
+
+        protected void MLinkDump()
+        {
+            // we are using HASH code as its unique identifier 
+            if (this.pMNext == null)
+            {
+                Debug.WriteLine("      next: null");
+            }
+            else
+            {
+                Debug.WriteLine("      next: ({0})", this.pMNext.GetHashCode());
+            }
+
+            if (this.pMPrev == null)
+            {
+                Debug.WriteLine("      prev: null");
+            }
+            else
+            {
+                Debug.WriteLine("      prev: ({0})", this.pMPrev.GetHashCode());
+            }
+        }
+
+        //virtual functions are inherited and redefined by child classes
+        //allows specific functionality unique to context of child class
+        virtual protected float derivedCompareValue()
+        {
+            Debug.Assert(false);
+            return 0.0f;
+        }
+
 
     }
 }

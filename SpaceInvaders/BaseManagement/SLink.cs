@@ -10,6 +10,14 @@ namespace SpaceInvaders
         {
             this.pSNext = null;
         }
+        ~SLink()
+        {
+#if(TRACK_DESTRUCTOR)
+            Debug.WriteLine("      ~SLink():{0}", this.GetHashCode());
+#endif
+            this.pSNext = null;
+        }
+
 
         public static void AddToFront(ref SLink pHead, SLink pNode)
         {

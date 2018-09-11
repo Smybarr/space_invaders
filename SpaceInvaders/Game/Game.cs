@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using SpaceInvaders.DestructorManagement;
 
 namespace SpaceInvaders
 {
@@ -57,8 +58,31 @@ namespace SpaceInvaders
 
             SpriteBatchManager.Create();
 
+            ProxySpriteManager.Create(10, 1);
+
+
             TimerEventManager.Create();
 
+            DeathManager.Create(1, 1);
+
+            //load all new objects here and attach to death manager;
+
+            //SquidOpen initial subrect;
+            Azul.Rect imageSubRect = new Azul.Rect(548.0f, 18.0f, 248.0f, 135.0f);
+            DeathManager.Attach(imageSubRect);
+
+            //render dimensions/coordinates
+            float spriteWidth = 65.0f;
+            float spriteHeight = 35.0f;
+
+            float screenX = 300.0f;
+            float screenY = 400.0f;
+
+            float boxWidth = 33.0f;
+            float boxHeight = 33.0f;
+
+            Azul.Rect box_pos_size = new Azul.Rect(screenX, screenY, boxWidth, boxHeight);
+            DeathManager.Attach(box_pos_size);
             //-----------------------------------------------
             //textures
 
@@ -71,7 +95,7 @@ namespace SpaceInvaders
 
             //load images from texture sheets above. input = coordinates on tga sheets
             //SquidOpen
-            Azul.Rect imageSubRect = new Azul.Rect(548.0f, 18.0f, 248.0f, 135.0f);
+
             ImageManager.Add(Image.Name.SquidOpen, Texture.Name.GameSprites, imageSubRect.x, imageSubRect.y, imageSubRect.width, imageSubRect.height);
 
             //SquidClosed
@@ -85,18 +109,13 @@ namespace SpaceInvaders
             SpriteBatch pSB_Boxes = SpriteBatchManager.Add(SpriteBatch.Name.SpriteBoxes);
 
 
+
             //-----------------------------------------------
             //Create sprites/boxes
 
             //render dimensions/coordinates
-            float spriteWidth = 65.0f;
-            float spriteHeight = 35.0f;
 
-            float screenX = 300.0f;
-            float screenY = 400.0f;
 
-            float boxWidth = 33.0f;
-            float boxHeight = 33.0f;
 
             //this rect dictates where to render the sprites in the game window
             //Azul.Rect position_size = new Azul.Rect(screenX, screenY, spriteWidth, spriteHeight);
@@ -114,7 +133,7 @@ namespace SpaceInvaders
 
             //----------------------
             //alien box
-            Azul.Rect box_pos_size = new Azul.Rect(screenX, screenY, boxWidth, boxHeight);
+           
             BoxSpriteManager.Add(BoxSprite.Name.AlienBox, box_pos_size);
 
             //Attach to Sprite Batch
@@ -126,13 +145,36 @@ namespace SpaceInvaders
 
             // Create an animation sprite
             AnimationSprite pAnimSprite = new AnimationSprite(GameSprite.Name.Squid);
+            //attach to death manager for garbage collection override
+            DeathManager.Attach(pAnimSprite);
 
-            // attach several images to cycle
+
+            // attach alternating images to animation cycle
             pAnimSprite.Attach(Image.Name.SquidOpen);
             pAnimSprite.Attach(Image.Name.SquidClosed);
 
             // add AnimationSprite to timer
             TimerEventManager.Add(TimerEvent.Name.SpriteAnimation, pAnimSprite, 1.0f);
+
+
+
+
+            // create 10 proxies of the squid sprite
+            //note that squid and the timer animation are independent
+            for (int i = 0; i < 10; i++)
+            {
+                ProxySprite pProxy = ProxySpriteManager.Add(GameSprite.Name.Squid);
+                pProxy.x = 50.0f + 40.0f * i;
+                pProxy.y = 700.0f;
+                pSB_Aliens.Attach(pProxy);
+            }
+
+
+
+
+
+
+
 
 
             Debug.WriteLine("\n\nLoad Content Complete\n----------------------------------\n");
@@ -197,7 +239,18 @@ namespace SpaceInvaders
         //-----------------------------------------------------------------------------
         public override void UnLoadContent()
         {
+            TextureManager.Destroy();
+            ImageManager.Destroy();
 
+            GameSpriteManager.Destroy();
+            BoxSpriteManager.Destroy();
+
+            SpriteBatchManager.Destroy();
+
+            ProxySpriteManager.Destroy();
+
+            TimerEventManager.Destroy();
+            DeathManager.Destroy();
         }
 
     }

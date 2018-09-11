@@ -56,6 +56,13 @@ namespace SpaceInvaders
         // Dynamic Sprite Data: -------------------------------------------
         private Name name;
 
+        //pulled from sprite base due to proxy pattern;
+        public float x;
+        public float y;
+        public float sx;
+        public float sy;
+        public float angle;
+
         private Image pImage;
         private Azul.Color poColor;
         private Azul.Rect poScreenRect;
@@ -92,6 +99,21 @@ namespace SpaceInvaders
             this.angle = poAzulSprite.angle;
 
         }
+        ~GameSprite()
+        {
+#if (TRACK_DESTRUCTOR)
+            Debug.WriteLine("~GameSprite():{0} ", this.GetHashCode());
+#endif
+            this.name = Name.Blank;
+            this.pImage = null;
+            this.poColor = null;
+            this.poScreenRect = null;
+            this.poAzulSprite = null;
+
+            GameSprite.pPrivScreenRect = null;
+            GameSprite.defaultSpriteColor_White = null;
+        }
+
         public void Set(Name spriteName, Image pImage, Azul.Rect pScreenRect, Azul.Color pColor)
         {
             //set the name
@@ -129,7 +151,6 @@ namespace SpaceInvaders
             this.sy = poAzulSprite.sy;
             this.angle = poAzulSprite.angle;
         }
-
         public void Set(GameSprite.Name name, Image pImage, float x, float y, float width, float height)
         {
             Debug.Assert(pImage != null);
@@ -160,6 +181,7 @@ namespace SpaceInvaders
         {
             this.name = inName;
         }
+
         public void WashNodeData()
         {
             //wash name and data;      
@@ -191,6 +213,8 @@ namespace SpaceInvaders
         }
         public void DumpNodeData()
         {
+            //this.MLinkDump();
+
             // we are using HASH code as its unique identifier 
             Debug.WriteLine("Sprite: {0}, hashcode: ({1})", this.name, this.GetHashCode());
             if (this.pMNext == null)
@@ -255,7 +279,10 @@ namespace SpaceInvaders
             this.poAzulSprite.SwapColor(this.poColor);
         }
 
-
+        public override Enum GetSpriteName()
+        {
+            return this.name;
+        }
         public override void Update()
         {
             this.poAzulSprite.x = this.x;
@@ -307,7 +334,7 @@ namespace SpaceInvaders
         //----------------------------------------------------------------------
         
         //TODO Remove New Call
-        private static GameSprite pNodeRef = new GameSprite();
+        private static GameSprite pSpriteRef = new GameSprite();
         //singleton reference ensures only one manager is created;
         private static GameSpriteManager pInstance = null;
 
@@ -349,6 +376,28 @@ namespace SpaceInvaders
             return pInstance;
         }
 
+        ~GameSpriteManager()
+        {
+#if (TRACK_DESTRUCTOR)
+            Debug.WriteLine("~GameSpriteMan():{0} ", this.GetHashCode());
+#endif
+            GameSpriteManager.pSpriteRef = null;
+            GameSpriteManager.pInstance = null;
+        }
+        public static void Destroy()
+        {
+            // Get the instance
+            GameSpriteManager pMan = GameSpriteManager.privGetInstance();
+            Debug.WriteLine("--->GameSpriteMan.Destroy()");
+            pMan.baseDestroy();
+
+#if (TRACK_DESTRUCTOR)
+            Debug.WriteLine("     {0} ({1})", GameSpriteMan.pSpriteRef, GameSpriteMan.pSpriteRef.GetHashCode());
+            Debug.WriteLine("     {0} ({1})", GameSpriteMan.pInstance, GameSpriteMan.pInstance.GetHashCode());
+#endif
+            GameSpriteManager.pSpriteRef = null;
+            GameSpriteManager.pInstance = null;
+        }
 
         //----------------------------------------------------------------------
         // 4 Wrapper methods: baseAdd, baseFind, baseRemove, baseDump
@@ -395,13 +444,13 @@ namespace SpaceInvaders
             //      fill in the needed data
             //      use in the Compare() function
 
-            Debug.Assert(pNodeRef != null);
-            pNodeRef.WashNodeData();
+            Debug.Assert(pSpriteRef != null);
+            pSpriteRef.WashNodeData();
 
             //find the node by name
-            pNodeRef.SetName(name);
+            pSpriteRef.SetName(name);
 
-            GameSprite pData = (GameSprite) pMan.baseFindNode(pNodeRef);
+            GameSprite pData = (GameSprite) pMan.baseFindNode(pSpriteRef);
 
             return pData;
         }

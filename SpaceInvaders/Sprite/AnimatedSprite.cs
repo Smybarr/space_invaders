@@ -23,6 +23,33 @@ namespace SpaceInvaders
             // list
             this.poFirstImage = null;
         }
+        ~AnimationSprite()
+        {
+#if (TRACK_DESTRUCTOR)
+            Debug.WriteLine("~AnimationSprite():{0} ", this.GetHashCode());
+#endif
+
+            ImageHolder pNode = (ImageHolder)this.poFirstImage;
+            while (pNode != null)
+            {
+                ImageHolder pNodeToKill = pNode;
+
+                // squirrel away
+                pNode = (ImageHolder)pNode.pSNext;
+
+#if (TRACK_DESTRUCTOR)
+                Debug.WriteLine("~AnimationSprite():  --->{0} ", pNodeToKill.GetHashCode());
+#endif
+                // kill the image inside the holder
+                pNodeToKill.pSNext = null;
+                pNodeToKill = null;
+            }
+
+            this.pSprite = null;
+            this.pCurrImage = null;
+            this.poFirstImage = null;
+        }
+
 
         public void Attach(Image.Name imageName)
         {

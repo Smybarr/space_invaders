@@ -39,6 +39,14 @@ namespace SpaceInvaders
 
         // Data: -------------------------------------------
         private Name name;
+
+        //pulled from sprite base due to proxy pattern;
+        public float x;
+        public float y;
+        public float sx;
+        public float sy;
+        public float angle;
+
         private Azul.Color poLineColor;
         private Azul.Rect poScreenRect;
         private Azul.SpriteBox poAzulSpriteBox;
@@ -71,7 +79,19 @@ namespace SpaceInvaders
             this.angle = poAzulSpriteBox.angle;
 
         }
+        ~BoxSprite()
+        {
+#if (TRACK_DESTRUCTOR)
+            Debug.WriteLine("~BoxSprite():{0} ", this.GetHashCode());
+#endif
+            this.name = Name.Blank;
+            this.poLineColor = null;
+            this.poScreenRect = null;
+            this.poAzulSpriteBox = null;
 
+            BoxSprite.pPrivScreenRect = null;
+            BoxSprite.defaultBoxColor_Red = null;
+        }
         public void WashNodeData()
         {
             //wash name and data;
@@ -181,6 +201,8 @@ namespace SpaceInvaders
 
         public void DumpNodeData()
         {
+            this.MLinkDump();
+
             // we are using HASH code as its unique identifier 
             Debug.WriteLine("SpriteBox: {0}, hashcode: ({1})", this.name, this.GetHashCode());
             if (this.pMNext == null)
@@ -207,6 +229,11 @@ namespace SpaceInvaders
             
         }
 
+
+        public override Enum GetSpriteName()
+        {
+            return this.name;
+        }
         public override void Update()
         {
             this.poAzulSpriteBox.x = this.x;
@@ -260,7 +287,7 @@ namespace SpaceInvaders
          *
          */
 
-        private static BoxSprite pNodeRef = new BoxSprite();
+        private static BoxSprite pBoxSpriteRef = new BoxSprite();
         private static BoxSpriteManager pInstance = null;
 
         private BoxSpriteManager(int startReserveSize = 3, int refillSize = 1)
@@ -295,6 +322,31 @@ namespace SpaceInvaders
 
             return pInstance;
         }
+
+
+        ~BoxSpriteManager()
+        {
+#if (TRACK_DESTRUCTOR)
+            Debug.WriteLine("~BoxSpriteMan():{0} ", this.GetHashCode());
+#endif
+            BoxSpriteManager.pBoxSpriteRef = null;
+            BoxSpriteManager.pInstance = null;
+        }
+        public static void Destroy()
+        {
+            // Get the instance
+            BoxSpriteManager pMan = BoxSpriteManager.privGetInstance();
+            Debug.WriteLine("--->BoxSpriteMan.Destroy()");
+            pMan.baseDestroy();
+
+#if (TRACK_DESTRUCTOR)
+            Debug.WriteLine("     {0} ({1})", BoxSpriteMan.pBoxSpriteRef, BoxSpriteMan.pBoxSpriteRef.GetHashCode());
+            Debug.WriteLine("     {0} ({1})", BoxSpriteMan.pInstance, BoxSpriteMan.pInstance.GetHashCode());
+#endif
+            BoxSpriteManager.pBoxSpriteRef = null;
+            BoxSpriteManager.pInstance = null;
+        }
+
 
         //----------------------------------------------------------------------
         // 4 Wrapper methods: baseAdd, baseFind, baseRemove, baseDump
@@ -337,13 +389,13 @@ namespace SpaceInvaders
             // So:  Use a reference node
             //      fill in the needed data
             //      use in the Compare() function
-            Debug.Assert(pNodeRef != null);
-            pNodeRef.WashNodeData();
+            Debug.Assert(pBoxSpriteRef != null);
+            pBoxSpriteRef.WashNodeData();
 
             //find the node by name
-            pNodeRef.SetName(name);
+            pBoxSpriteRef.SetName(name);
 
-            BoxSprite pData = (BoxSprite) pMan.baseFindNode(pNodeRef);
+            BoxSprite pData = (BoxSprite) pMan.baseFindNode(pBoxSpriteRef);
 
             return pData;
         }
