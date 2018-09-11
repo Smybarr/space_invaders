@@ -6,7 +6,7 @@ namespace SpaceInvaders
     public abstract class Manager
     {
         //heads of active/reserve lists
-        protected MLink pActive;
+        private MLink pActive;
         private MLink pReserve;
         //node counts
         private int mNumActive;
@@ -14,12 +14,13 @@ namespace SpaceInvaders
         private int mTotalNodeCount;
         //refill by this much when reserve pool is empty (delta grow)
         private int mRefillSize;
-        //other paramers;
+        //other parameters;
         private int mStartNumReserve;
         private int mActiveHighCount;
 
         protected Manager(int initialReserveSize = 3, int refillReserveSize = 1)
         {
+            //safety first
             Debug.Assert(initialReserveSize > 0);
             Debug.Assert(refillReserveSize > 0);
 
@@ -68,7 +69,41 @@ namespace SpaceInvaders
                 MLink.AddToFront(ref this.pReserve, pNode);
             }
         }
+        protected void baseSetReserve(int reserveNum, int reserveGrow)
+        {
+            this.mRefillSize = reserveGrow;
 
+            if (reserveNum > this.mNumReserve)
+            {
+                // Preload the reserve
+                //TODO Test baseSetReserve Condition to Call FillReservePool
+                this.privFillReservedPool(reserveNum - this.mNumReserve);
+            }
+        }
+
+        public MLink baseGetActive()
+        {
+            return this.pActive;
+        }
+        protected MLink basePopReserve()
+        {
+            // Are there any nodes on the Reserve list?
+            if (this.pReserve == null)
+            {
+                // refill the reserve list by the DeltaGrow
+                this.privFillReservedPool(this.mRefillSize);
+            }
+
+            // Always take from the reserve list
+            MLink pNode = MLink.PullFromFront(ref this.pReserve);
+            Debug.Assert(pNode != null);
+
+            // Update stats
+            this.mNumReserve--;
+
+            // YES - here's your new one (may its reused from reserved)
+            return pNode;
+        }
         protected MLink baseAddToFront()
         {
             // Are there any nodes on the Reserve list?
@@ -99,6 +134,24 @@ namespace SpaceInvaders
             // YES - here's your new one (may its reused from reserved)
             return pNode;
 
+        }
+        protected MLink baseAddSorted(MLink pNode)
+        {
+            // Insert a node in sorted order
+            Debug.Assert(pNode != null);
+
+            // Update stats
+            this.mNumActive++;
+            if (this.mNumActive > this.mActiveHighCount)
+            {
+                this.mActiveHighCount = this.mNumActive;
+            }
+
+            // copy to active
+            MLink.AddSorted(ref this.pActive, pNode);
+
+            // YES - here's your new one (may its reused from reserved)
+            return pNode;
         }
         protected MLink baseFindNode(MLink pNodeRef)
         {
@@ -131,9 +184,6 @@ namespace SpaceInvaders
 
             // wash node before returning to reserve list
             this.derivedWashNode(targetNode);
-            Debug.Assert(targetNode.pMNext == null);
-            Debug.Assert(targetNode.pMPrev == null);
-
 
             // add pulled node to the reserve list
             MLink.AddToFront(ref this.pReserve, targetNode);
@@ -153,7 +203,7 @@ namespace SpaceInvaders
         protected void debugPrintManagerStats()
         {
             Debug.WriteLine("");
-            Debug.WriteLine("-------- Stats: -------------");
+            Debug.WriteLine("-------- Manager Stats: -------------");
             Debug.WriteLine("Total Num Nodes:       {0}", this.mTotalNodeCount);
             Debug.WriteLine("Num Active:            {0}", this.mNumActive);
             Debug.WriteLine("Num Reserved:          {0}", this.mNumReserve);
@@ -165,7 +215,7 @@ namespace SpaceInvaders
         protected void debugPrintLists()
         {
             Debug.WriteLine("");
-            Debug.WriteLine("------ Active List: ---------------------------\n");
+            Debug.WriteLine("------ Manager Active List: ---------------------------\n");
 
             //print starting with active head;
             MLink pNode = this.pActive;
@@ -179,7 +229,7 @@ namespace SpaceInvaders
                 pNode = pNode.pMNext;
             }
             Debug.WriteLine("");
-            Debug.WriteLine("------ END OF ACTIVE LIST: ---------------------------\n");
+            Debug.WriteLine("------ END OF MANAGER ACTIVE LIST: ------------------\n");
 
 
             Debug.WriteLine("");
@@ -196,7 +246,7 @@ namespace SpaceInvaders
             }
 
             Debug.WriteLine("");
-            Debug.WriteLine("------ END OF RESERVE LIST: ---------------------------\n");
+            Debug.WriteLine("------ END OF MANAGER RESERVE LIST-----------------------\n");
         }
 
         //----------------------------------------------------------------------

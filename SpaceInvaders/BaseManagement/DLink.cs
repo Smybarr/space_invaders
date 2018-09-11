@@ -50,6 +50,56 @@ namespace SpaceInvaders
 
             Debug.Assert(pHead != null);
         }
+        public static void AddSorted(ref MLink pHead, MLink pNode)
+        {
+            // nothing on list, first node insert on list
+            if (pHead == null)
+            {
+                pNode.pMNext = null;
+                pNode.pMPrev = null;
+                pHead = pNode;
+            }
+            else
+            {  // active list, now insert it
+
+                // insert at front of list if less or equal
+                if (pHead.derivedCompareValue() > pNode.derivedCompareValue())
+                {
+                    pNode.pMNext = pHead;
+                    pNode.pMPrev = null;
+                    pHead.pMPrev = pNode;
+                    pHead = pNode;
+                }
+                else
+                {
+                    /* Locate the node before the point of insertion */
+                    // insert after pCurrent
+                    MLink pCurrent = pHead;
+                    while (pCurrent.pMNext != null)
+                    {
+                        if (pCurrent.pMNext.derivedCompareValue() > pNode.derivedCompareValue())
+                        {
+                            break;
+                        }
+                        pCurrent = pCurrent.pMNext;
+                    }
+
+                    pNode.pMNext = pCurrent.pMNext;
+                    pNode.pMPrev = pCurrent;
+                    pCurrent.pMNext = pNode;
+                }
+
+            }
+
+        }
+
+        //virtual functions are inherited and redefined by child classes
+        //allows specific functionality unique to context of child class
+        virtual protected float derivedCompareValue()
+        {
+            Debug.Assert(false);
+            return 0.0f;
+        }
         public static MLink PullFromFront(ref MLink pHead)
         {
             // There should always be something on list

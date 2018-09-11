@@ -7,7 +7,7 @@ namespace SpaceInvaders
     public abstract class Container : MLink
     {
         //heads of active/reserve lists
-        public CLink pActive;
+        private CLink pActive;
         private CLink pReserve;
         //node counts
         private int mNumActive;
@@ -15,23 +15,42 @@ namespace SpaceInvaders
         private int mTotalNodeCount;
         //refill by this much when reserve pool is empty (delta grow)
         private int mRefillSize;
+        //other parameters;
+        private int mStartNumReserve;
+        private int mActiveHighCount;
 
 
         protected Container(int initialReserveSize = 3, int refillReserveSize = 1)
         {
-            // Check now or pay later
-            Debug.Assert(initialReserveSize >= 0);
+            //safety first
+            Debug.Assert(initialReserveSize > 0);
             Debug.Assert(refillReserveSize > 0);
 
+            this.mStartNumReserve = initialReserveSize;
+            //set the refill rate of reserve pool
             this.mRefillSize = refillReserveSize;
-            this.mNumReserve = 0;
+
+            //everything else starts as 0/null,
+            //data will get fixed when pool is created below;
             this.mNumActive = 0;
+            this.mNumReserve = 0;
             this.mTotalNodeCount = 0;
+
+            this.mActiveHighCount = 0;
+
             this.pActive = null;
             this.pReserve = null;
 
-            // Preload the reserve
+            //fill the reserve pool
+            //relevent stats updated in this method
             this.privFillReservedPool(initialReserveSize);
+
+            //double check relevant reserve stats;
+            Debug.Assert(this.mTotalNodeCount > 0);
+            Debug.Assert(this.mNumReserve == initialReserveSize);
+            Debug.Assert(this.pReserve != null);
+            //check for proper linkage - headNode.pPrev = null;
+            Debug.Assert(this.pReserve.pCPrev == null);
         }
         private void privFillReservedPool(int count)
         {
@@ -50,8 +69,6 @@ namespace SpaceInvaders
                 CLink.AddToFront(ref this.pReserve, pNode);
             }
         }
-
-        //Unique to Container
         protected void baseSetReserve(int reserveNum, int reserveGrow)
         {
             this.mRefillSize = reserveGrow;
@@ -63,6 +80,11 @@ namespace SpaceInvaders
             }
         }
 
+        public CLink baseGetActive()
+        {
+            return this.pActive;
+        }
+        
         //same as Manager
         protected CLink baseAddToFront()
         {
@@ -79,6 +101,11 @@ namespace SpaceInvaders
 
             // Update stats
             this.mNumActive++;
+            //update active high count if needed;
+            if (this.mNumActive > this.mActiveHighCount)
+            {
+                this.mActiveHighCount = this.mNumActive;
+            }
             this.mNumReserve--;
 
             // copy to active
@@ -131,30 +158,36 @@ namespace SpaceInvaders
         protected void debugPrintManagerStats()
         {
             Debug.WriteLine("");
-            Debug.WriteLine("-------- Stats: -------------");
-            Debug.WriteLine("  Total Num Nodes: {0}", this.mTotalNodeCount);
-            Debug.WriteLine("       Num Active: {0}", this.mNumActive);
-            Debug.WriteLine("     Num Reserved: {0}", this.mNumReserve);
-            Debug.WriteLine("       Delta Grow: {0}", this.mRefillSize);
+            Debug.WriteLine("-------- Container Stats: -------------");
+            Debug.WriteLine("Total Num Nodes:       {0}", this.mTotalNodeCount);
+            Debug.WriteLine("Num Active:            {0}", this.mNumActive);
+            Debug.WriteLine("Num Reserved:          {0}", this.mNumReserve);
+            Debug.WriteLine("Refill ReserveList By: {0}", this.mRefillSize);
+            Debug.WriteLine("Initial Reserved:      {0}", this.mStartNumReserve);
+            Debug.WriteLine("Active High Count:     {0}", this.mActiveHighCount);
+            Debug.WriteLine("------------------------------\n");
         }
         protected void debugPrintLists()
         {
             Debug.WriteLine("");
-            Debug.WriteLine("------ Active List: ---------------------------\n");
+            Debug.WriteLine("------ Container Active List: ---------------------------\n");
 
             CLink pNode = this.pActive;
 
             int i = 0;
             while (pNode != null)
             {
-                Debug.WriteLine("{0}: -------------", i);
+                Debug.WriteLine("active index {0}: -------------", i);
                 this.derivedDumpNode(pNode);
                 i++;
                 pNode = pNode.pCNext;
             }
+            Debug.WriteLine("");
+            Debug.WriteLine("------ END OF CONTAINER ACTIVE LIST: ------------------\n");
+
 
             Debug.WriteLine("");
-            Debug.WriteLine("------ Reserve List: ---------------------------\n");
+            Debug.WriteLine("------ Container Reserve List: ---------------------------\n");
 
             pNode = this.pReserve;
             i = 0;
@@ -165,6 +198,9 @@ namespace SpaceInvaders
                 i++;
                 pNode = pNode.pCNext;
             }
+
+            Debug.WriteLine("");
+            Debug.WriteLine("------ END OF CONTAINER RESERVE LIST---------------------------\n");
         }
 
         //----------------------------------------------------------------------

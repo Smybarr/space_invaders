@@ -55,7 +55,7 @@ namespace SpaceInvaders
             Blank
         }
 
-        public Name name;
+        private Name name;
         private Azul.Rect poRect;
         public Texture pTexture;
 
@@ -119,7 +119,7 @@ namespace SpaceInvaders
             }
             else
             {
-                Debug.WriteLine("   Texture: {0}", this.pTexture.name);
+                Debug.WriteLine("   Texture: {0}", this.pTexture.GetName());
             }
             
             Debug.WriteLine("");
@@ -130,10 +130,19 @@ namespace SpaceInvaders
         {
             return this.pTexture.GetAzulTexture();
         }
-        public Rect GetAzulRect()
+        public Azul.Rect GetAzulRect()
         {
             Debug.Assert(this.poRect != null);
             return this.poRect;
+        }
+
+        public Image.Name GetName()
+        {
+            return this.name;
+        }
+        public void SetName(Image.Name inName)
+        {
+            this.name = inName;
         }
     }
 
@@ -257,7 +266,7 @@ namespace SpaceInvaders
             pNodeRef.WashNodeData();
 
             //find the node by name
-            pNodeRef.name = name;
+            pNodeRef.SetName(name);
 
             Image pData = (Image) pMan.baseFindNode(pNodeRef);
 
@@ -298,7 +307,7 @@ namespace SpaceInvaders
 
             Boolean status = false;
 
-            if (pDataA.name == pDataB.name)
+            if (pDataA.GetName() == pDataB.GetName())
             {
                 status = true;
             }

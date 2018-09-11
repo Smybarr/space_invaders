@@ -7,19 +7,26 @@ namespace SpaceInvaders
     public class TimerEventManager : Manager
     {
         //----------------------------------------------------------------------
+        // Data: unique data for this manager here
+        //----------------------------------------------------------------------
+        private static TimerEvent pTimerEventRef = new TimerEvent();
+        private static TimerEventManager pInstance = null;
+        protected float currTime;
+
+        //----------------------------------------------------------------------
         // Constructor
         //----------------------------------------------------------------------
-        private TimerEventManager(int reserveNum = 3, int reserveGrow = 1)
-            : base(reserveNum, reserveGrow)
+        private TimerEventManager(int startReserveSize = 3, int refillSize = 1)
+            : base(startReserveSize, refillSize)
         {
             // do nothing
             this.currTime = 0.0f;
         }
-        public static void Create(int reserveNum = 3, int reserveGrow = 1)
+        public static void Create(int startReserveSize = 3, int refillSize = 1)
         {
             // make sure values are ressonable 
-            Debug.Assert(reserveNum > 0);
-            Debug.Assert(reserveGrow > 0);
+            Debug.Assert(startReserveSize > 0);
+            Debug.Assert(refillSize > 0);
 
             // initialize the singleton here
             Debug.Assert(pInstance == null);
@@ -27,10 +34,17 @@ namespace SpaceInvaders
             // Do the initialization
             if (pInstance == null)
             {
-                pInstance = new TimerEventManager(reserveNum, reserveGrow);
+                pInstance = new TimerEventManager(startReserveSize, refillSize);
             }
         }
+        private static TimerEventManager privGetInstance()
+        {
+            // Safety - this forces users to call Create() first before using class
+            Debug.Assert(pInstance != null);
 
+            return pInstance;
+        }
+        
         //----------------------------------------------------------------------
         // Methods
         //----------------------------------------------------------------------
@@ -39,13 +53,19 @@ namespace SpaceInvaders
             TimerEventManager pMan = TimerEventManager.privGetInstance();
             Debug.Assert(pMan != null);
 
-            TimerEvent pNode = (TimerEvent)pMan.baseAddToFront();
+            //pull a resereved node
+            TimerEvent pNode = (TimerEvent)pMan.basePopReserve();
             Debug.Assert(pNode != null);
 
             Debug.Assert(pCommand != null);
             Debug.Assert(deltaTimeToTrigger >= 0.0f);
 
+            //set the data
             pNode.Set(timeName, pCommand, deltaTimeToTrigger);
+
+            //add the newly set timer event node to the list in sorted order
+            pMan.baseAddSorted(pNode);
+
             return pNode;
         }
         public static TimerEvent Find(TimerEvent.Name name)
@@ -59,7 +79,7 @@ namespace SpaceInvaders
             //      use in the Compare() function
             Debug.Assert(pTimerEventRef != null);
             pTimerEventRef.Wash();
-            pTimerEventRef.name = name;
+            pTimerEventRef.SetName(name);
 
             TimerEvent pData = (TimerEvent)pMan.baseFindNode(pTimerEventRef);
             return pData;
@@ -95,28 +115,33 @@ namespace SpaceInvaders
             // Get the instance
             TimerEventManager pTimerEventManager = TimerEventManager.privGetInstance();
 
-            // squirrel away
+            // store the current time
             pTimerEventManager.currTime = totalTime;
 
-            // walk the list
-            TimerEvent pEvent = (TimerEvent)pTimerEventManager.pActive;
+            // walk the event list
+            TimerEvent pEvent = (TimerEvent)pTimerEventManager.baseGetActive();
             TimerEvent nextEvent = null;
 
-            // Walk the list until there is no more list OR currTime is greater than TimerEvent 
-            // ToDo Fix: List needs to be sorted
-            while (pEvent != null && (pTimerEventManager.currTime >= pEvent.triggerTime))
+            // Walk the list until currTime is greater than timeEvent triggerTime
+            while (pEvent != null)
             {
-                // Difficult to walk a list and remove itself from the list
-                // so squirrel away the next event now, use it at bottom of while
+                // get the next event early in case this event executes and is removed
                 nextEvent = (TimerEvent)pEvent.pMNext;
 
                 if (pTimerEventManager.currTime >= pEvent.triggerTime)
                 {
-                    // call it
+                    Debug.WriteLine("{0} Event Triggered!", pEvent.GetName());
+                    Debug.WriteLine("Trigger Time:{0}", pTimerEventManager.currTime);
+                    // execute the event
                     pEvent.Process();
 
-                    // remove from list
+                    // remove event from list after execution
                     pTimerEventManager.baseRemoveNode(pEvent);
+                }
+                else
+                {
+                    // early out, since the list is sorted
+                    break;
                 }
 
                 // advance the pointer
@@ -145,7 +170,7 @@ namespace SpaceInvaders
 
             Boolean status = false;
 
-            if (pDataA.name == pDataB.name)
+            if (pDataA.GetName() == pDataB.GetName())
             {
                 status = true;
             }
@@ -168,19 +193,8 @@ namespace SpaceInvaders
         //----------------------------------------------------------------------
         // Private methods
         //----------------------------------------------------------------------
-        private static TimerEventManager privGetInstance()
-        {
-            // Safety - this forces users to call Create() first before using class
-            Debug.Assert(pInstance != null);
 
-            return pInstance;
-        }
 
-        //----------------------------------------------------------------------
-        // Data: unique data for this manager here
-        //----------------------------------------------------------------------
-        private static TimerEvent pTimerEventRef = new TimerEvent();
-        private static TimerEventManager pInstance = null;
-        protected float currTime;
+
     }
 }

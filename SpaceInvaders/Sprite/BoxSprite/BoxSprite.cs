@@ -16,10 +16,21 @@ namespace SpaceInvaders
 
         public enum Name
         {
-            Box,
+            TestBox,
 
+            AlienBox,
+            ColumBox,
+            GridBox,
+
+            WallBox,
+
+            HeroShipBox,
+
+            BombBox,
+    
             NullObject,
             Blank,
+
         }
 
         // Static Data: ------------------------------------
@@ -27,8 +38,8 @@ namespace SpaceInvaders
         private static Azul.Color defaultBoxColor_Red = new Azul.Color(1, 0, 0);
 
         // Data: -------------------------------------------
-        public Name name;
-        public Azul.Color poLineColor;
+        private Name name;
+        private Azul.Color poLineColor;
         private Azul.Rect poScreenRect;
         private Azul.SpriteBox poAzulSpriteBox;
 
@@ -144,7 +155,14 @@ namespace SpaceInvaders
             this.sy = poAzulSpriteBox.sy;
             this.angle = poAzulSpriteBox.angle;
         }
-
+        public BoxSprite.Name GetName()
+        {
+            return this.name;
+        }
+        public void SetName(Name inName)
+        {
+            this.name = inName;
+        }
         public void ChangeColor(Azul.Color _pColor)
         {
             Debug.Assert(_pColor != null);
@@ -323,7 +341,7 @@ namespace SpaceInvaders
             pNodeRef.WashNodeData();
 
             //find the node by name
-            pNodeRef.name = name;
+            pNodeRef.SetName(name);
 
             BoxSprite pData = (BoxSprite) pMan.baseFindNode(pNodeRef);
 
@@ -362,7 +380,7 @@ namespace SpaceInvaders
 
             Boolean status = false;
 
-            if (pDataA.name == pDataB.name)
+            if (pDataA.GetName() == pDataB.GetName())
             {
                 status = true;
             }

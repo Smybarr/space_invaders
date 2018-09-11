@@ -7,11 +7,16 @@ namespace SpaceInvaders
     {
         public enum Name
         {
-            Blank,
+            SpriteAnimation,
 
-            SpriteAnimation
-
+            Blank
         }
+
+        // Data: ---------------
+        private TimerEvent.Name name;
+        public Command pCommand;
+        public float triggerTime;
+        public float deltaTime;
 
         public TimerEvent()
             : base()
@@ -46,7 +51,14 @@ namespace SpaceInvaders
             // set the trigger time
             this.triggerTime = TimerEventManager.GetCurrTime() + deltaTimeToTrigger;
         }
-
+        public TimerEvent.Name GetName()
+        {
+            return this.name;
+        }
+        public void SetName(Name inName)
+        {
+            this.name = inName;
+        }
         public void Process()
         {
             // make sure the command is valid
@@ -65,8 +77,8 @@ namespace SpaceInvaders
             }
             else
             {
-                Image pTmp = (Image)this.pMNext;
-                Debug.WriteLine("      next: {0} ({1})", pTmp.name, pTmp.GetHashCode());
+                TimerEvent pTmp = (TimerEvent)this.pMNext;
+                Debug.WriteLine("      next: {0} ({1})", pTmp.GetName(), pTmp.GetHashCode());
             }
 
             if (this.pMPrev == null)
@@ -74,9 +86,10 @@ namespace SpaceInvaders
                 Debug.WriteLine("      prev: null");
             }
             else
+
             {
-                Image pTmp = (Image)this.pMPrev;
-                Debug.WriteLine("      prev: {0} ({1})", pTmp.name, pTmp.GetHashCode());
+                TimerEvent pTmp = (TimerEvent)this.pMPrev;
+                Debug.WriteLine("      prev: {0} ({1})", pTmp.GetName(), pTmp.GetHashCode());
             }
 
             // Data:
@@ -86,10 +99,11 @@ namespace SpaceInvaders
             Debug.WriteLine("   Delta Time: {0}", this.deltaTime);
 
         }
-        // Data: ---------------
-        public TimerEvent.Name name;
-        public Command pCommand;
-        public float triggerTime;
-        public float deltaTime;
+
+
+        override protected float derivedCompareValue()
+        {
+            return this.triggerTime;
+        }
     }
 }

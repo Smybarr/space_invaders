@@ -52,7 +52,7 @@ namespace SpaceInvaders
             TextureManager.Create();
             ImageManager.Create();
 
-            GameSpriteManager.Create();
+            GameSpriteManager.Create(5, 2);
             BoxSpriteManager.Create();
 
             SpriteBatchManager.Create();
@@ -63,7 +63,7 @@ namespace SpaceInvaders
             //textures
 
             //load texture sheets: images will be cut from these sheets
-            TextureManager.Add(Texture.Name.SpaceInvadersMono4, "SpaceInvadersMono4.tga");
+            //TextureManager.Add(Texture.Name.SpaceInvadersMono4, "SpaceInvadersMono4.tga");
             TextureManager.Add(Texture.Name.GameSprites, "SpaceInvaderSprites_14x14.tga");
 
             //-----------------------------------------------
@@ -71,51 +71,58 @@ namespace SpaceInvaders
 
             //load images from texture sheets above. input = coordinates on tga sheets
             //SquidOpen
-            Azul.Rect si = new Azul.Rect(548.0f, 18.0f, 248.0f, 135.0f);
+            Azul.Rect imageSubRect = new Azul.Rect(548.0f, 18.0f, 248.0f, 135.0f);
+            ImageManager.Add(Image.Name.SquidOpen, Texture.Name.GameSprites, imageSubRect.x, imageSubRect.y, imageSubRect.width, imageSubRect.height);
 
-            ImageManager.Add(Image.Name.SquidOpen, Texture.Name.GameSprites, si.x, si.y, si.width, si.height);
-            
             //SquidClosed
-            si.Set(548.0f, 170.0f, 248.0f, 135.0f);
-            ImageManager.Add(Image.Name.SquidClosed, Texture.Name.GameSprites, si.x, si.y, si.width, si.height);
+            imageSubRect.Set(548.0f, 170.0f, 248.0f, 135.0f);
+            ImageManager.Add(Image.Name.SquidClosed, Texture.Name.GameSprites, imageSubRect.x, imageSubRect.y, imageSubRect.width, imageSubRect.height);
+
 
             //-----------------------------------------------
-            //sprites
-            
-            float spriteWidth = 65.0f;
-            float spriteHeight = 35.0f;
-
-            //this rect dictates where to render the sprites in the game window
-            Azul.Rect position_size = new Azul.Rect(300.0f, 400.0f, spriteWidth, spriteHeight);
-            Azul.Rect box_pos_size = new Azul.Rect(300.0f, 400.0f, 33.0f, 33.0f);
-
-            //squidOpen
-            GameSpriteManager.Add(GameSprite.Name.Squid, Image.Name.SquidOpen, position_size);
-
-            //squidClosed
-            GameSpriteManager.Add(GameSprite.Name.Squid, Image.Name.SquidClosed, position_size);
-
-            //-----------------------------------------------
-            //sprite box
-            BoxSpriteManager.Add(BoxSprite.Name.Box, box_pos_size);
-
-            //-----------------------------------------------
-            //sprite batch
+            //Create sprite batch
             SpriteBatch pSB_Aliens = SpriteBatchManager.Add(SpriteBatch.Name.GameSprites);
             SpriteBatch pSB_Boxes = SpriteBatchManager.Add(SpriteBatch.Name.SpriteBoxes);
 
 
+            //-----------------------------------------------
+            //Create sprites/boxes
 
+            //render dimensions/coordinates
+            float spriteWidth = 65.0f;
+            float spriteHeight = 35.0f;
+
+            float screenX = 300.0f;
+            float screenY = 400.0f;
+
+            float boxWidth = 33.0f;
+            float boxHeight = 33.0f;
+
+            //this rect dictates where to render the sprites in the game window
+            //Azul.Rect position_size = new Azul.Rect(screenX, screenY, spriteWidth, spriteHeight);
+
+            //----------------------
+            //alien sprite
+
+            //squid game sprite
+            GameSpriteManager.Add(GameSprite.Name.Squid, Image.Name.SquidOpen, screenX, screenY, spriteWidth, spriteHeight);
+            //GameSpriteManager.Add(GameSprite.Name.Squid, Image.Name.SquidOpen, position_size);
+
+            //Attach to Sprite Batch
             pSB_Aliens.Attach(GameSprite.Name.Squid);
-            //pSB_Aliens.Attach(Sprite.Name.Crab);
-            //pSB_Aliens.Attach(Sprite.Name.Octopus);
-
-            pSB_Boxes.Attach(BoxSprite.Name.Box);
 
 
+            //----------------------
+            //alien box
+            Azul.Rect box_pos_size = new Azul.Rect(screenX, screenY, boxWidth, boxHeight);
+            BoxSpriteManager.Add(BoxSprite.Name.AlienBox, box_pos_size);
+
+            //Attach to Sprite Batch
+            pSB_Boxes.Attach(BoxSprite.Name.AlienBox);
 
 
-
+            //-----------------------------------------------
+            //Animated Sprite
 
             // Create an animation sprite
             AnimationSprite pAnimSprite = new AnimationSprite(GameSprite.Name.Squid);
@@ -125,7 +132,7 @@ namespace SpaceInvaders
             pAnimSprite.Attach(Image.Name.SquidClosed);
 
             // add AnimationSprite to timer
-            TimerEventManager.Add(TimerEvent.Name.SpriteAnimation, pAnimSprite, 1.5f);
+            TimerEventManager.Add(TimerEvent.Name.SpriteAnimation, pAnimSprite, 1.0f);
 
 
             Debug.WriteLine("\n\nLoad Content Complete\n----------------------------------\n");
@@ -158,11 +165,13 @@ namespace SpaceInvaders
             //-----------------------------------------------
             //sprites/spriteboxes
             GameSprite pSquid = GameSpriteManager.Find(GameSprite.Name.Squid);
+            Debug.Assert(pSquid != null);
+
             pSquid.Update();
 
             //sprite boxes
-            BoxSprite pBox = BoxSpriteManager.Find(BoxSprite.Name.Box);
-            pBox.Update();
+            BoxSprite pAlienBox = BoxSpriteManager.Find(BoxSprite.Name.AlienBox);
+            pAlienBox.Update();
 
         }
 
@@ -176,6 +185,8 @@ namespace SpaceInvaders
         {
             //-----------------------------------------------
             //sprites
+            SpriteBatchManager.renderBoxes = false;
+
             SpriteBatchManager.Draw();
         }
 

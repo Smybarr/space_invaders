@@ -26,8 +26,8 @@ namespace SpaceInvaders
             Blank
         }
 
-        public Name name;
-        public Azul.Texture poAzulTexture;
+        private Name name;
+        private Azul.Texture poAzulTexture;
 
         public Texture()
         {
@@ -44,6 +44,15 @@ namespace SpaceInvaders
             this.poAzulTexture = new Azul.Texture(pTextureName, Azul.Texture_Filter.NEAREST, Azul.Texture_Filter.NEAREST);
             Debug.Assert(this.poAzulTexture != null);
         }
+        public Texture.Name GetName()
+        {
+            return this.name;
+        }
+        public void SetName(Name inName)
+        {
+            this.name = inName;
+        }
+
         public void WashNodeData()
         {
             //wash name and data;
@@ -201,7 +210,7 @@ namespace SpaceInvaders
             pNodeRef.WashNodeData();
 
             //find the node by name
-            pNodeRef.name = textureName;
+            pNodeRef.SetName(textureName);
 
             Texture pData = (Texture) pMan.baseFindNode(pNodeRef);
 
@@ -240,7 +249,7 @@ namespace SpaceInvaders
 
             Boolean status = false;
 
-            if (pDataA.name == pDataB.name)
+            if (pDataA.GetName() == pDataB.GetName())
             {
                 status = true;
             }

@@ -8,7 +8,6 @@ namespace SpaceInvaders
         // Data: ---------------
         public Image pImage;
 
-
         public ImageHolder(Image image)
             : base()
         {

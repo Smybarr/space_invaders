@@ -54,9 +54,9 @@ namespace SpaceInvaders
         private static Azul.Color defaultSpriteColor_White = new Azul.Color(1, 1, 1);
 
         // Dynamic Sprite Data: -------------------------------------------
-        public Name name;
+        private Name name;
 
-        public Image pImage;
+        private Image pImage;
         private Azul.Color poColor;
         private Azul.Rect poScreenRect;
         private Azul.Sprite poAzulSprite;
@@ -152,7 +152,14 @@ namespace SpaceInvaders
             this.angle = poAzulSprite.angle;
 
         }
-
+        public GameSprite.Name GetName()
+        {
+            return this.name;
+        }
+        public void SetName(GameSprite.Name inName)
+        {
+            this.name = inName;
+        }
         public void WashNodeData()
         {
             //wash name and data;      
@@ -214,7 +221,7 @@ namespace SpaceInvaders
             }
             else
             {
-                Debug.WriteLine("  Image: name:{0}", this.pImage.name);
+                Debug.WriteLine("  Image: name:{0}", this.pImage.GetName());
             }
             Debug.WriteLine("");
             Debug.WriteLine("------------------------");
@@ -392,7 +399,7 @@ namespace SpaceInvaders
             pNodeRef.WashNodeData();
 
             //find the node by name
-            pNodeRef.name = name;
+            pNodeRef.SetName(name);
 
             GameSprite pData = (GameSprite) pMan.baseFindNode(pNodeRef);
 
@@ -430,7 +437,7 @@ namespace SpaceInvaders
 
             Boolean status = false;
 
-            if (pDataA.name == pDataB.name)
+            if (pDataA.GetName() == pDataB.GetName())
             {
                 status = true;
             }
