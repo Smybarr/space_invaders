@@ -71,6 +71,8 @@
     <Compile Include="BaseManagement\SLink.cs" />
     <Compile Include="DebugPrinter\DebugPrinter.cs" />
     <Compile Include="DestructorManagement\Death.cs" />
+    <Compile Include="GameObject\GameObject.cs" />
+    <Compile Include="GameObject\NullGameObject.cs" />
     <Compile Include="Game\Game.cs" />
     <Compile Include="Image\Image.cs" />
     <Compile Include="Image\ImageHolder.cs" />
