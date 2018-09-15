@@ -103,8 +103,7 @@ namespace SpaceInvaders
 
         // Data: ------------------
         public GameObject pGameObj;
-
-        
+     
         public GameObjectNode()
             : base()
         {
@@ -126,6 +125,7 @@ namespace SpaceInvaders
 
         public void SetName(GameObject.Name name)
         {
+            Debug.Assert(this.pGameObj != null);
             this.pGameObj.SetName(name);
         }
 
@@ -202,6 +202,8 @@ namespace SpaceInvaders
                 pInstance = new GameObjectManager(startReserveSize, refillSize);
             }
 
+            Debug.WriteLine("------GameObject Manager Initialized-------");
+
         }
         private static GameObjectManager privGetInstance()
         {
@@ -214,21 +216,23 @@ namespace SpaceInvaders
 
         ~GameObjectManager()
         {
-#if(TRACK_DESTRUCTOR)
+            #if(TRACK_DESTRUCTOR)
             Debug.WriteLine("~GameObjectMan():{0}", this.GetHashCode());
-#endif
+            #endif
+
             GameObjectManager.pHeadRef = null;
             GameObjectManager.pNullGameObject = null;
             GameObjectManager.pInstance = null;
         }
-
         public static void Destroy()
         {
             // Get the instance
             GameObjectManager pMan = GameObjectManager.privGetInstance();
-#if(TRACK_DESTRUCTOR)
+
+            #if(TRACK_DESTRUCTOR)
             Debug.WriteLine("--->GameObjectMan.Destroy()");
-#endif
+            #endif
+
             pMan.baseDestroy();
             GameObjectManager.pHeadRef = null;
             GameObjectManager.pNullGameObject = null;
@@ -277,38 +281,37 @@ namespace SpaceInvaders
 
         }
 
-        public static GameObjectNode Find(GameObject.Name name)
+        public static GameObject Find(GameObject.Name name)
         {
             //get the singleton
             GameObjectManager pMan = privGetInstance();
 
-            Debug.Assert(pMan != null);
             // Compare functions only compares two Nodes
+            GameObjectManager.pHeadRef.pGameObj.SetName(name);
 
-            // So:  Use a reference node
-            //      fill in the needed data
-            //      use in the Compare() function
-            Debug.Assert(pHeadRef != null);
-            pHeadRef.WashNodeData();
+            GameObjectNode pNode = (GameObjectNode)pMan.baseFindNode(GameObjectManager.pHeadRef);
+            Debug.Assert(pNode != null);
 
-            //find the node by name
-            pHeadRef.SetName(name);
-
-            GameObjectNode pData = (GameObjectNode) pMan.baseFindNode(pHeadRef);
-
-            return pData;
+            return pNode.pGameObj;
         }
 
 
-        public static void Dump()
+        public static void DumpAll()
         {
             GameObjectManager pMan = privGetInstance();
             Debug.Assert(pMan != null);
 
-            Debug.WriteLine("------ GameObjectNode Manager ------");
+            Debug.WriteLine("------ GameObject Manager Dump All ------");
             pMan.baseDumpAll();
         }
+        public static void DumpStats()
+        {
+            GameObjectManager pMan = privGetInstance();
+            Debug.Assert(pMan != null);
 
+            Debug.WriteLine("------ GameObject Manager Stats ------");
+            pMan.baseDumpStats();
+        }
         //----------------------------------------------------------------------
         // Override Abstract methods
         //----------------------------------------------------------------------
@@ -325,7 +328,7 @@ namespace SpaceInvaders
 
             Boolean status = false;
 
-            if (pDataA.GetName() == pDataB.GetName())
+            if (pDataA.pGameObj.GetName() == pDataB.pGameObj.GetName())
             {
                 status = true;
             }

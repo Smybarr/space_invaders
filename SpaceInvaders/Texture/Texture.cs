@@ -253,13 +253,22 @@ namespace SpaceInvaders
             Debug.Assert(pNode != null);
             pMan.baseRemoveNode(pNode);
         }
-        public static void Dump()
+        public static void DumpAll()
         {
             TextureManager pMan = privGetInstance();
             Debug.Assert(pMan != null);
 
-            Debug.WriteLine("\n------ TextureNode Manager ------");
+            Debug.WriteLine("\n------ Texture Manager Dump All ------");
             pMan.baseDumpAll();
+        }
+
+        public static void DumpStats()
+        {
+            TextureManager pMan = privGetInstance();
+            Debug.Assert(pMan != null);
+
+            Debug.WriteLine("\n------ TextureNode Manager Stats ------");
+            pMan.baseDumpStats();
         }
 
         //----------------------------------------------------------------------

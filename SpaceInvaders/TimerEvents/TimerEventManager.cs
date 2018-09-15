@@ -36,6 +36,8 @@ namespace SpaceInvaders
             {
                 pInstance = new TimerEventManager(startReserveSize, refillSize);
             }
+
+            Debug.WriteLine("------TimerEvent Manager Initialized-------");
         }
         private static TimerEventManager privGetInstance()
         {
@@ -116,15 +118,22 @@ namespace SpaceInvaders
             Debug.Assert(pNode != null);
             pMan.baseRemoveNode(pNode);
         }
-        public static void Dump()
+        public static void DumpAll()
         {
             TimerEventManager pMan = TimerEventManager.privGetInstance();
             Debug.Assert(pMan != null);
 
-            Debug.WriteLine("------ Timer Manager ------");
+            Debug.WriteLine("------ TimerEvent Manager Dump All ------");
             pMan.baseDumpAll();
         }
+        public static void DumpStats()
+        {
+            TimerEventManager pMan = TimerEventManager.privGetInstance();
+            Debug.Assert(pMan != null);
 
+            Debug.WriteLine("------ TimerEvent Manager Stats ------");
+            pMan.baseDumpStats();
+        }
         public static float GetCurrTime()
         {
             // Get the instance

@@ -167,6 +167,8 @@ namespace SpaceInvaders
             }
 
             //add a default node?
+
+            Debug.WriteLine("------SpriteBatch Manager Initialized-------");
         }
         private static SpriteBatchManager privGetInstance()
         {
@@ -283,15 +285,22 @@ namespace SpaceInvaders
             Debug.Assert(pNode != null);
             pMan.baseRemoveNode(pNode);
         }
-        public static void Dump()
+        public static void DumpAll()
         {
             SpriteBatchManager pMan = privGetInstance();
             Debug.Assert(pMan != null);
 
-            Debug.WriteLine("------ SpriteBatchNode Manager ------");
+            Debug.WriteLine("------ SpriteBatch Manager Dump All ------");
             pMan.baseDumpAll();
         }
+        public static void DumpStats()
+        {
+            SpriteBatchManager pMan = privGetInstance();
+            Debug.Assert(pMan != null);
 
+            Debug.WriteLine("------ SpriteBatch Manager Stats------");
+            pMan.baseDumpStats();
+        }
         //----------------------------------------------------------------------
         // 4 Override Abstract Methods (From Base Manager)
         //----------------------------------------------------------------------

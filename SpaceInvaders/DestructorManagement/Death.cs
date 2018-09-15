@@ -119,6 +119,8 @@ namespace SpaceInvaders.DestructorManagement
                 //constructor can only be called here since private access
                 pInstance = new DeathManager(startReserveSize, refillSize);
             }
+
+            Debug.WriteLine("------Death Manager Initialized-------");
         }
         private static DeathManager privGetInstance()
         {
@@ -173,13 +175,21 @@ namespace SpaceInvaders.DestructorManagement
         // 4 Wrapper methods: baseAdd, baseFind, baseRemove, baseDump
         //----------------------------------------------------------------------
 
-        public static void Dump()
+        public static void DumpAll()
         {
             DeathManager pMan = privGetInstance();
             Debug.Assert(pMan != null);
 
-            Debug.WriteLine("------ DeathNode Manager ------");
+            Debug.WriteLine("------ DeathNode Manager Dump All ------");
             pMan.baseDumpAll();
+        }
+        public static void DumpStats()
+        {
+            DeathManager pMan = privGetInstance();
+            Debug.Assert(pMan != null);
+
+            Debug.WriteLine("------ DeathNode Manager Stats ------");
+            pMan.baseDumpStats();
         }
 
         //----------------------------------------------------------------------

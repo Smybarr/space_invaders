@@ -71,6 +71,11 @@
     <Compile Include="BaseManagement\SLink.cs" />
     <Compile Include="DebugPrinter\DebugPrinter.cs" />
     <Compile Include="DestructorManagement\Death.cs" />
+    <Compile Include="GameObject\Aliens\AlienType.cs" />
+    <Compile Include="GameObject\Aliens\AlienFactory.cs" />
+    <Compile Include="GameObject\Aliens\Crab.cs" />
+    <Compile Include="GameObject\Aliens\Octopus.cs" />
+    <Compile Include="GameObject\Aliens\Squid.cs" />
     <Compile Include="GameObject\GameObject.cs" />
     <Compile Include="GameObject\NullGameObject.cs" />
     <Compile Include="Game\Game.cs" />

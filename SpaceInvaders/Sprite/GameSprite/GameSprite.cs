@@ -366,7 +366,7 @@ namespace SpaceInvaders
             // Add a default data node
             //Add(SpriteNode.Name.Blank, SpriteNode.Data.Blank);
 
-            Debug.WriteLine("------Sprite Manager Initialized-------");
+            Debug.WriteLine("------GameSprite Manager Initialized-------");
         }
         private static GameSpriteManager privGetInstance()
         {
@@ -463,13 +463,22 @@ namespace SpaceInvaders
             Debug.Assert(pNode != null);
             pMan.baseRemoveNode(pNode);
         }
-        public static void Dump()
+        public static void DumpAll()
         {
             GameSpriteManager pMan = privGetInstance();
             Debug.Assert(pMan != null);
 
-            Debug.WriteLine("------ SpriteNode Manager ------");
+            Debug.WriteLine("------ GameSprite Manager Dump All ------");
             pMan.baseDumpAll();
+        }
+
+        public static void DumpStats()
+        {
+            GameSpriteManager pMan = privGetInstance();
+            Debug.Assert(pMan != null);
+
+            Debug.WriteLine("------ GameSprite Manager Stats ------");
+            pMan.baseDumpStats();
         }
 
         //----------------------------------------------------------------------

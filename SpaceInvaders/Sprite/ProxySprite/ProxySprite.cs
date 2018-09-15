@@ -108,7 +108,7 @@ namespace SpaceInvaders
         {
             return this.name;
         }
-        public void Dump()
+        public void DumpNodeData()
         {
 
 

@@ -309,15 +309,22 @@ namespace SpaceInvaders
             Debug.Assert(pNode != null);
             pMan.baseRemoveNode(pNode);
         }
-        public static void Dump()
+        public static void DumpAll()
         {
             ImageManager pMan = privGetInstance();
             Debug.Assert(pMan != null);
 
-            Debug.WriteLine("------ ImageNode Manager ------");
+            Debug.WriteLine("------ Image Manager Dump All ------");
             pMan.baseDumpAll();
         }
+        public static void DumpStats()
+        {
+            ImageManager pMan = privGetInstance();
+            Debug.Assert(pMan != null);
 
+            Debug.WriteLine("------ Image Manager Stats ------");
+            pMan.baseDumpStats();
+        }
         //----------------------------------------------------------------------
         // Override Abstract methods
         //----------------------------------------------------------------------

@@ -48,6 +48,8 @@ namespace SpaceInvaders
             {
                 pInstance = new ProxySpriteManager(startReserveSize, refillSize);
             }
+
+            Debug.WriteLine("------ProxySprite Manager Initialized-------");
         }
 
         //----------------------------------------------------------------------
@@ -90,15 +92,22 @@ namespace SpaceInvaders
             return pData;
         }
 
-        public static void Dump()
+        public static void DumpAll()
         {
             ProxySpriteManager pMan = ProxySpriteManager.privGetInstance();
             Debug.Assert(pMan != null);
 
-            Debug.WriteLine("------ ProxySprite Manager ------");
+            Debug.WriteLine("------ ProxySprite Manager Dump All ------");
             pMan.baseDumpAll();
         }
+        public static void DumpStats()
+        {
+            ProxySpriteManager pMan = ProxySpriteManager.privGetInstance();
+            Debug.Assert(pMan != null);
 
+            Debug.WriteLine("------ ProxySprite Manager Stats ------");
+            pMan.baseDumpStats();
+        }
         //----------------------------------------------------------------------
         // Override Abstract methods
         //----------------------------------------------------------------------
@@ -137,7 +146,7 @@ namespace SpaceInvaders
         {
             Debug.Assert(pLink != null);
             ProxySprite pData = (ProxySprite)pLink;
-            pData.Dump();
+            pData.DumpNodeData();
         }
 
         //----------------------------------------------------------------------

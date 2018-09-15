@@ -246,23 +246,22 @@ namespace SpaceInvaders
         }
         protected void baseDumpAll()
         {
-            this.debugPrintManagerStats();
-            this.debugPrintLists();
+            this.baseDumpStats();
+            this.baseDumpLists();
         }
 
-        protected void debugPrintManagerStats()
+        protected void baseDumpStats()
         {
-            Debug.WriteLine("");
-            Debug.WriteLine("-------- Manager Stats: -------------");
+            Debug.WriteLine("------------------------------------");
             Debug.WriteLine("Total Num Nodes:       {0}", this.mTotalNodeCount);
             Debug.WriteLine("Num Active:            {0}", this.mNumActive);
             Debug.WriteLine("Num Reserved:          {0}", this.mNumReserve);
             Debug.WriteLine("Refill ReserveList By: {0}", this.mRefillSize);
             Debug.WriteLine("Initial Reserved:      {0}", this.mStartNumReserve);
             Debug.WriteLine("Active High Count:     {0}", this.mActiveHighCount);
-            Debug.WriteLine("------------------------------\n");
+            Debug.WriteLine("------------------------------------\n");
         }
-        protected void debugPrintLists()
+        protected void baseDumpLists()
         {
             Debug.WriteLine("");
             Debug.WriteLine("------ Manager Active List: ---------------------------\n");

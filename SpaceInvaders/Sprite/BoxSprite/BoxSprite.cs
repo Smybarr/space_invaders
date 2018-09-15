@@ -314,6 +314,8 @@ namespace SpaceInvaders
 
             // Add a default data node?
 
+            Debug.WriteLine("------BoxSprite Manager Initialized-------");
+
         }
         private static BoxSpriteManager privGetInstance()
         {
@@ -408,15 +410,22 @@ namespace SpaceInvaders
             Debug.Assert(pNode != null);
             pMan.baseRemoveNode(pNode);
         }
-        public static void Dump()
+        public static void DumpAll()
         {
             BoxSpriteManager pMan = privGetInstance();
             Debug.Assert(pMan != null);
 
-            Debug.WriteLine("------ SpriteBox Manager ------");
+            Debug.WriteLine("------ BoxSprite Manager Dump All ------");
             pMan.baseDumpAll();
         }
+        public static void DumpStats()
+        {
+            BoxSpriteManager pMan = privGetInstance();
+            Debug.Assert(pMan != null);
 
+            Debug.WriteLine("------ BoxSprite Manager Stats ------");
+            pMan.baseDumpStats();
+        }
         //----------------------------------------------------------------------
         // Override Abstract methods
         //----------------------------------------------------------------------
