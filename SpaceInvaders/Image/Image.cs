@@ -55,7 +55,7 @@ namespace SpaceInvaders
             Blank
         }
 
-        private Name name;
+        protected Name name;
         private Azul.Rect poRect;
         public Texture pTexture;
 
@@ -73,9 +73,10 @@ namespace SpaceInvaders
         }
         ~Image()
         {
-#if (TRACK_DESTRUCTOR)
+            #if (TRACK_DESTRUCTOR)
             Debug.WriteLine("~Image():{0} ", this.GetHashCode());
-#endif
+            #endif
+
             this.name = Name.Blank;
             this.pTexture = null;
             this.poRect = null;
@@ -224,8 +225,9 @@ namespace SpaceInvaders
                 pInstance = new ImageManager(startReserveSize, refillSize);
             }
 
-            // Add a default data node as hot pink
-            Add(Image.Name.Blank, Texture.Name.Blank, 0.0f, 0.0f, 128.0f, 128.0f);
+            //Add a NullObject into the image manager as default - allows find to work correctly;
+            Image pImage = Add(Image.Name.NullObject, Texture.Name.NullObject, 0.0f, 0.0f, 128.0f, 128.0f);
+            Debug.Assert(pImage != null);
 
             Debug.WriteLine("------Image Manager Initialized-------");
         }

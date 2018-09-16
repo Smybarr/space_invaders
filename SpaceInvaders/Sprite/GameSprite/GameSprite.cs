@@ -80,7 +80,8 @@ namespace SpaceInvaders
             //default field values
             this.name = Name.Blank;
 
-            this.pImage = ImageManager.Find(Image.Name.Blank);
+            //create a NullObject image by default to avoid breaking find;
+            this.pImage = ImageManager.Find(Image.Name.NullObject);
             Debug.Assert(this.pImage != null);
 
             Debug.Assert(pPrivScreenRect != null);
@@ -101,9 +102,10 @@ namespace SpaceInvaders
         }
         ~GameSprite()
         {
-#if (TRACK_DESTRUCTOR)
+            #if (TRACK_DESTRUCTOR)
             Debug.WriteLine("~GameSprite():{0} ", this.GetHashCode());
-#endif
+            #endif
+
             this.name = Name.Blank;
             this.pImage = null;
             this.poColor = null;
@@ -187,8 +189,8 @@ namespace SpaceInvaders
             //wash name and data;      
             this.name = Name.Blank;
 
-            //reset the image to default blank
-            this.pImage = ImageManager.Find(Image.Name.Blank);
+            //reset the image to default (NullObject)
+            this.pImage = ImageManager.Find(Image.Name.NullObject);
             Debug.Assert(this.pImage != null);
 
             Debug.Assert(pPrivScreenRect != null);

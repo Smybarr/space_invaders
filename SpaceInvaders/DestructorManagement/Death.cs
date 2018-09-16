@@ -201,9 +201,12 @@ namespace SpaceInvaders.DestructorManagement
         {
             DeathNode pNode = (DeathNode)pLink;
 
-#if (TRACK_DESTRUCTOR)
-           Debug.WriteLine("     {0} ({1})", pNode.pObject, pNode.pObject.GetHashCode());
-#endif
+            #if (TRACK_DESTRUCTOR)
+            if (pNode.pObject != null)
+            {
+                Debug.WriteLine("     {0} ({1})", pNode.pObject, pNode.pObject.GetHashCode());
+            }
+            #endif
             pNode.pObject = null;
         }
         protected override Boolean derivedCompareNodes(MLink pLinkA, MLink pLinkB)

@@ -5,10 +5,22 @@ namespace SpaceInvaders
 {
     public class AlienFactory
     {
-        public AlienFactory(SpriteBatch.Name spriteBatchName)
+        // Data: ---------------------
+        private SpriteBatch pSpriteBatch;
+        private PCSTree pTree;
+        private PCSNode pParent;
+
+
+        public AlienFactory(SpriteBatch.Name spriteBatchName, PCSTree pTree)
         {
             this.pSpriteBatch = SpriteBatchManager.Find(spriteBatchName);
             Debug.Assert(this.pSpriteBatch != null);
+
+            Debug.Assert(pTree != null);
+            this.pTree = pTree;
+
+            //parent is null by default;
+            this.pParent = null;
         }
 
         ~AlienFactory()
@@ -16,25 +28,46 @@ namespace SpaceInvaders
             #if (TRACK_DESTRUCTOR)
             Debug.WriteLine("~AlienFactory():{0}", this.GetHashCode());
             #endif
+
+            //reset the goods;
             this.pSpriteBatch = null;
+            this.pParent = null;
         }
 
-        public void Create(AlienType.Type type, float posX, float posY)
+        public void SetParent(GameObject parentNode)
+        {
+            //fine being null (null object)
+            this.pParent = parentNode;
+        }
+
+
+
+
+        public AlienType Create(AlienType.Type type, GameObject.Name gameObjectName, float posX = 0.0f, float posY = 0.0f)
         {
             AlienType pAlien = null;
 
             switch (type)
             {
                 case AlienType.Type.Crab:
-                    pAlien = new Crab(GameObject.Name.Crab, GameSprite.Name.Crab, posX, posY);
+                    pAlien = new Crab(gameObjectName, GameSprite.Name.Crab, posX, posY);
                     break;
 
                 case AlienType.Type.Squid:
-                    pAlien = new Squid(GameObject.Name.Squid, GameSprite.Name.Squid, posX, posY);
+                    pAlien = new Squid(gameObjectName, GameSprite.Name.Squid, posX, posY);
                     break;
 
                 case AlienType.Type.Octopus:
-                    pAlien = new Octopus(GameObject.Name.Octopus, GameSprite.Name.Octopus, posX, posY);
+                    pAlien = new Octopus(gameObjectName, GameSprite.Name.Octopus, posX, posY);
+                    break;
+
+
+                case AlienType.Type.AlienGrid:
+                    //the grid doesn't have a single sprite - enter game sprite null object!
+                    pAlien = new Grid(gameObjectName, GameSprite.Name.NullObject, posX, posY);
+                    // --> Add alien grid to the gameObjectManager ONLY once - the root
+                    //Debug.Assert(pAlien != null);
+                    GameObjectManager.Attach(pAlien);
                     break;
 
                 default:
@@ -43,16 +76,16 @@ namespace SpaceInvaders
                     break;
             }
 
-            // add it to the gameObjectManager
-            Debug.Assert(pAlien != null);
-            GameObjectManager.Attach(pAlien);
+
+            //insert alien into the PCSTree Hierarchy;
+            this.pTree.Insert(pAlien, this.pParent);
 
             // Attached to Group
             this.pSpriteBatch.Attach(pAlien.pProxySprite);
+
+            return pAlien;
         }
 
-        // Data: ---------------------
 
-        SpriteBatch pSpriteBatch;
     }
 }

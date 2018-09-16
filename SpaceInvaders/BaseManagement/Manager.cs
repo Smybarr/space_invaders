@@ -242,7 +242,7 @@ namespace SpaceInvaders
             this.mNumActive--;
             this.mNumReserve++;
 
-            Debug.WriteLine("Base Remove called");
+            //Debug.WriteLine("Base Remove called");
         }
         protected void baseDumpAll()
         {

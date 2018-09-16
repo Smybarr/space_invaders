@@ -7,7 +7,7 @@ namespace SpaceInvaders
     {
 
         public Crab(GameObject.Name name, GameSprite.Name spriteName, float posX, float posY)
-            : base(name, spriteName)
+            : base(name, spriteName, AlienType.Type.Crab)
         {
             this.x = posX;
             this.y = posY;

@@ -163,8 +163,8 @@ namespace SpaceInvaders
 
                 if (pTimerEventManager.currTime >= pEvent.triggerTime)
                 {
-                    Debug.WriteLine("{0} Event Triggered!", pEvent.GetName());
-                    Debug.WriteLine("Trigger Time:{0}", pTimerEventManager.currTime);
+                    //Debug.WriteLine("{0} Event Triggered!", pEvent.GetName());
+                    //Debug.WriteLine("Trigger Time:{0}", pTimerEventManager.currTime);
                     // execute the event
                     pEvent.Process();
 

@@ -21,7 +21,8 @@ namespace SpaceInvaders
 
             AlienExplosion,
 
-            Blank
+            Blank,
+
         }
 
 
@@ -29,10 +30,10 @@ namespace SpaceInvaders
         //placeholder data - will eventually change
         protected Type alienType;
 
-        protected AlienType(GameObject.Name name, GameSprite.Name spriteName)
+        protected AlienType(GameObject.Name name, GameSprite.Name spriteName, Type alienType)
             : base(name, spriteName)
         {
-            this.alienType = Type.Blank;
+            this.alienType = alienType;
         }
 
         // Data: ---------------

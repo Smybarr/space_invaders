@@ -47,6 +47,8 @@ namespace SpaceInvaders
         {
             // associate it
             Debug.Assert(pNode != null);
+
+            // Should verify that (pNode) its real and active?
             this.pSpriteBase = pNode;
             Debug.Assert(this.pSpriteBase != null);
         }

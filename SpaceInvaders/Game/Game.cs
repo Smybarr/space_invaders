@@ -260,17 +260,17 @@ namespace SpaceInvaders
             pSB_Aliens.Attach(pOcto.pProxySprite);
 
 
-            ////----------------------
-            ////Method 2) Factory
+            //----------------------
+            //Method 2) Factory
 
-            //// create the Alien Factory 
+            // create the Alien Factory 
             //AlienFactory AlienFactory = new AlienFactory(SpriteBatch.Name.GameSprites);
 
-            //// eventually we'll make one game object per column
-            //// then use proxies to cookie-cut copy each game object
-            //// to make more sprites in the grid;
+            // eventually we'll make one game object per column
+            // then use proxies to cookie-cut copy each game object
+            // to make more sprites in the grid;
 
-            //// create 15 game objects quickly
+            // create 15 game objects quickly
             //for (int i = 0; i < 5; i++)
             //{
             //    AlienFactory.Create(AlienType.Type.Crab, 100.0f + i * 150.0f, 700.0f);
@@ -335,23 +335,19 @@ namespace SpaceInvaders
             TimerEventManager.Update(this.GetTime());
 
             //-----------------------------------------------
-            //sprites/spriteboxes
-            GameSprite pSquid = GameSpriteManager.Find(GameSprite.Name.Squid);
-            Debug.Assert(pSquid != null);
-            pSquid.Update();
+            //Sprites
 
-            GameSprite pCrab = GameSpriteManager.Find(GameSprite.Name.Crab);
-            Debug.Assert(pSquid != null);
-            pCrab.Update();
+            //GameSprite pSquid = GameSpriteManager.Find(GameSprite.Name.Squid);
+            //Debug.Assert(pSquid != null);
+            //pSquid.Update();
 
-            GameSprite pOctopus = GameSpriteManager.Find(GameSprite.Name.Octopus);
-            Debug.Assert(pSquid != null);
-            pOctopus.Update();
+            //GameSprite pCrab = GameSpriteManager.Find(GameSprite.Name.Crab);
+            //Debug.Assert(pSquid != null);
+            //pCrab.Update();
 
-
-            //sprite boxes
-            BoxSprite pAlienBox = BoxSpriteManager.Find(BoxSprite.Name.AlienBox);
-            pAlienBox.Update();
+            //GameSprite pOctopus = GameSpriteManager.Find(GameSprite.Name.Octopus);
+            //Debug.Assert(pSquid != null);
+            //pOctopus.Update();
 
             //-----------------------------------------------
             //GameObjects
@@ -368,7 +364,12 @@ namespace SpaceInvaders
             //Debug.Assert(pAlienOctopus != null);
             //pAlienOctopus.Update();
 
+            //-----------------------------------------------
+            //sprite box
+            BoxSprite pAlienBox = BoxSpriteManager.Find(BoxSprite.Name.AlienBox);
+            pAlienBox.Update();
 
+            //GameObjectManager updates ALL game objects and sprite positions
             GameObjectManager.Update();
 
         }

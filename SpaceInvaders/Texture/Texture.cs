@@ -36,9 +36,10 @@ namespace SpaceInvaders
         }
         ~Texture()
         {
-#if (TRACK_DESTRUCTOR)
+            #if (TRACK_DESTRUCTOR)
             Debug.WriteLine("~Texture():{0} ", this.GetHashCode());
-#endif
+            #endif
+
             this.name = Texture.Name.Blank;
             this.poAzulTexture = null;
         }
@@ -171,10 +172,9 @@ namespace SpaceInvaders
                 pInstance = new TextureManager(startReserveSize, refillSize);
             }
 
-            // Add a default texture node - HotPink.tga
-            // Default texture
-            TextureManager.Add(Texture.Name.Blank, "HotPink.tga");
-
+            // Add a NullObject texture NullObject - HotPink.tga
+            Texture pText = TextureManager.Add(Texture.Name.NullObject, "HotPink.tga");
+            Debug.Assert(pText != null);
 
             Debug.WriteLine("------Texture Manager Initialized-------");
         }

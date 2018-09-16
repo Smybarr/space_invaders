@@ -13,7 +13,7 @@ namespace SpaceInvaders
     public class NullGameObject : GameObject
     {
         public NullGameObject()
-            : base(GameObject.Name.Null_Object)
+            : base(GameObject.Name.NullObject)
         {
 
         }

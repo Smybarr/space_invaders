@@ -4,7 +4,7 @@ using System.Diagnostics;
 namespace SpaceInvaders
 {
 
-    public abstract class GameObject
+    public abstract class GameObject : PCSNode
     {
         public enum Name
         {
@@ -12,8 +12,12 @@ namespace SpaceInvaders
             Crab,
             Octopus,
 
-            Null_Object,
+            Grid,
+
+            NullObject,
+
             Blank
+
         }
 
         // Data: ---------------
@@ -36,9 +40,15 @@ namespace SpaceInvaders
             this.name = objName;
             this.x = 0.0f;
             this.y = 0.0f;
-            this.pProxySprite = new ProxySprite(spriteName);
+            //this.pProxySprite = new ProxySprite(spriteName);
+            this.pProxySprite = ProxySpriteManager.Add(spriteName);
+            Debug.Assert(this.pProxySprite != null);
         }
 
+        override public Enum getName()
+        {
+            return this.name;
+        }
         public void SetName(Name name)
         {
             this.name = name;
@@ -175,15 +185,17 @@ namespace SpaceInvaders
          *
          */
        
-        private static GameObjectNode pHeadRef = new GameObjectNode();
-        private static NullGameObject pNullGameObject = new NullGameObject();
+        private static GameObjectNode pRefNode = new GameObjectNode();
         private static GameObjectManager pInstance = null;
 
         
         private GameObjectManager(int startReserveSize = 3, int refillSize = 1)
             : base(startReserveSize, refillSize)
         {
-            GameObjectManager.pHeadRef.pGameObj = GameObjectManager.pNullGameObject;
+            //default null game object to avoid breaking find;
+            GameObject pGameObj = new NullGameObject();
+            Debug.Assert(pGameObj != null);
+            GameObjectManager.pRefNode.pGameObj = pGameObj;
         }
         //public facing constructor for instantiation of the singleton instance
         public static void Create(int startReserveSize = 3, int refillSize = 1)
@@ -201,6 +213,10 @@ namespace SpaceInvaders
                 //constructor can only be called here since private access
                 pInstance = new GameObjectManager(startReserveSize, refillSize);
             }
+
+            // Add a NULL Sprite into the Manager, allows find 
+            GameSprite pGSprite = GameSpriteManager.Add(GameSprite.Name.NullObject, Image.Name.NullObject, 0, 0, 1, 1);
+            Debug.Assert(pGSprite != null);
 
             Debug.WriteLine("------GameObject Manager Initialized-------");
 
@@ -220,8 +236,7 @@ namespace SpaceInvaders
             Debug.WriteLine("~GameObjectMan():{0}", this.GetHashCode());
             #endif
 
-            GameObjectManager.pHeadRef = null;
-            GameObjectManager.pNullGameObject = null;
+            GameObjectManager.pRefNode = null;
             GameObjectManager.pInstance = null;
         }
         public static void Destroy()
@@ -234,8 +249,7 @@ namespace SpaceInvaders
             #endif
 
             pMan.baseDestroy();
-            GameObjectManager.pHeadRef = null;
-            GameObjectManager.pNullGameObject = null;
+            GameObjectManager.pRefNode = null;
             GameObjectManager.pInstance = null;
         }
 
@@ -287,9 +301,9 @@ namespace SpaceInvaders
             GameObjectManager pMan = privGetInstance();
 
             // Compare functions only compares two Nodes
-            GameObjectManager.pHeadRef.pGameObj.SetName(name);
+            GameObjectManager.pRefNode.pGameObj.SetName(name);
 
-            GameObjectNode pNode = (GameObjectNode)pMan.baseFindNode(GameObjectManager.pHeadRef);
+            GameObjectNode pNode = (GameObjectNode)pMan.baseFindNode(GameObjectManager.pRefNode);
             Debug.Assert(pNode != null);
 
             return pNode.pGameObj;

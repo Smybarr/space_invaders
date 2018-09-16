@@ -68,12 +68,17 @@
   <ItemGroup>
     <Compile Include="BaseManagement\DLink.cs" />
     <Compile Include="BaseManagement\Manager.cs" />
+    <Compile Include="BaseManagement\PCSTree\Iterator.cs" />
+    <Compile Include="BaseManagement\PCSTree\PCSNode.cs" />
+    <Compile Include="BaseManagement\PCSTree\PCSTree.cs" />
+    <Compile Include="BaseManagement\PCSTree\PCSTreeIterator.cs" />
     <Compile Include="BaseManagement\SLink.cs" />
     <Compile Include="DebugPrinter\DebugPrinter.cs" />
     <Compile Include="DestructorManagement\Death.cs" />
     <Compile Include="GameObject\Aliens\AlienType.cs" />
     <Compile Include="GameObject\Aliens\AlienFactory.cs" />
     <Compile Include="GameObject\Aliens\Crab.cs" />
+    <Compile Include="GameObject\Aliens\Grid.cs" />
     <Compile Include="GameObject\Aliens\Octopus.cs" />
     <Compile Include="GameObject\Aliens\Squid.cs" />
     <Compile Include="GameObject\GameObject.cs" />
@@ -81,6 +86,7 @@
     <Compile Include="Game\Game.cs" />
     <Compile Include="Image\Image.cs" />
     <Compile Include="Image\ImageHolder.cs" />
+    <Compile Include="Image\NullImage.cs" />
     <Compile Include="Sprite\AnimatedSprite.cs" />
     <Compile Include="BaseManagement\Containers\CLink.cs" />
     <Compile Include="BaseManagement\Containers\Container.cs" />
