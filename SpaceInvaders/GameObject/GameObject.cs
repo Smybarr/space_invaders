@@ -22,32 +22,44 @@ namespace SpaceInvaders
 
         // Data: ---------------
         private Name name;
+        public int index;
 
         public float x;
         public float y;
         public ProxySprite pProxySprite;
 
-        protected GameObject(GameObject.Name objName)
+        protected GameObject(GameObject.Name objName, GameSprite.Name spriteName, int _index)
         {
             this.name = objName;
-            this.x = 0.0f;
-            this.y = 0.0f;
-            this.pProxySprite = null;
-        }
-
-        protected GameObject(GameObject.Name objName, GameSprite.Name spriteName)
-        {
-            this.name = objName;
+            this.index = _index;
             this.x = 0.0f;
             this.y = 0.0f;
             //this.pProxySprite = new ProxySprite(spriteName);
             this.pProxySprite = ProxySpriteManager.Add(spriteName);
             Debug.Assert(this.pProxySprite != null);
         }
+        ~GameObject()
+        {
+            #if(TRACK_DESTRUCTOR)
+            Debug.WriteLine("     ~GameObject():{0}", this.GetHashCode());
+            #endif
+            this.name = GameObject.Name.Blank;
+            this.pProxySprite = null;
+        }
 
-        override public Enum getName()
+        override public Enum GetPCSName()
         {
             return this.name;
+        }
+
+        public Name GetName()
+        {
+            return this.name;
+        }
+
+        public override int GetIndex()
+        {
+            return this.index;
         }
         public void SetName(Name name)
         {
@@ -55,15 +67,29 @@ namespace SpaceInvaders
         }
 
 
-        ~GameObject()
+        public void Remove()
         {
-#if(TRACK_DESTRUCTOR)
-            Debug.WriteLine("     ~GameObject():{0}", this.GetHashCode());
-#endif
-            this.name = GameObject.Name.Blank;
-            this.pProxySprite = null;
+            // Remove from SpriteBatch
+            Debug.Assert(this.pProxySprite != null);
+            SBNode pSpriteBatchNode = this.pProxySprite.GetSBNode();
+
+            Debug.Assert(pSpriteBatchNode != null);
+            SpriteBatchManager.Remove(pSpriteBatchNode);
+
+            // Remove from GameObjectMan
+            GameObjectManager.Remove(this);
+
+            //add to the ghost manager since it's a dead object
+            GhostManager.Add(this);
+
         }
 
+
+        public void ActivateGameSprite(SpriteBatch pSpriteBatch)
+        {
+            Debug.Assert(pSpriteBatch != null);
+            pSpriteBatch.Attach(this.pProxySprite);
+        }
         public virtual void Update()
         {
             Debug.Assert(this.pProxySprite != null);
@@ -90,10 +116,12 @@ namespace SpaceInvaders
 
         }
 
-        public GameObject.Name GetName()
-        {
-            return this.name;
-        }
+
+        //todo streamline this GameObject/PCSNode GetName function
+        //public GameObject.Name GetName()
+        //{
+        //    return this.name;
+        //}
 
     }
 
@@ -113,7 +141,9 @@ namespace SpaceInvaders
 
         // Data: ------------------
         public GameObject pGameObj;
-     
+        private PCSTree pTree;
+
+
         public GameObjectNode()
             : base()
         {
@@ -128,9 +158,12 @@ namespace SpaceInvaders
         }
 
         //SetData here;
-        public void Set(GameObject pGameObject)
+        public void Set(GameObject pGameObject, PCSTree pTree)
         {
             this.pGameObj = pGameObject;
+
+            Debug.Assert(pTree != null);
+            this.pTree = pTree;
         }
 
         public void SetName(GameObject.Name name)
@@ -146,10 +179,17 @@ namespace SpaceInvaders
 
         public void DumpNodeData()
         {
-            Debug.Assert(this.pGameObj != null);
-            Debug.WriteLine("\t\t     GameObject: {0}", this.GetHashCode());
+            if (this.pGameObj == null)
+            {
+                Debug.WriteLine("\t\t     GameObject: NULL");
+            }
+            else
+            {
+                Debug.WriteLine("\t\t     GameObject: {0}", this.GetHashCode());
 
-            this.pGameObj.Dump();
+                this.pGameObj.Dump();
+            }
+
         }
 
     }
@@ -187,8 +227,8 @@ namespace SpaceInvaders
        
         private static GameObjectNode pRefNode = new GameObjectNode();
         private static GameObjectManager pInstance = null;
+        private PCSTree pRoot;
 
-        
         private GameObjectManager(int startReserveSize = 3, int refillSize = 1)
             : base(startReserveSize, refillSize)
         {
@@ -196,6 +236,11 @@ namespace SpaceInvaders
             GameObject pGameObj = new NullGameObject();
             Debug.Assert(pGameObj != null);
             GameObjectManager.pRefNode.pGameObj = pGameObj;
+
+
+            //Todo - GameObjectManager Constructor - used in remove: HACK HACK, need a better way
+            this.pRoot = new PCSTree();
+            Debug.Assert(this.pRoot != null);
         }
         //public facing constructor for instantiation of the singleton instance
         public static void Create(int startReserveSize = 3, int refillSize = 1)
@@ -257,18 +302,7 @@ namespace SpaceInvaders
         // 4 Wrapper methods: baseAdd, baseFind, baseRemove, baseDump
         //----------------------------------------------------------------------
 
-        public static GameObjectNode Attach(GameObject pGameObject)
-        {
-            GameObjectManager pMan = GameObjectManager.privGetInstance();
-            Debug.Assert(pMan != null);
-
-            GameObjectNode pNode = (GameObjectNode)pMan.baseAddToFront();
-            Debug.Assert(pNode != null);
-
-            pNode.Set(pGameObject);
-            return pNode;
-        }
-
+        //Remove GameObject Node 
         public static void Remove(GameObjectNode pNode)
         {
             Debug.Assert(pNode != null);
@@ -276,38 +310,178 @@ namespace SpaceInvaders
             pMan.baseRemoveNode(pNode);
         }
 
+        //Remove from GameObject PCSTree
+        public static void Remove(GameObject pNode)
+        {
+            Debug.Assert(pNode != null);
+            GameObjectManager pMan = GameObjectManager.privGetInstance();
+
+            GameObject pSafetyNode = pNode;
+
+            // OK so we have a linked list of trees (Remember that)
+
+            // 1) find the tree root (we already know its the most parent)
+
+            GameObject pTmp = pNode;
+            GameObject pRoot = null;
+            while (pTmp != null)
+            {
+                pRoot = pTmp;
+                pTmp = (GameObject)pTmp.pParent;
+            }
+
+            // 2) pRoot is the tree we are looking for
+            // now walk the active list looking for pRoot
+
+            GameObjectNode pTree = (GameObjectNode)pMan.baseGetActive();
+
+            while (pTree != null)
+            {
+                if (pTree.pGameObj == pRoot)
+                {
+                    // found it
+                    break;
+                }
+                // Goto Next tree
+                pTree = (GameObjectNode)pTree.pMNext;
+            }
+
+            // 3) pTree is the tree that holds pNode
+            //  Now remove it
+
+            Debug.Assert(pTree != null);
+            Debug.Assert(pTree.pGameObj != null);
+            pMan.pRoot.SetRoot(pTree.pGameObj);
+            pMan.pRoot.Remove(pNode);
+
+        }
+
+
         public static void Update()
         {
             GameObjectManager pMan = GameObjectManager.privGetInstance();
-            Debug.Assert(pMan != null);
 
-            GameObjectNode pNode = (GameObjectNode)pMan.baseGetActive();
+            GameObjectNode pRoot = (GameObjectNode)pMan.baseGetActive();
 
-            while (pNode != null)
+            while (pRoot != null)
             {
-                // Update the node
-                Debug.Assert(pNode.pGameObj != null);
+                // OK at this point, I have a Root tree,
+                // need to walk the tree completely before moving to next tree
 
-                pNode.pGameObj.Update();
+                PCSTreeIterator pIterator = new PCSTreeIterator(pRoot.pGameObj);
 
-                pNode = (GameObjectNode)pNode.pMNext;
+                // Initialize
+                GameObject pGameObj = (GameObject)pIterator.First();
+
+                while (pGameObj != null)
+                {
+                    pGameObj.Update();
+
+                    // Advance
+                    pGameObj = (GameObject)pIterator.Next();
+                }
+
+                // Goto Next tree
+                pRoot = (GameObjectNode)pRoot.pMNext;
             }
-
         }
 
-        public static GameObject Find(GameObject.Name name)
+        //public static GameObject Find(GameObject.Name name)
+        //{
+        //    //get the singleton
+        //    GameObjectManager pMan = privGetInstance();
+
+        //    // Compare functions only compares two Nodes
+        //    GameObjectManager.pRefNode.pGameObj.SetName(name);
+
+        //    GameObjectNode pNode = (GameObjectNode)pMan.baseFindNode(GameObjectManager.pRefNode);
+        //    Debug.Assert(pNode != null);
+
+        //    return pNode.pGameObj;
+        //}
+
+
+        public static GameObjectNode AttachTree(GameObject pGameObject, PCSTree pTree)
         {
-            //get the singleton
-            GameObjectManager pMan = privGetInstance();
+            //safety first
+            Debug.Assert(pGameObject != null);
+
+            GameObjectManager pMan = GameObjectManager.privGetInstance();
+            Debug.Assert(pMan != null);
+
+            GameObjectNode pNode = (GameObjectNode)pMan.baseAddToFront();
+            Debug.Assert(pNode != null);
+
+
+            Debug.Assert(pTree != null);
+            pNode.Set(pGameObject, pTree);
+
+            return pNode;
+        }
+
+
+        public static GameObject Find(GameObject.Name name, int index = 0)
+        {
+            GameObjectManager pMan = GameObjectManager.privGetInstance();
 
             // Compare functions only compares two Nodes
             GameObjectManager.pRefNode.pGameObj.SetName(name);
+            GameObjectManager.pRefNode.pGameObj.index = index;
 
-            GameObjectNode pNode = (GameObjectNode)pMan.baseFindNode(GameObjectManager.pRefNode);
-            Debug.Assert(pNode != null);
+            GameObjectNode pRoot = (GameObjectNode)pMan.baseGetActive();
+            GameObject pGameObj = null;
 
-            return pNode.pGameObj;
+            bool found = false;
+            while (pRoot != null && found == false)
+            {
+                // OK at this point, I have a Root tree,
+                // need to walk the tree completely before moving to next tree
+
+                PCSTreeIterator pIterator = new PCSTreeIterator(pRoot.pGameObj);
+
+                // Initialize
+                pGameObj = (GameObject)pIterator.First();
+
+                while (pGameObj != null)
+                {
+                    //check for both matching name and index
+                    if (pGameObj.GetName() == GameObjectManager.pRefNode.pGameObj.GetName() &&
+                        pGameObj.index == GameObjectManager.pRefNode.pGameObj.index)
+                    {
+                        found = true;
+                        break;
+                    }
+
+                    // Advance
+                    pGameObj = (GameObject)pIterator.Next();
+                }
+
+                // Goto Next tree
+                pRoot = (GameObjectNode)pRoot.pMNext;
+            }
+
+            return pGameObj;
         }
+
+        public static void Insert(GameObject pGameObj, GameObject pParent)
+        {
+            GameObjectManager pMan = GameObjectManager.privGetInstance();
+            Debug.Assert(pGameObj != null);
+
+            if (pParent == null)
+            {
+                GameObjectManager.AttachTree(pGameObj, null);
+            }
+            else
+            {
+                // Can be null
+                Debug.Assert(pParent != null);
+
+                pMan.pRoot.SetRoot(pParent);
+                pMan.pRoot.Insert(pGameObj, pParent);
+            }
+        }
+
 
 
         public static void DumpAll()
@@ -337,17 +511,20 @@ namespace SpaceInvaders
             Debug.Assert(pLinkA != null);
             Debug.Assert(pLinkB != null);
 
-            GameObjectNode pDataA = (GameObjectNode) pLinkA;
-            GameObjectNode pDataB = (GameObjectNode) pLinkB;
+            //GameObjectNode pDataA = (GameObjectNode) pLinkA;
+            //GameObjectNode pDataB = (GameObjectNode) pLinkB;
 
-            Boolean status = false;
+            //Boolean status = false;
 
-            if (pDataA.pGameObj.GetName() == pDataB.pGameObj.GetName())
-            {
-                status = true;
-            }
+            //if (pDataA.pGameObj.GetName() == pDataB.pGameObj.GetName())
+            //{
+            //    status = true;
+            //}
 
-            return status;
+            //return status;
+
+            Debug.Assert(false);
+            return false;
         }
 
         protected override MLink derivedCreateNode()
@@ -375,4 +552,27 @@ namespace SpaceInvaders
             pNode.WashNodeData();
         }
     }
+/*GameObjectManager.Update() - OLD
+    //public static void Update()
+    //{
+    //    GameObjectManager pMan = GameObjectManager.privGetInstance();
+    //    Debug.Assert(pMan != null);
+
+    //    GameObjectNode pNode = (GameObjectNode)pMan.baseGetActive();
+
+    //    while (pNode != null)
+    //    {
+    //        // Update the node
+    //        Debug.Assert(pNode.pGameObj != null);
+
+    //        pNode.pGameObj.Update();
+
+    //        pNode = (GameObjectNode)pNode.pMNext;
+    //    }
+
+    //}
+*/
 }
+
+
+

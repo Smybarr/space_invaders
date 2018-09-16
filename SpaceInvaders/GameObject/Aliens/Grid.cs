@@ -10,8 +10,8 @@ namespace SpaceInvaders
         private float delta;
         private float total;
 
-        public Grid(GameObject.Name name, GameSprite.Name spriteName, float posX, float posY)
-            : base(name, spriteName, AlienType.Type.AlienGrid)
+        public Grid(GameObject.Name name, GameSprite.Name spriteName, int index, float posX, float posY)
+            : base(name, spriteName, index, AlienType.Type.AlienGrid)
         {
             this.x = posX;
             this.y = posY;

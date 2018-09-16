@@ -16,34 +16,70 @@ namespace SpaceInvaders
 
         // Data: ----------------------------------------------
         public SpriteBase pSpriteBase;
+        private SBNodeManager pSBNodeManager;
 
         public SBNode()
             : base()
         {
             this.pSpriteBase = null;
+            this.pSBNodeManager = null;
         }
         ~SBNode()
         {
-#if (TRACK_DESTRUCTOR)
+            #if (TRACK_DESTRUCTOR)
             Debug.WriteLine("~SBNode():{0} ", this.GetHashCode());
-#endif
+            #endif
             this.pSpriteBase = null;
+            this.pSBNodeManager = null;
         }
 
-        public void Set(GameSprite.Name targetSpriteName, Boolean render = true)
+        public SBNodeManager GetSBNodeMan()
+        {
+            Debug.Assert(this.pSBNodeManager != null);
+            return this.pSBNodeManager;
+        }
+
+        public SpriteBatch GetSpriteBatch()
+        {
+            Debug.Assert(this.pSBNodeManager != null);
+            return this.pSBNodeManager.GetSpriteBatch();
+        }
+
+        public SpriteBase GetSpriteBase()
+        {
+            Debug.Assert(this.pSpriteBase != null);
+            return this.pSpriteBase;
+        }
+
+
+        public void Set(GameSprite.Name targetSpriteName, SBNodeManager _pSBNodeMan, Boolean render = true)
         {
             // Go find it
             this.pSpriteBase = GameSpriteManager.Find(targetSpriteName);
+
+            Debug.Assert(_pSBNodeMan != null);
+            this.pSBNodeManager = _pSBNodeMan;
+
             Debug.Assert(this.pSpriteBase != null);
+
+            //set whether to render the sprite
             this.pSpriteBase.render = render;
         }
-        public void Set(BoxSprite.Name targetBoxName)
+        //todo verify that setting the render value for sprite base to default as true screws anything up
+        public void Set(BoxSprite.Name targetBoxName, SBNodeManager _pSBNodeMan, Boolean render = true)
         {
             // Go find it
             this.pSpriteBase = BoxSpriteManager.Find(targetBoxName);
+
+            Debug.Assert(_pSBNodeMan != null);
+            this.pSBNodeManager = _pSBNodeMan;
+
             Debug.Assert(this.pSpriteBase != null);
+
+            //set whether to render the box sprite
+            this.pSpriteBase.render = render;
         }
-        public void Set(ProxySprite pNode)
+        public void Set(ProxySprite pNode, SBNodeManager _pSBNodeMan)
         {
             // associate it
             Debug.Assert(pNode != null);
@@ -51,6 +87,24 @@ namespace SpaceInvaders
             // Should verify that (pNode) its real and active?
             this.pSpriteBase = pNode;
             Debug.Assert(this.pSpriteBase != null);
+
+            Debug.Assert(_pSBNodeMan != null);
+            this.pSBNodeManager = _pSBNodeMan;
+        }
+
+        public void Set(SpriteBase pNode, SBNodeManager _pSBNodeMan)
+        {
+            Debug.Assert(pNode != null);
+            Debug.Assert(_pSBNodeMan != null);
+
+            this.pSpriteBase = pNode;
+            this.pSBNodeManager = _pSBNodeMan;
+
+            // Set the back pointer
+            // Allows easier deletion in the future
+            Debug.Assert(pSpriteBase != null);
+            this.pSpriteBase.SetSBNode(this);
+
         }
 
         public void WashNodeData()
@@ -115,6 +169,7 @@ namespace SpaceInvaders
         private static SBNode pSBNodeRef = new SBNode();
         //name reference to parent sprite batch;
         private SpriteBatch.Name spriteBatchName;
+        private SpriteBatch pSpriteBatch;
 
         //----------------------------------------------------------------------
         // Constructor - Singleton Instantiation
@@ -123,17 +178,18 @@ namespace SpaceInvaders
             : base(startReserveSize, refillSize)
         {
             this.spriteBatchName = SpriteBatch.Name.Blank;
-
+            this.pSpriteBatch = null;
 
         }
 
         ~SBNodeManager()
         {
-#if (TRACK_DESTRUCTOR)
+            #if (TRACK_DESTRUCTOR)
             Debug.WriteLine("~SBNodeMan():{0} ", this.GetHashCode());
-#endif
+            #endif
             SBNodeManager.pSBNodeRef = null;
             this.spriteBatchName = SpriteBatch.Name.Blank;
+            this.pSpriteBatch = null;
         }
 
         public void Destroy()
@@ -142,12 +198,12 @@ namespace SpaceInvaders
             Debug.WriteLine("      SBNodeManager.Destroy()");
             this.baseDestroy();
 
-#if (TRACK_DESTRUCTOR)
-            if (SBNodeMan.pSBNodeRef != null)
+            #if (TRACK_DESTRUCTOR)
+                        if (SBNodeMan.pSBNodeRef != null)
             {
                 Debug.WriteLine("     {0} ({1})", SBNodeMan.pSBNodeRef, SBNodeMan.pSBNodeRef.GetHashCode());
             }
-#endif
+            #endif
             SBNodeManager.pSBNodeRef = null;
 
         }
@@ -159,6 +215,7 @@ namespace SpaceInvaders
             this.spriteBatchName = SpriteBatch.Name.Blank;
         }
 
+
         public void Set(SpriteBatch.Name spriteBatchName, int reserveNum, int reserveGrow)
         {
             this.spriteBatchName = spriteBatchName;
@@ -168,6 +225,16 @@ namespace SpaceInvaders
 
             this.baseSetReserve(reserveNum, reserveGrow);
         }
+        public void SetSpriteBatch(SpriteBatch _pSpriteBatch)
+        {
+            this.pSpriteBatch = _pSpriteBatch;
+        }
+
+        public SpriteBatch GetSpriteBatch()
+        {
+            return this.pSpriteBatch;
+        }
+
 
 
         public SBNode GetActive()
@@ -185,7 +252,7 @@ namespace SpaceInvaders
             Debug.Assert(pSpriteBatchNode != null);
 
             // Initialize SpriteBatchNode
-            pSpriteBatchNode.Set(name);
+            pSpriteBatchNode.Set(name, this);
 
             return pSpriteBatchNode;
         }
@@ -196,22 +263,33 @@ namespace SpaceInvaders
             Debug.Assert(pSpriteBatchNode != null);
 
             // Initialize SpriteBatchNode
-            pSpriteBatchNode.Set(name);
+            pSpriteBatchNode.Set(name, this);
 
             return pSpriteBatchNode;
         }
+        //public SBNode Add(ProxySprite pNode)
+        //{
+        //    // Go to Man, get a node from reserve, add to active, return it
+        //    SBNode pSBNode = (SBNode)this.baseAddToFront();
+        //    Debug.Assert(pSBNode != null);
 
-        public SBNode Add(ProxySprite pNode)
+        //    // Initialize SpriteBatchNode
+        //    pSBNode.Set(pNode, this);
+
+        //    return pSBNode;
+        //}
+        public SBNode Add(SpriteBase pNode)
         {
             // Go to Man, get a node from reserve, add to active, return it
             SBNode pSBNode = (SBNode)this.baseAddToFront();
             Debug.Assert(pSBNode != null);
 
             // Initialize SpriteBatchNode
-            pSBNode.Set(pNode);
+            pSBNode.Set(pNode, this);
 
             return pSBNode;
         }
+
         public void Remove(SBNode pNode)
         {
             Debug.Assert(pNode != null);

@@ -43,31 +43,31 @@ namespace SpaceInvaders
 
 
 
-        public AlienType Create(AlienType.Type type, GameObject.Name gameObjectName, float posX = 0.0f, float posY = 0.0f)
+        public AlienType Create(AlienType.Type type, GameObject.Name gameObjectName, int index = 0, float posX = 0.0f, float posY = 0.0f)
         {
             AlienType pAlien = null;
 
             switch (type)
             {
                 case AlienType.Type.Crab:
-                    pAlien = new Crab(gameObjectName, GameSprite.Name.Crab, posX, posY);
+                    pAlien = new Crab(gameObjectName, GameSprite.Name.Crab, index, posX, posY);
                     break;
 
                 case AlienType.Type.Squid:
-                    pAlien = new Squid(gameObjectName, GameSprite.Name.Squid, posX, posY);
+                    pAlien = new Squid(gameObjectName, GameSprite.Name.Squid, index, posX, posY);
                     break;
 
                 case AlienType.Type.Octopus:
-                    pAlien = new Octopus(gameObjectName, GameSprite.Name.Octopus, posX, posY);
+                    pAlien = new Octopus(gameObjectName, GameSprite.Name.Octopus, index, posX, posY);
                     break;
 
 
                 case AlienType.Type.AlienGrid:
                     //the grid doesn't have a single sprite - enter game sprite null object!
-                    pAlien = new Grid(gameObjectName, GameSprite.Name.NullObject, posX, posY);
+                    pAlien = new Grid(gameObjectName, GameSprite.Name.NullObject, index, posX, posY);
                     // --> Add alien grid to the gameObjectManager ONLY once - the root
                     //Debug.Assert(pAlien != null);
-                    GameObjectManager.Attach(pAlien);
+                    GameObjectManager.AttachTree(pAlien, this.pTree);
                     break;
 
                 default:
@@ -80,8 +80,9 @@ namespace SpaceInvaders
             //insert alien into the PCSTree Hierarchy;
             this.pTree.Insert(pAlien, this.pParent);
 
-            // Attached to Group
-            this.pSpriteBatch.Attach(pAlien.pProxySprite);
+            //Activate the GameSprite by Attaching the
+            // new alien's proxy sprite to the alien sprite batch;
+            pAlien.ActivateGameSprite(this.pSpriteBatch);
 
             return pAlien;
         }

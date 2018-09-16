@@ -363,10 +363,11 @@ namespace SpaceInvaders
             {
                 //constructor can only be called here since private access
                 pInstance = new GameSpriteManager(startReserveSize, refillSize);
-            }
 
-            // Add a default data node
-            //Add(SpriteNode.Name.Blank, SpriteNode.Data.Blank);
+                // Add a default NULL Sprite into the Manager, allows find to work without breaking
+                GameSprite pGSprite = GameSpriteManager.Add(GameSprite.Name.NullObject, Image.Name.NullObject, 0, 0, 128, 128);
+                Debug.Assert(pGSprite != null);
+            }
 
             Debug.WriteLine("------GameSprite Manager Initialized-------");
         }

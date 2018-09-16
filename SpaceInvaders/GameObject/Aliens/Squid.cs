@@ -6,8 +6,8 @@ namespace SpaceInvaders
     public class Squid : AlienType
     {
 
-        public Squid(GameObject.Name name, GameSprite.Name spriteName, float posX, float posY)
-            : base(name, spriteName, AlienType.Type.Squid)
+        public Squid(GameObject.Name name, GameSprite.Name spriteName, int index, float posX, float posY)
+            : base(name, spriteName, index, AlienType.Type.Squid)
         {
             this.x = posX;
             this.y = posY;

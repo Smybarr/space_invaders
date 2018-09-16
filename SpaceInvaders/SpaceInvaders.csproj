@@ -75,6 +75,7 @@
     <Compile Include="BaseManagement\SLink.cs" />
     <Compile Include="DebugPrinter\DebugPrinter.cs" />
     <Compile Include="DestructorManagement\Death.cs" />
+    <Compile Include="DestructorManagement\Ghost.cs" />
     <Compile Include="GameObject\Aliens\AlienType.cs" />
     <Compile Include="GameObject\Aliens\AlienFactory.cs" />
     <Compile Include="GameObject\Aliens\Crab.cs" />

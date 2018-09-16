@@ -15,6 +15,10 @@ namespace SpaceInvaders
     public abstract class SpriteBase : MLink
     {
         public Boolean render;
+        // If you remove a SpriteBase initiated by gameObject... its hard to get the spriteBatchNode
+        // so have a back pointer to it
+        private SBNode pSBNode;
+
 
         //public float x;
         //public float y;
@@ -26,7 +30,7 @@ namespace SpaceInvaders
             : base()
         {
             this.render = true;
-
+            this.pSBNode = null;
             ////moved to child classes due to proxy pattern
             //this.x = 0.0f;
             //this.y = 0.0f;
@@ -39,6 +43,18 @@ namespace SpaceInvaders
 #if (TRACK_DESTRUCTOR)
             Debug.WriteLine("      ~SpriteBase():{0} ", this.GetHashCode());
 #endif
+        }
+
+
+        public SBNode GetSBNode()
+        {
+            Debug.Assert(this.pSBNode != null);
+            return this.pSBNode;
+        }
+        public void SetSBNode(SBNode pSpriteBatchNode)
+        {
+            Debug.Assert(pSpriteBatchNode != null);
+            this.pSBNode = pSpriteBatchNode;
         }
 
         protected void baseDumpSprite()

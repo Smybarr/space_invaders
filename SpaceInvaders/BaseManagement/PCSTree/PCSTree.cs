@@ -5,17 +5,44 @@ namespace SpaceInvaders
 {
     public class PCSTree
     {
+        //Nested Objects -----------------------------------------------------
+        // Name and PCSRootNode : PCSNode
         public enum Name
         {
             Root,
             Not_Initialized
         }
+        //nested class = PCSRootNode;
+        public class PCSRootNode : PCSNode
+        {
 
-        // Data -----------------------------------------------------
+            // Data -----------------------------------------------------
+            private PCSTree.Name name;
+            private int index;
 
+            public PCSRootNode(PCSTree.Name treeName, int _index = 0)
+                : base()
+            {
+                this.name = treeName;
+                this.index = _index;
+            }
+            public override int GetIndex()
+            {
+                return this.index;
+            }
+            public override Enum GetPCSName()
+            {
+                return this.name;
+            }
+        }
+
+        //Data -----------------------------------------------------
         private PCSNode pRoot;
         public int numNodes;
         public int maxNodeCount;
+
+
+        //Methods -----------------------------------------------------
 
         // constructor
         public PCSTree()
@@ -29,11 +56,18 @@ namespace SpaceInvaders
             this.Insert(pcsRoot, null);
         }
 
-        public PCSNode getRoot()
+
+        public void SetRoot(PCSNode pRoot)
         {
+            Debug.Assert(pRoot != null);
+            this.pRoot = pRoot;
+        }
+        public PCSNode GetRoot()
+        {
+            Debug.Assert(this.pRoot != null);
             return this.pRoot;
         }
-
+        
         // insert
         public void Insert(PCSNode inNode, PCSNode pParent)
         {
@@ -123,6 +157,13 @@ namespace SpaceInvaders
                 this.Remove(inNode);
             }
         }
+        public void DumpTree()
+        {
+            Debug.WriteLine("");
+            Debug.WriteLine("DumpTree () -------------------------------");
+            this.privDumpTreeDepthFirst(this.pRoot);
+        }
+
 
         private void privRemoveNodeNoYoungerSiblings(PCSNode inNode, PCSNode pParent)
         {
@@ -179,14 +220,6 @@ namespace SpaceInvaders
                 pPrev.pSibling = inNode.pSibling;
             }
         }
-
-        public void dumpTree()
-        {
-            Debug.WriteLine("");
-            Debug.WriteLine("dumpTree () -------------------------------");
-            this.privDumpTreeDepthFirst(this.pRoot);
-        }
-
         private void privDumpTreeDepthFirst(PCSNode pNode)
         {
             PCSNode pChild = null;
@@ -211,7 +244,6 @@ namespace SpaceInvaders
                 // bye bye exit condition
             }
         }
-
         private void privInfoAddNode()
         {
             this.numNodes += 1;
@@ -227,23 +259,7 @@ namespace SpaceInvaders
         }
 
 
-        public class PCSRootNode : PCSNode
-        {
 
-            // Data -----------------------------------------------------
-            private PCSTree.Name name;
-
-            public PCSRootNode(PCSTree.Name treeName)
-                : base()
-            {
-                this.name = treeName;
-            }
-
-            public override Enum getName()
-            {
-                return this.name;
-            }
-        }
 
 
 

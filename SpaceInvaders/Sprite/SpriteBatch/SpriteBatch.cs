@@ -52,7 +52,9 @@ namespace SpaceInvaders
             Debug.Assert(startReserveSize > 0);
             Debug.Assert(refillSize > 0);
 
+            //attach both the name of the sprite batch and a pointer to batch itself;
             this.pSBNodeMan.Set(spriteBatchName, startReserveSize, refillSize);
+            this.pSBNodeMan.SetSpriteBatch(this);
         }
 
         public void SetName(Name spriteBatchName)
@@ -70,38 +72,57 @@ namespace SpaceInvaders
             return this.pSBNodeMan;
         }
 
-        public SBNode Attach(GameSprite.Name name)
+        public void Attach(SpriteBase pNode)
         {
-            SBNode pSBNode = this.pSBNodeMan.Attach(name);
+            Debug.Assert(pNode != null);
 
-            return pSBNode;
-        }
-        public SBNode Attach(BoxSprite.Name name)
-        {
-            SBNode pSBNode = this.pSBNodeMan.Attach(name);
-
-            return pSBNode;
-        }
-        public SBNode Attach(ProxySprite pNode)
-        {
             // Go to Man, get a node from reserve, add to active, return it
-            Debug.Assert(this.pSBNodeMan != null);
-            SBNode pSBNode = this.pSBNodeMan.Add(pNode);
-            return pSBNode;
+            SBNode pSBNode = (SBNode)this.pSBNodeMan.Add(pNode);
+            Debug.Assert(pSBNode != null);
+
+            // Initialize SpriteBatchNode
+            pSBNode.Set(pNode, this.pSBNodeMan);
         }
+
+        //public SBNode Attach(GameSprite.Name name)
+        //{
+        //    SBNode pSBNode = this.pSBNodeMan.Attach(name);
+
+        //    return pSBNode;
+        //}
+        //public SBNode Attach(BoxSprite.Name name)
+        //{
+        //    SBNode pSBNode = this.pSBNodeMan.Attach(name);
+
+        //    return pSBNode;
+        //}
+        //public SBNode Attach(ProxySprite pNode)
+        //{
+        //    // Go to Man, get a node from reserve, add to active, return it
+        //    Debug.Assert(this.pSBNodeMan != null);
+        //    SBNode pSBNode = this.pSBNodeMan.Add(pNode);
+        //    return pSBNode;
+        //}
 
         public void Draw()
         {
             SBNode pSpriteBatchNode = (SBNode)this.pSBNodeMan.GetActive();
-
+            int count = 0;
             while (pSpriteBatchNode != null)
             {
+                count++;
                 // Assumes someone before here called update() on each sprite
                 // OK... data is right so --> Draw me.
-                pSpriteBatchNode.pSpriteBase.Draw();
+                pSpriteBatchNode.GetSpriteBase().Draw();
 
                 pSpriteBatchNode = (SBNode)pSpriteBatchNode.pMNext;
             }
+            Debug.WriteLine("DrawCount:{0}", count);
+        }
+        public void Remove(SBNode pSpriteBatchNode)
+        {
+            Debug.Assert(pSpriteBatchNode != null);
+            this.pSBNodeMan.Remove(pSpriteBatchNode);
         }
 
         public void WashSpriteBatchData()
@@ -269,6 +290,15 @@ namespace SpaceInvaders
 
             return pData;
         }
+
+        public static void Remove(SBNode pSBNode)
+        {
+            Debug.Assert(pSBNode != null);
+            SBNodeManager pSBNodeMan = pSBNode.GetSBNodeMan();
+
+            Debug.Assert(pSBNodeMan != null);
+            pSBNodeMan.Remove(pSBNode);
+        }
         public static void Remove(SpriteBatch pNode)
         {
             //get the singleton
@@ -278,6 +308,7 @@ namespace SpaceInvaders
             Debug.Assert(pNode != null);
             pMan.baseRemoveNode(pNode);
         }
+
         public static void DumpAll()
         {
             SpriteBatchManager pMan = privGetInstance();
@@ -341,6 +372,48 @@ namespace SpaceInvaders
             pNode.WashSpriteBatchData();
         }
     }
+
+
+
+
+/*SpriteBatchManager.Draw() - OLD
+
+    ////Draw is now handled by each individual sprite batch
+    //public static void Draw()
+    //{
+    //    // FIX: this screams - iterators...
+
+    //    // get the singleton
+    //    SpriteBatchManager pSpriteBatchMan = SpriteBatchManager.privGetInstance();
+    //    SpriteBatch pSpriteBatch = pSpriteBatchMan.GetActive();
+    //    SBNodeManager pSBNodeManager = null;          
+    //    SBNode pSBNode = null;
+
+    //    while (pSpriteBatch != null)
+    //    {
+    //        //get the sprite batch node manager reference attached to this sprite batch link
+    //        pSBNodeManager = pSpriteBatch.GetSBNodeManager();
+    //        Debug.Assert(pSBNodeManager != null);
+
+    //        //get the first active SBNode link on that manager;
+    //        pSBNode = (SBNode)pSBNodeManager.GetActive();
+
+    //        while (pSBNode != null)
+    //        {
+    //            // Assumes someone before here called update() on each sprite
+    //            // Draw me.
+    //            pSBNode.pSpriteBase.Draw();
+
+    //            //get the next sprite batch node on this manager
+    //            pSBNode = (SBNode)pSBNode.pMNext;
+    //        }
+
+    //        //get the next sprite batch
+    //        pSpriteBatch = (SpriteBatch)pSpriteBatch.pMNext;
+    //    }
+    //}
+
+ */
 }
 
 
@@ -348,37 +421,3 @@ namespace SpaceInvaders
 
 
 
-////Draw is now handled by each individual sprite batch
-//public static void Draw()
-//{
-//    // FIX: this screams - iterators...
-
-//    // get the singleton
-//    SpriteBatchManager pSpriteBatchMan = SpriteBatchManager.privGetInstance();
-//    SpriteBatch pSpriteBatch = pSpriteBatchMan.GetActive();
-//    SBNodeManager pSBNodeManager = null;          
-//    SBNode pSBNode = null;
-
-//    while (pSpriteBatch != null)
-//    {
-//        //get the sprite batch node manager reference attached to this sprite batch link
-//        pSBNodeManager = pSpriteBatch.GetSBNodeManager();
-//        Debug.Assert(pSBNodeManager != null);
-
-//        //get the first active SBNode link on that manager;
-//        pSBNode = (SBNode)pSBNodeManager.GetActive();
-
-//        while (pSBNode != null)
-//        {
-//            // Assumes someone before here called update() on each sprite
-//            // Draw me.
-//            pSBNode.pSpriteBase.Draw();
-
-//            //get the next sprite batch node on this manager
-//            pSBNode = (SBNode)pSBNode.pMNext;
-//        }
-
-//        //get the next sprite batch
-//        pSpriteBatch = (SpriteBatch)pSpriteBatch.pMNext;
-//    }
-//}

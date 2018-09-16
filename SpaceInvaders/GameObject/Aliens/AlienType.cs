@@ -30,8 +30,8 @@ namespace SpaceInvaders
         //placeholder data - will eventually change
         protected Type alienType;
 
-        protected AlienType(GameObject.Name name, GameSprite.Name spriteName, Type alienType)
-            : base(name, spriteName)
+        protected AlienType(GameObject.Name name, GameSprite.Name spriteName, int index, Type alienType)
+            : base(name, spriteName, index)
         {
             this.alienType = alienType;
         }

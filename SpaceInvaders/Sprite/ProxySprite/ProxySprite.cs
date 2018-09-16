@@ -8,6 +8,8 @@ namespace SpaceInvaders
         public enum Name
         {
             Proxy,
+
+            NullObject,
             Blank
         }
 
@@ -50,9 +52,9 @@ namespace SpaceInvaders
 
         ~ProxySprite()
         {
-#if (TRACK_DESTRUCTOR)   
+            #if (TRACK_DESTRUCTOR)   
             Debug.WriteLine("~ProxySprite():{0} ", this.GetHashCode());
-#endif
+            #endif
             this.pSprite = null;
             this.name = ProxySprite.Name.Blank;
         }
@@ -65,6 +67,9 @@ namespace SpaceInvaders
             this.y = 0.0f;
 
             this.pSprite = GameSpriteManager.Find(name);
+
+            ////COMMENT THIS OUT AND IT STILL RUNS
+            //// See 
             Debug.Assert(this.pSprite != null);
         }
         public void Wash()
@@ -74,9 +79,11 @@ namespace SpaceInvaders
 
         public override void Update()
         {
-            // push the data from proxy to Real GameSprite
-            this.privPushToReal();
-            this.pSprite.Update();
+            //// push the data from proxy to Real GameSprite
+            //this.privPushToReal();
+            //this.pSprite.Update();
+
+            //Due to proxy sprite, do push in render
         }
 
         private void privPushToReal()

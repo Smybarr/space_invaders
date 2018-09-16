@@ -34,17 +34,18 @@ namespace SpaceInvaders
 
         // Methods: set/get -------------------------------
 
-        abstract public Enum getName();
+        abstract public Enum GetPCSName();
+        abstract public int GetIndex();
 
         // Methods: Dump ------------------
 
         public void dumpNode()
         {
             Debug.WriteLine("");
-            Debug.WriteLine("    name: {0} {1}", this.getName(), this.GetHashCode());
+            Debug.WriteLine("    name: {0} {1}", this.GetPCSName(), this.GetHashCode());
             if (this.pParent != null)
             {
-                Debug.WriteLine("  parent: {0} {1}", this.pParent.getName(), this.pParent.GetHashCode());
+                Debug.WriteLine("  parent: {0} {1}", this.pParent.GetPCSName(), this.pParent.GetHashCode());
             }
             else
             {
@@ -52,7 +53,7 @@ namespace SpaceInvaders
             }
             if (this.pChild != null)
             {
-                Debug.WriteLine("   child: {0} {1}", this.pChild.getName(), this.pChild.GetHashCode());
+                Debug.WriteLine("   child: {0} {1}", this.pChild.GetPCSName(), this.pChild.GetHashCode());
             }
             else
             {
@@ -60,7 +61,7 @@ namespace SpaceInvaders
             }
             if (this.pSibling != null)
             {
-                Debug.WriteLine(" sibling: {0} {1}", this.pSibling.getName(), this.pSibling.GetHashCode());
+                Debug.WriteLine(" sibling: {0} {1}", this.pSibling.GetPCSName(), this.pSibling.GetHashCode());
             }
             else
             {

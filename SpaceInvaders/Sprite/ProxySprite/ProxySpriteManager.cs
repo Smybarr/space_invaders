@@ -6,33 +6,23 @@ namespace SpaceInvaders
     public class ProxySpriteManager : Manager
     {
         //----------------------------------------------------------------------
+        // Data
+        private static ProxySprite pSpriteRef = new ProxySprite();
+        private static ProxySpriteManager pInstance = null;
+
+        //----------------------------------------------------------------------
         // Constructor
         //----------------------------------------------------------------------
         private ProxySpriteManager(int startReserveSize = 3, int refillSize = 1)
             : base(startReserveSize, refillSize)
         {
         }
-        ~ProxySpriteManager()
+        private static ProxySpriteManager privGetInstance()
         {
-#if (TRACK_DESTRUCTOR)
-            Debug.WriteLine("~ProxySpriteManager():{0} ", this.GetHashCode());
-#endif
-            ProxySpriteManager.pSpriteRef = null;
-            ProxySpriteManager.pInstance = null;
-        }
-        public static void Destroy()
-        {
-            // Get the instance
-            ProxySpriteManager pMan = ProxySpriteManager.privGetInstance();
-            Debug.WriteLine("--->ProxySpriteManager.Destroy()");
-            pMan.baseDestroy();
+            // Safety - this forces users to call Create() first before using class
+            Debug.Assert(pInstance != null);
 
-#if (TRACK_DESTRUCTOR)
-            Debug.WriteLine("     {0} ({1})", ProxySpriteManager.pSpriteRef, ProxySpriteManager.pSpriteRef.GetHashCode());
-            Debug.WriteLine("     {0} ({1})", ProxySpriteManager.pInstance, ProxySpriteManager.pInstance.GetHashCode());
-#endif
-            ProxySpriteManager.pSpriteRef = null;
-            ProxySpriteManager.pInstance = null;
+            return pInstance;
         }
         public static void Create(int startReserveSize = 3, int refillSize = 1)
         {
@@ -47,9 +37,37 @@ namespace SpaceInvaders
             if (pInstance == null)
             {
                 pInstance = new ProxySpriteManager(startReserveSize, refillSize);
+
+                // Add a NULL Sprite into the Manager, allows find to work without breaking;
+                ProxySprite pPSprite = ProxySpriteManager.Add(GameSprite.Name.NullObject);
+                Debug.Assert(pPSprite != null);
             }
 
             Debug.WriteLine("------ProxySprite Manager Initialized-------");
+        }
+
+
+        ~ProxySpriteManager()
+        {
+            #if (TRACK_DESTRUCTOR)
+            Debug.WriteLine("~ProxySpriteManager():{0} ", this.GetHashCode());
+            #endif
+            ProxySpriteManager.pSpriteRef = null;
+            ProxySpriteManager.pInstance = null;
+        }
+        public static void Destroy()
+        {
+            // Get the instance
+            ProxySpriteManager pMan = ProxySpriteManager.privGetInstance();
+            Debug.WriteLine("--->ProxySpriteManager.Destroy()");
+            pMan.baseDestroy();
+
+            #if (TRACK_DESTRUCTOR)
+            Debug.WriteLine("     {0} ({1})", ProxySpriteManager.pSpriteRef, ProxySpriteManager.pSpriteRef.GetHashCode());
+            Debug.WriteLine("     {0} ({1})", ProxySpriteManager.pInstance, ProxySpriteManager.pInstance.GetHashCode());
+            #endif
+            ProxySpriteManager.pSpriteRef = null;
+            ProxySpriteManager.pInstance = null;
         }
 
         //----------------------------------------------------------------------
@@ -149,22 +167,7 @@ namespace SpaceInvaders
             pData.DumpNodeData();
         }
 
-        //----------------------------------------------------------------------
-        // Private methods
-        //----------------------------------------------------------------------
-        private static ProxySpriteManager privGetInstance()
-        {
-            // Safety - this forces users to call Create() first before using class
-            Debug.Assert(pInstance != null);
 
-            return pInstance;
-        }
-
-        //----------------------------------------------------------------------
-        // Data: unique data for this manager here
-        //----------------------------------------------------------------------
-        private static ProxySprite pSpriteRef = new ProxySprite();
-        private static ProxySpriteManager pInstance = null;
 
     }
 }

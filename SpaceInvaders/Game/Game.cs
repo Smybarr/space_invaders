@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using SpaceInvaders.DestructorManagement;
 
 namespace SpaceInvaders
 {
@@ -64,7 +63,21 @@ namespace SpaceInvaders
 
             TimerEventManager.Create();
             DeathManager.Create(1, 1);
+            GhostManager.Create(1, 1);
             //load all new objects here and attach to death manager;
+
+            //Print some initial stats
+            TextureManager.DumpStats();
+            ImageManager.DumpStats();
+            GameSpriteManager.DumpStats();
+            BoxSpriteManager.DumpStats();
+            SpriteBatchManager.DumpStats();
+            ProxySpriteManager.DumpStats();
+            TimerEventManager.DumpStats();
+            GameObjectManager.DumpStats();
+            DeathManager.DumpStats();
+            GhostManager.DumpStats();
+
 
             //-----------------------------------------------
             //Texture Load
@@ -73,12 +86,22 @@ namespace SpaceInvaders
             TextureManager.Add(Texture.Name.SpaceInvadersMono4, "SpaceInvadersMono4.tga");
             TextureManager.Add(Texture.Name.GameSprites, "SpaceInvaderSprites_14x14.tga");
 
+
+
+
+
+
+
+
+
             //-----------------------------------------------
             //Image Load
 
             //load images from texture sheets above. input = coordinates on tga sheets
 
-            //constants
+            //constant image rect values
+            // topLeft x, y & image width/height values
+            // from "SpaceInvaderSprites_14x14.tga" texture sheet
             float constAlienOpen_tlY = 28.0f;
             float constAlienClosed_tlY = 182.0f;
             float constAlien_ImageHeight = 112.0f;
@@ -102,6 +125,8 @@ namespace SpaceInvaders
             float octo_ImageWidth = 168.0f;
 
             //---------------------------------
+            //Load the images
+
 
             //Squid Open
             ImageManager.Add(Image.Name.SquidOpen, Texture.Name.GameSprites, squidOpen_tlX, constAlienOpen_tlY, squid_ImageWidth, constAlien_ImageHeight);
@@ -119,10 +144,24 @@ namespace SpaceInvaders
             ImageManager.Add(Image.Name.OctopusClosed, Texture.Name.GameSprites, octoClosed_tlX, constAlienClosed_tlY, octo_ImageWidth, constAlien_ImageHeight);
 
 
+
+
+
+
+
+
+
             //-----------------------------------------------
             //Sprite Batch Creation
             SpriteBatch pSB_Aliens = SpriteBatchManager.Add(SpriteBatch.Name.GameSprites);
             SpriteBatch pSB_Boxes = SpriteBatchManager.Add(SpriteBatch.Name.SpriteBoxes);
+
+
+
+
+
+
+
 
 
             //-----------------------------------------------
@@ -155,21 +194,37 @@ namespace SpaceInvaders
             //octopus game sprite
             GameSpriteManager.Add(GameSprite.Name.Octopus, Image.Name.OctopusOpen, octo_sX, octo_sY, const_SpriteSize, const_SpriteSize);
 
-            //Attach to appropriate Sprite Batch
-            pSB_Aliens.Attach(GameSprite.Name.Squid);
-            pSB_Aliens.Attach(GameSprite.Name.Crab);
-            pSB_Aliens.Attach(GameSprite.Name.Octopus);
+            //Attachment to sprite batch now happens inside of the game object creation for ALIENS ONLY!!!
+            ////Attach to appropriate Sprite Batch
+            //pSB_Aliens.Attach(GameSprite.Name.Squid);
+            //pSB_Aliens.Attach(GameSprite.Name.Crab);
+            //pSB_Aliens.Attach(GameSprite.Name.Octopus);
 
             //----------------------
             //BoxSprite (Alien)
 
+            //todo fix boxsprite rendering issues after gameobject-pcstree refactor
             //add box to sx-sy, with a preset width/height
             BoxSpriteManager.Add(BoxSprite.Name.AlienBox, squid_sX, squid_sY, boxSize, boxSize);
-            //Attach to appropriate Sprite Batch 
-            pSB_Boxes.Attach(BoxSprite.Name.AlienBox);
+            ////Attach to appropriate Sprite Batch 
+            //pSB_Boxes.Attach(BoxSprite.Name.AlienBox);
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             //----------------------
-            //Animated Sprite 
+            //Animated Sprite (Attached to TimerManager
+            //Each animation is a TimerEvent following command pattern;
 
             // Create a squid animation sprite
             AnimationSprite pAnim_Squid = new AnimationSprite(GameSprite.Name.Squid);
@@ -199,84 +254,50 @@ namespace SpaceInvaders
             TimerEventManager.Add(TimerEvent.Name.SpriteAnimation, pAnim_Crab, animInterval);
             TimerEventManager.Add(TimerEvent.Name.SpriteAnimation, pAnim_Octo, animInterval);
 
-            //----------------------
-            //Proxy Sprite
 
-            // create 10 proxies of each alien sprite
-            //note that squid and the timer animation are independent
-            float gap = 50.0f;
-            float proxyX = 50.0f;
-            for (int i = 0; i < 10; i++)
-            {
-                
-                //create the proxy sprites
-                ProxySprite squidProxy = ProxySpriteManager.Add(GameSprite.Name.Squid);
-                ProxySprite crabProxy = ProxySpriteManager.Add(GameSprite.Name.Crab);
-                ProxySprite octoProxy = ProxySpriteManager.Add(GameSprite.Name.Octopus);
 
-                //set the coordinates
-                squidProxy.x = proxyX + gap * i;
-                squidProxy.y = 700.0f;
 
-                crabProxy.x = proxyX + gap * i;
-                crabProxy.y = 650.0f;
 
-                octoProxy.x = proxyX + gap * i;
-                octoProxy.y = 600.0f;
 
-                //attach proxy sprite clones to the sprite batch for rendering
-                pSB_Aliens.Attach(squidProxy);
-                pSB_Aliens.Attach(crabProxy);
-                pSB_Aliens.Attach(octoProxy);
 
-            }
+
+
+
 
 
 
             //-----------------------------------------------
-            //GameObject Load (Individual or Factory)
+            //GameObject Load (Factory)
 
-            //Method 1) Individual
-            // Create a game object
-            Squid pSquid = new Squid(GameObject.Name.Squid, GameSprite.Name.Squid, 50.0f, 200.0f);
-            Crab pCrab = new Crab(GameObject.Name.Crab, GameSprite.Name.Crab, 50.0f, 150.0f);
-            Octopus pOcto = new Octopus(GameObject.Name.Octopus, GameSprite.Name.Octopus, 50.0f, 100.0f);
+            // Create a AlienTree
+            PCSTree pAlienTree = new PCSTree();
 
-            // add to the gameObjectManager
-            GameObjectManager.Attach(pSquid);
-            GameObjectManager.Attach(pCrab);
-            GameObjectManager.Attach(pOcto);
+            // create the factory 
+            AlienFactory AlienFactory = new AlienFactory(SpriteBatch.Name.GameSprites, pAlienTree);
+            DeathManager.Attach(AlienFactory);
+
+            // attach grid as a child of game object root; grid will be parent of all alien game objects
+            AlienType pGrid = AlienFactory.Create(AlienType.Type.AlienGrid, GameObject.Name.Grid);
+
+            // set the grid as the root parent to attach all aliens to
+            AlienFactory.SetParent(pGrid);
+
+            float gap = 50.0f;
+            float proxyX = 50.0f;
+            // create 30 alien game objects quickly and attach to grid parent
+            for (int i = 0; i < 10; i++)
+            {
+                // load children of grid;
+                AlienFactory.Create(AlienType.Type.Crab, GameObject.Name.Crab, i, proxyX + gap * i, 700.0f);
+                AlienFactory.Create(AlienType.Type.Squid, GameObject.Name.Squid, i, proxyX + gap * i, 650.0f);
+                AlienFactory.Create(AlienType.Type.Octopus, GameObject.Name.Octopus, i, proxyX + gap * i, 600.0f);
+            }
+            Debug.WriteLine("\n\n\n\n\n");
+            GameObjectManager.DumpAll();
 
 
-            //change to color to differentiate from proxies
-            pSquid.pProxySprite.pSprite.ChangeColor(1.0f, 0.0f, 0.0f);
-            pCrab.pProxySprite.pSprite.ChangeColor(0.0f, 1.0f, 0.0f);
-            pOcto.pProxySprite.pSprite.ChangeColor(0.0f, 0.0f, 1.0f);
 
 
-            // Attach the GameObject's associated proxy sprites to sprite batch for rendering
-            pSB_Aliens.Attach(pSquid.pProxySprite);
-            pSB_Aliens.Attach(pCrab.pProxySprite);
-            pSB_Aliens.Attach(pOcto.pProxySprite);
-
-
-            //----------------------
-            //Method 2) Factory
-
-            // create the Alien Factory 
-            //AlienFactory AlienFactory = new AlienFactory(SpriteBatch.Name.GameSprites);
-
-            // eventually we'll make one game object per column
-            // then use proxies to cookie-cut copy each game object
-            // to make more sprites in the grid;
-
-            // create 15 game objects quickly
-            //for (int i = 0; i < 5; i++)
-            //{
-            //    AlienFactory.Create(AlienType.Type.Crab, 100.0f + i * 150.0f, 700.0f);
-            //    AlienFactory.Create(AlienType.Type.Squid, 50.0f + 40.0f * i, 600.0f);
-            //    AlienFactory.Create(AlienType.Type.Octopus, 100.0f + i * 150.0f, 450.0f);
-            //}
 
 
 
@@ -294,7 +315,7 @@ namespace SpaceInvaders
             TimerEventManager.DumpStats();
             GameObjectManager.DumpStats();
             DeathManager.DumpStats();
-
+            GhostManager.DumpStats();
 
             //TextureManager.DumpLists();
             //ImageManager.DumpLists();
@@ -305,7 +326,7 @@ namespace SpaceInvaders
             //TimerEventManager.DumpLists();
             //GameObjectManager.DumpLists();
             //DeathManager.DumpLists();
-
+            //GhostManager.DumpLists();
 
 
             //TextureManager.DumpAll();
@@ -317,6 +338,7 @@ namespace SpaceInvaders
             //TimerEventManager.DumpAll();
             //GameObjectManager.DumpAll();
             //DeathManager.DumpAll();
+            //GhostManager.DumpAll();
         }
 
         //-----------------------------------------------------------------------------
@@ -330,39 +352,8 @@ namespace SpaceInvaders
             //KeyboardTest();
             //MouseTest();
 
-
             // Fire off the timer events
             TimerEventManager.Update(this.GetTime());
-
-            //-----------------------------------------------
-            //Sprites
-
-            //GameSprite pSquid = GameSpriteManager.Find(GameSprite.Name.Squid);
-            //Debug.Assert(pSquid != null);
-            //pSquid.Update();
-
-            //GameSprite pCrab = GameSpriteManager.Find(GameSprite.Name.Crab);
-            //Debug.Assert(pSquid != null);
-            //pCrab.Update();
-
-            //GameSprite pOctopus = GameSpriteManager.Find(GameSprite.Name.Octopus);
-            //Debug.Assert(pSquid != null);
-            //pOctopus.Update();
-
-            //-----------------------------------------------
-            //GameObjects
-
-            //GameObject pAlienSquid = GameObjectManager.Find(GameObject.Name.Squid);
-            //Debug.Assert(pAlienSquid != null);
-            //pAlienSquid.Update();
-
-            //GameObject pAlienCrab = GameObjectManager.Find(GameObject.Name.Crab);
-            //Debug.Assert(pAlienCrab != null);
-            //pAlienCrab.Update();
-
-            //GameObject pAlienOctopus = GameObjectManager.Find(GameObject.Name.Octopus);
-            //Debug.Assert(pAlienOctopus != null);
-            //pAlienOctopus.Update();
 
             //-----------------------------------------------
             //sprite box
@@ -370,6 +361,7 @@ namespace SpaceInvaders
             pAlienBox.Update();
 
             //GameObjectManager updates ALL game objects and sprite positions
+            // remember each game object has a proxy sprite attached
             GameObjectManager.Update();
 
         }
@@ -386,6 +378,7 @@ namespace SpaceInvaders
             //sprites
             SpriteBatchManager.renderBoxes = true;
 
+            //draw all the sprites attached to sprite batches
             SpriteBatchManager.Draw();
         }
 
