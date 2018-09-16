@@ -175,6 +175,12 @@ namespace SpaceInvaders
             this.angle = poAzulSprite.angle;
 
         }
+
+        //todo clean up GetName() for GameSprite
+        public override Enum GetSpriteName()
+        {
+            return this.name;
+        }
         public GameSprite.Name GetName()
         {
             return this.name;
@@ -182,6 +188,11 @@ namespace SpaceInvaders
         public void SetName(GameSprite.Name inName)
         {
             this.name = inName;
+        }
+        public Azul.Rect GetScreenRect()
+        {
+            Debug.Assert(this.poScreenRect != null);
+            return this.poScreenRect;
         }
 
         public void WashNodeData()
@@ -281,10 +292,7 @@ namespace SpaceInvaders
             this.poAzulSprite.SwapColor(this.poColor);
         }
 
-        public override Enum GetSpriteName()
-        {
-            return this.name;
-        }
+
         public override void Update()
         {
             this.poAzulSprite.x = this.x;

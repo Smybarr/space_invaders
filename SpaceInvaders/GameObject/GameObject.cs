@@ -27,6 +27,7 @@ namespace SpaceInvaders
         public float x;
         public float y;
         public ProxySprite pProxySprite;
+        public CollisionObject poColObj;
 
         protected GameObject(GameObject.Name objName, GameSprite.Name spriteName, int _index)
         {
@@ -37,6 +38,9 @@ namespace SpaceInvaders
             //this.pProxySprite = new ProxySprite(spriteName);
             this.pProxySprite = ProxySpriteManager.Add(spriteName);
             Debug.Assert(this.pProxySprite != null);
+            
+            this.poColObj = new CollisionObject(this.pProxySprite);
+            Debug.Assert(this.poColObj != null);
         }
         ~GameObject()
         {
@@ -45,6 +49,7 @@ namespace SpaceInvaders
             #endif
             this.name = GameObject.Name.Blank;
             this.pProxySprite = null;
+            this.poColObj = null;
         }
 
         override public Enum GetPCSName()
@@ -90,11 +95,24 @@ namespace SpaceInvaders
             Debug.Assert(pSpriteBatch != null);
             pSpriteBatch.Attach(this.pProxySprite);
         }
+        public void ActivateCollisionSprite(SpriteBatch pSpriteBatch)
+        {
+            Debug.Assert(pSpriteBatch != null);
+            Debug.Assert(this.poColObj != null);
+            pSpriteBatch.Attach(this.poColObj.pColSprite);
+        }
+
         public virtual void Update()
         {
+            //update the proxy sprite coordinates
             Debug.Assert(this.pProxySprite != null);
             this.pProxySprite.x = this.x;
             this.pProxySprite.y = this.y;
+
+            //update the collision box coordinates
+            Debug.Assert(this.poColObj != null);
+            this.poColObj.UpdatePos(this.x, this.y);
+            this.poColObj.pColSprite.Update();
         }
 
         public void Dump()
@@ -283,6 +301,7 @@ namespace SpaceInvaders
 
             GameObjectManager.pRefNode = null;
             GameObjectManager.pInstance = null;
+            this.pRoot = null;
         }
         public static void Destroy()
         {

@@ -80,9 +80,11 @@ namespace SpaceInvaders
             //insert alien into the PCSTree Hierarchy;
             this.pTree.Insert(pAlien, this.pParent);
 
-            //Activate the GameSprite by Attaching the
-            // new alien's proxy sprite to the alien sprite batch;
+            //Activate the GameSprite by attaching the
+            //new alien's proxy sprite to the alien sprite batch;
+            //also attach a collision box associated with this sprite;
             pAlien.ActivateGameSprite(this.pSpriteBatch);
+            pAlien.ActivateCollisionSprite(this.pSpriteBatch);
 
             return pAlien;
         }

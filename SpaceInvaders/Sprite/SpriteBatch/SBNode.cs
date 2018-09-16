@@ -182,6 +182,8 @@ namespace SpaceInvaders
 
         }
 
+
+
         ~SBNodeManager()
         {
             #if (TRACK_DESTRUCTOR)
@@ -191,7 +193,6 @@ namespace SpaceInvaders
             this.spriteBatchName = SpriteBatch.Name.Blank;
             this.pSpriteBatch = null;
         }
-
         public void Destroy()
         {
             // Get the instance
@@ -207,9 +208,6 @@ namespace SpaceInvaders
             SBNodeManager.pSBNodeRef = null;
 
         }
-
-
-
         public void Wash()
         {
             this.spriteBatchName = SpriteBatch.Name.Blank;

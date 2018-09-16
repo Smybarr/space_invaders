@@ -73,6 +73,8 @@
     <Compile Include="BaseManagement\PCSTree\PCSTree.cs" />
     <Compile Include="BaseManagement\PCSTree\PCSTreeIterator.cs" />
     <Compile Include="BaseManagement\SLink.cs" />
+    <Compile Include="Collision\CollisionObject.cs" />
+    <Compile Include="Collision\CollisionRect.cs" />
     <Compile Include="DebugPrinter\DebugPrinter.cs" />
     <Compile Include="DestructorManagement\Death.cs" />
     <Compile Include="DestructorManagement\Ghost.cs" />

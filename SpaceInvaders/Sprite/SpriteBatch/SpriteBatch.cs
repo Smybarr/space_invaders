@@ -56,12 +56,10 @@ namespace SpaceInvaders
             this.pSBNodeMan.Set(spriteBatchName, startReserveSize, refillSize);
             this.pSBNodeMan.SetSpriteBatch(this);
         }
-
         public void SetName(Name spriteBatchName)
         {
             this.name = spriteBatchName;
         }
-
         public SpriteBatch.Name GetName()
         {
             return this.name;
@@ -107,17 +105,17 @@ namespace SpaceInvaders
         public void Draw()
         {
             SBNode pSpriteBatchNode = (SBNode)this.pSBNodeMan.GetActive();
-            int count = 0;
+            //int debugPrintCount = 0;
             while (pSpriteBatchNode != null)
             {
-                count++;
+                //debugPrintCount++;
                 // Assumes someone before here called update() on each sprite
                 // OK... data is right so --> Draw me.
                 pSpriteBatchNode.GetSpriteBase().Draw();
 
                 pSpriteBatchNode = (SBNode)pSpriteBatchNode.pMNext;
             }
-            Debug.WriteLine("DrawCount:{0}", count);
+            //Debug.WriteLine("{0} sprites from SpriteBatch({1}) drawn", debugPrintCount, this.name);
         }
         public void Remove(SBNode pSpriteBatchNode)
         {

@@ -18,6 +18,8 @@ namespace SpaceInvaders
         {
             TestBox,
 
+            Box,
+
             AlienBox,
             ColumBox,
             GridBox,
@@ -30,6 +32,7 @@ namespace SpaceInvaders
     
             NullObject,
             Blank,
+
 
         }
 
@@ -191,6 +194,7 @@ namespace SpaceInvaders
             this.poLineColor.Set(_pColor);
             this.poAzulSpriteBox.SwapColor(this.poLineColor);
         }
+        //todo clean up boxsprite line color management
         public void ChangeColor(float red, float green, float blue, float alpha = 1.0f)
         {
             Debug.Assert(this.poLineColor != null);
@@ -198,7 +202,10 @@ namespace SpaceInvaders
             this.poLineColor.Set(red, green, blue, alpha);
             this.poAzulSpriteBox.SwapColor(this.poLineColor);
         }
-
+        public void SetLineColor(float red, float green, float blue, float alpha = 1.0f)
+        {
+            this.poLineColor.Set(red, green, blue, alpha);
+        }
         public void DumpNodeData()
         {
             this.MLinkDump();
