@@ -71,7 +71,9 @@
     <Compile Include="BaseManagement\PCSTree\Iterator.cs" />
     <Compile Include="BaseManagement\PCSTree\PCSNode.cs" />
     <Compile Include="BaseManagement\PCSTree\PCSTree.cs" />
+    <Compile Include="BaseManagement\PCSTree\PCSTreeForwardIterator.cs" />
     <Compile Include="BaseManagement\PCSTree\PCSTreeIterator.cs" />
+    <Compile Include="BaseManagement\PCSTree\PCSTreeReverseIterator.cs" />
     <Compile Include="BaseManagement\SLink.cs" />
     <Compile Include="Collision\CollisionObject.cs" />
     <Compile Include="Collision\CollisionRect.cs" />

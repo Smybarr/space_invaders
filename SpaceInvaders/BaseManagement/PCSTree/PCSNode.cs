@@ -10,12 +10,30 @@ namespace SpaceInvaders
         public PCSNode pChild;
         public PCSNode pSibling;
 
+        public PCSNode pForward;
+        public PCSNode pReverse;
+
         // Constructors: --------------------------------
         public PCSNode()
         {
             this.pParent = null;
             this.pChild = null;
             this.pSibling = null;
+
+            this.pForward = null;
+            this.pReverse = null;
+        }
+
+        ~PCSNode()
+        {
+            #if(TRACK_DESTRUCTOR)
+            Debug.WriteLine("     ~PCSNode():{0}", this.GetHashCode());
+            #endif
+            this.pParent = null;
+            this.pChild = null;
+            this.pSibling = null;
+            this.pReverse = null;
+            this.pForward = null;
         }
 
         public PCSNode(PCSNode pNode)
@@ -23,13 +41,19 @@ namespace SpaceInvaders
             this.pParent = pNode.pParent;
             this.pChild = pNode.pChild;
             this.pSibling = pNode.pSibling;
+
+            this.pForward = pNode.pForward;
+            this.pReverse = pNode.pReverse;
         }
 
-        public PCSNode(PCSNode pParent, PCSNode pChild, PCSNode pSibling)
+        public PCSNode(PCSNode pParent, PCSNode pChild, PCSNode pSibling, PCSNode pForward, PCSNode pReverse)
         {
             this.pParent = pParent;
             this.pChild = pChild;
             this.pSibling = pSibling;
+
+            this.pForward = pForward;
+            this.pReverse = pReverse;
         }
 
         // Methods: set/get -------------------------------
@@ -39,7 +63,7 @@ namespace SpaceInvaders
 
         // Methods: Dump ------------------
 
-        public void dumpNode()
+        public void DumpPCSNode()
         {
             Debug.WriteLine("");
             Debug.WriteLine("    name: {0} {1}", this.GetPCSName(), this.GetHashCode());

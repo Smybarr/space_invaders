@@ -82,18 +82,6 @@ namespace SpaceInvaders
             pSBNode.Set(pNode, this.pSBNodeMan);
         }
 
-        //public SBNode Attach(GameSprite.Name name)
-        //{
-        //    SBNode pSBNode = this.pSBNodeMan.Attach(name);
-
-        //    return pSBNode;
-        //}
-        //public SBNode Attach(BoxSprite.Name name)
-        //{
-        //    SBNode pSBNode = this.pSBNodeMan.Attach(name);
-
-        //    return pSBNode;
-        //}
         //public SBNode Attach(ProxySprite pNode)
         //{
         //    // Go to Man, get a node from reserve, add to active, return it

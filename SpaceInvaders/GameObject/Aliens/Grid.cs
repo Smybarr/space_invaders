@@ -25,37 +25,74 @@ namespace SpaceInvaders
             Debug.WriteLine("~Grid():{0}", this.GetHashCode());
             #endif
         }
+
+
         public override void Update()
         {
-            base.Update();
-            this.MoveGrid();
-        }
+            // Go to first child
+            PCSNode pNode = (PCSNode)this;
+            pNode = pNode.pChild;
 
-        public void MoveGrid()
-        {
-            // Initialize
-            PCSTreeIterator pIterator = new PCSTreeIterator(this);
-            Debug.Assert(pIterator != null);
+            // Set ColTotal to first child
+            GameObject pGameObj = (GameObject)pNode;
 
-            PCSNode pNode = pIterator.First();
+            CollisionRect ColTotal = this.poColObj.poColRect;
+            ColTotal.Set(pGameObj.poColObj.poColRect);
 
+            // loop through sliblings
             while (pNode != null)
             {
-                // delta
-                GameObject pGameObj = (GameObject)pNode;
-                pGameObj.x += this.delta;
+                pGameObj = (GameObject)pNode;
+                ColTotal.Union(pGameObj.poColObj.poColRect);
 
-                // Advance
-                pNode = pIterator.Next();
+                // go to next sibling
+                pNode = pNode.pSibling;
             }
 
-            this.total += this.delta;
+            //this.pColObj.pColRect.Set(201, 201, 201, 201);
+            this.x = this.poColObj.poColRect.x;
+            this.y = this.poColObj.poColRect.y;
 
-            if (this.total > 400.0f || this.total < 0.0f)
-            {
-                this.delta *= -1.0f;
-            }
+           //Debug.WriteLine("x:{0} y:{1} w:{2} h:{3}", ColTotal.x, ColTotal.y, ColTotal.width, ColTotal.height);
+
+            base.Update();
         }
+
+
+
+
+
+        //public override void Update()
+        //{
+        //    base.Update();
+        //    this.MoveGrid();
+        //}
+
+        //public void MoveGrid()
+        //{
+        //    // Initialize
+        //    PCSTreeIterator pIterator = new PCSTreeIterator(this);
+        //    Debug.Assert(pIterator != null);
+
+        //    PCSNode pNode = pIterator.First();
+
+        //    while (pNode != null)
+        //    {
+        //        // delta
+        //        GameObject pGameObj = (GameObject)pNode;
+        //        pGameObj.x += this.delta;
+
+        //        // Advance
+        //        pNode = pIterator.Next();
+        //    }
+
+        //    this.total += this.delta;
+
+        //    if (this.total > 400.0f || this.total < 0.0f)
+        //    {
+        //        this.delta *= -1.0f;
+        //    }
+        //}
 
 
     }

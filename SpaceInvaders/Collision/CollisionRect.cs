@@ -36,47 +36,46 @@ namespace SpaceInvaders
             float maxX;
             float maxY;
 
-            if (this.x < ColRect.x)
+            if ((this.x - this.width / 2) < (ColRect.x - ColRect.width / 2))
             {
-                minX = this.x;
+                minX = (this.x - this.width / 2);
             }
             else
             {
-                minX = ColRect.x;
+                minX = (ColRect.x - ColRect.width / 2);
             }
 
-            if ((this.x + this.width) > (ColRect.x + ColRect.width))
+            if ((this.x + this.width / 2) > (ColRect.x + ColRect.width / 2))
             {
-                maxX = (this.x + this.width);
+                maxX = (this.x + this.width / 2);
             }
             else
             {
-                maxX = (ColRect.x + ColRect.width);
+                maxX = (ColRect.x + ColRect.width / 2);
             }
 
-            if (this.y > ColRect.y)
+            if ((this.y + this.height / 2) > (ColRect.y + ColRect.height / 2))
             {
-                maxY = this.y;
+                maxY = (this.y + this.height / 2);
             }
             else
             {
-                maxY = ColRect.y;
+                maxY = (ColRect.y + ColRect.height / 2);
             }
 
-            if ((this.y - this.height) < (ColRect.y - ColRect.height))
+            if ((this.y - this.height / 2) < (ColRect.y - ColRect.height / 2))
             {
-                minY = (this.y - this.height);
+                minY = (this.y - this.height / 2);
             }
             else
             {
-                minY = (ColRect.y - ColRect.height);
+                minY = (ColRect.y - ColRect.height / 2);
             }
 
-
-            this.x = minX;
-            this.y = maxY;
             this.width = (maxX - minX);
             this.height = (maxY - minY);
+            this.x = minX + this.width / 2;
+            this.y = minY + this.height / 2;
         }
 
     }

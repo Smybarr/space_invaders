@@ -26,10 +26,12 @@ namespace SpaceInvaders
             // Create the sprite
             this.pColSprite = BoxSpriteManager.Add(BoxSprite.Name.Box, this.poColRect);
             Debug.Assert(this.pColSprite != null);
+
             this.pColSprite.SetLineColor(1.0f, 1.0f, 0.0f);
 
         }
 
+        //Rename to PushPosition?
         public void UpdatePos(float x, float y)
         {
             this.poColRect.x = x;
@@ -37,6 +39,9 @@ namespace SpaceInvaders
 
             this.pColSprite.x = this.poColRect.x;
             this.pColSprite.y = this.poColRect.y;
+
+            this.pColSprite.SetScreenRect(this.poColRect.x, this.poColRect.y, this.poColRect.width, this.poColRect.height);
+            this.pColSprite.Update();
         }
 
 

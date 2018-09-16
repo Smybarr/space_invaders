@@ -111,8 +111,8 @@ namespace SpaceInvaders
 
             //update the collision box coordinates
             Debug.Assert(this.poColObj != null);
+            //UpdatePos will push new x/y vals and call update
             this.poColObj.UpdatePos(this.x, this.y);
-            this.poColObj.pColSprite.Update();
         }
 
         public void Dump()
@@ -380,6 +380,7 @@ namespace SpaceInvaders
         {
             GameObjectManager pMan = GameObjectManager.privGetInstance();
 
+            //get the root game object
             GameObjectNode pRoot = (GameObjectNode)pMan.baseGetActive();
 
             while (pRoot != null)
@@ -387,20 +388,25 @@ namespace SpaceInvaders
                 // OK at this point, I have a Root tree,
                 // need to walk the tree completely before moving to next tree
 
-                PCSTreeIterator pIterator = new PCSTreeIterator(pRoot.pGameObj);
+                PCSTreeForwardIterator pIterator = new PCSTreeForwardIterator(pRoot.pGameObj);
+              //PCSTreeReverseIterator pIterator = new PCSTreeReverseIterator(pRoot.pGameObj);
+                //PCSTreeIterator pIterator = new PCSTreeIterator(pRoot.pGameObj);
 
-                // Initialize
+                // Initialize the first game object pointer
                 GameObject pGameObj = (GameObject)pIterator.First();
 
-                while (pGameObj != null)
+                //iterate through and update all GameObjects in this tree/subtree
+                //Debug.WriteLine("-------");
+                while (!pIterator.IsDone())
                 {
+                    //Debug.WriteLine("  {0}", pGameObj.GetName());
                     pGameObj.Update();
 
                     // Advance
                     pGameObj = (GameObject)pIterator.Next();
                 }
 
-                // Goto Next tree
+                // Go to next tree
                 pRoot = (GameObjectNode)pRoot.pMNext;
             }
         }
@@ -455,13 +461,13 @@ namespace SpaceInvaders
             {
                 // OK at this point, I have a Root tree,
                 // need to walk the tree completely before moving to next tree
-
-                PCSTreeIterator pIterator = new PCSTreeIterator(pRoot.pGameObj);
+                //forward navigation
+                PCSTreeForwardIterator pIterator = new PCSTreeForwardIterator(pRoot.pGameObj);
 
                 // Initialize
                 pGameObj = (GameObject)pIterator.First();
-
-                while (pGameObj != null)
+                //while (pGameObj != null)
+                while (!pIterator.IsDone())
                 {
                     //check for both matching name and index
                     if (pGameObj.GetName() == GameObjectManager.pRefNode.pGameObj.GetName() &&
@@ -493,9 +499,11 @@ namespace SpaceInvaders
             }
             else
             {
-                // Can be null
+                //parent shouldn't be null if here
                 Debug.Assert(pParent != null);
 
+                //set the root as the parent and insert pGamObj as 
+                //a child of the parent in the same tree;
                 pMan.pRoot.SetRoot(pParent);
                 pMan.pRoot.Insert(pGameObj, pParent);
             }
@@ -545,7 +553,6 @@ namespace SpaceInvaders
             Debug.Assert(false);
             return false;
         }
-
         protected override MLink derivedCreateNode()
         {
             MLink pNode = new GameObjectNode();
@@ -553,17 +560,12 @@ namespace SpaceInvaders
 
             return pNode;
         }
-        //---------------------
-
-
-
         protected override void derivedDumpNode(MLink pLink)
         {
             Debug.Assert(pLink != null);
             GameObjectNode pNode = (GameObjectNode) pLink;
             pNode.DumpNodeData();
         }
-
         protected override void derivedWashNode(MLink pLink)
         {
             Debug.Assert(pLink != null);

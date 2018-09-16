@@ -186,6 +186,14 @@ namespace SpaceInvaders
         {
             this.name = inName;
         }
+
+        public void SetScreenRect(float x, float y, float width, float height)
+        {
+            this.Set(this.name, x, y, width, height);
+        }
+
+
+        //todo clean up boxsprite line color management
         public void ChangeColor(Azul.Color _pColor)
         {
             Debug.Assert(_pColor != null);
@@ -194,7 +202,6 @@ namespace SpaceInvaders
             this.poLineColor.Set(_pColor);
             this.poAzulSpriteBox.SwapColor(this.poLineColor);
         }
-        //todo clean up boxsprite line color management
         public void ChangeColor(float red, float green, float blue, float alpha = 1.0f)
         {
             Debug.Assert(this.poLineColor != null);
@@ -237,6 +244,7 @@ namespace SpaceInvaders
         }
 
 
+        //todo clean up Enum GetSpriteName() in BoxSprite
         public override Enum GetSpriteName()
         {
             return this.name;

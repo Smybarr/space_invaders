@@ -3,44 +3,67 @@ using System.Diagnostics;
 
 namespace SpaceInvaders
 {
-    public class PCSTreeIterator : Iterator
+    public class PCSTreeIterator
     {
-        public PCSTreeIterator(PCSNode rootNode)
+
+        private static GameObject root;
+        private static GameObject current;
+
+        public static void CalculateIterators(GameObject pRootNode)
         {
-            Debug.Assert(rootNode != null);
-            this.root = rootNode;
-            this.current = this.root;
+            // FIX Todo have this backed into PCSTree
+
+            Debug.Assert(pRootNode != null);
+            PCSTreeIterator.root = pRootNode;
+            PCSTreeIterator.current = PCSTreeIterator.root;
+
+            GameObject pPrevGameObj = (GameObject)pRootNode;
+            // Initialize the reserve pointer
+            GameObject pGameObj = (GameObject)pRootNode;
+
+
+            while (pGameObj != null)
+            {
+                // fill the basis
+                pPrevGameObj = pGameObj;
+
+                // Advance
+                pGameObj = PCSTreeIterator.privSecretNext();
+                pPrevGameObj.pForward = pGameObj;
+
+                if (pGameObj != null)
+                {
+                    pGameObj.pReverse = pPrevGameObj;
+                }
+            }
+
+            pRootNode.pReverse = pPrevGameObj;
+
         }
 
-        public override PCSNode First()
+        private static GameObject privSecretNext()
         {
-            this.current = this.root;
-            return this.current;
+            PCSTreeIterator.current = privGetNext(PCSTreeIterator.current);
+
+            return (GameObject)PCSTreeIterator.current;
         }
 
-        public override PCSNode Next()
+        private static GameObject privGetNext(GameObject node, bool UseChild = true)
         {
-            this.current = privGetNext(this.current);
-
-            return this.current;
-        }
-
-        private PCSNode privGetNext(PCSNode node, bool UseChild = true)
-        {
-            PCSNode tmp = null;
+            GameObject tmp = null;
 
             if ((node.pChild != null) && UseChild)
             {
-                tmp = node.pChild;
+                tmp = (GameObject)node.pChild;
             }
             else if (node.pSibling != null)
             {
-                tmp = node.pSibling;
+                tmp = (GameObject)node.pSibling;
             }
-            else if (node.pParent != this.root)
+            else if (node.pParent != PCSTreeIterator.root)
             {
                 // recurse here
-                tmp = this.privGetNext(node.pParent, false);
+                tmp = PCSTreeIterator.privGetNext((GameObject)node.pParent, false);
             }
             else
             {
@@ -49,17 +72,5 @@ namespace SpaceInvaders
             return tmp;
         }
 
-        public override bool IsDone()
-        {
-            return (this.current == null);
-        }
-
-        public override PCSNode CurrentItem()
-        {
-            return this.current;
-        }
-
-        private PCSNode root;
-        private PCSNode current;
     }
 }

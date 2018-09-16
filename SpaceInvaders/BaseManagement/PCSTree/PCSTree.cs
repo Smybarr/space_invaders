@@ -225,7 +225,7 @@ namespace SpaceInvaders
             PCSNode pChild = null;
 
             // dump
-            pNode.dumpNode();
+            pNode.DumpPCSNode();
 
             // iterate through all of the active children 
             if (pNode.pChild != null)

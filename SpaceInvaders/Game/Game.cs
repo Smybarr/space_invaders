@@ -355,11 +355,7 @@ namespace SpaceInvaders
             // Fire off the timer events
             TimerEventManager.Update(this.GetTime());
 
-            //-----------------------------------------------
-            //sprite box
-            BoxSprite pAlienBox = BoxSpriteManager.Find(BoxSprite.Name.AlienBox);
-            pAlienBox.Update();
-
+ 
             //GameObjectManager updates ALL game objects and sprite positions
             // remember each game object has a proxy sprite attached
             GameObjectManager.Update();
