@@ -66,6 +66,7 @@ namespace SpaceInvaders
         }
 
         abstract public Enum GetSpriteName();
+
         public abstract void Update();
         public abstract void Draw();
     }

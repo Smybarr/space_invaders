@@ -3,33 +3,57 @@ using System.Diagnostics;
 
 namespace SpaceInvaders
 {
-    public class CollisionRect : Azul.Rect
+    public class ColRect : Azul.Rect
     {
-        public CollisionRect(float x, float y, float width, float height)
+        public ColRect(float x, float y, float width, float height)
             : base(x, y, width, height)
         {
         }
-        public CollisionRect(Azul.Rect pRect)
+        public ColRect(Azul.Rect pRect)
             : base(pRect)
         {
         }
-        public CollisionRect(CollisionRect pRect)
+        public ColRect(ColRect pRect)
             : base(pRect)
         {
         }
-        public CollisionRect()
+        public ColRect()
             : base()
         {
         }
-        public bool Intersect(CollisionRect ColRectA, CollisionRect ColRectB)
+        //detects whether a collision occured;
+        public static bool Intersect(ColRect ColRectA, ColRect ColRectB)
         {
-            return true;
+            bool status = false;
+
+            float A_minx = ColRectA.x - ColRectA.width / 2;
+            float A_maxx = ColRectA.x + ColRectA.width / 2;
+            float A_miny = ColRectA.y - ColRectA.height / 2;
+            float A_maxy = ColRectA.y + ColRectA.height / 2;
+
+            float B_minx = ColRectB.x - ColRectB.width / 2;
+            float B_maxx = ColRectB.x + ColRectB.width / 2;
+            float B_miny = ColRectB.y - ColRectB.height / 2;
+            float B_maxy = ColRectB.y + ColRectB.height / 2;
+
+            // Trivial reject
+            if ((B_maxx < A_minx) || (B_minx > A_maxx) || (B_maxy < A_miny) || (B_miny > A_maxy))
+            {
+                status = false;
+            }
+            else
+            {
+                status = true;
+            }
+
+
+            return status;
         }
 
 
 
 
-        public void Union(CollisionRect ColRect)
+        public void Union(ColRect ColRect)
         {
             float minX;
             float minY;

@@ -20,13 +20,17 @@ namespace SpaceInvaders
             Crab,
             Octopus,
 
+            AlienColumn,
+            AlienGrid,
+
             AlienUFO,
 
             AlienExplosion,
 
             Ship,
 
-            Wall,
+            VerticalWall,
+            HorizontalWall,
 
             Missile,
 
@@ -36,17 +40,16 @@ namespace SpaceInvaders
 
             ShieldBrick,
 
-            ShieldBrickLeft_Top0,
-            ShieldBrickLeft_Top1,
-            ShieldBrickLeft_Bottom,
-
-            ShieldBrickRight_Top0,
-            ShieldBrickRight_Top1,
-            ShieldBrickRight_Bottom,
+            ShieldBrickLeft_Top,
+            ShieldBrickRight_Top,
+            ShieldBrickMidLeft_Bottom,
+            ShieldBrickMid_Bottom,
+            ShieldBrickMidRight_Bottom,
 
 
             NullObject,
-            Blank
+            Blank,
+
         }
 
         // Static Data: ------------------------------------
@@ -491,7 +494,14 @@ namespace SpaceInvaders
             Debug.WriteLine("------ GameSprite Manager Stats ------");
             pMan.baseDumpStats();
         }
+        public static void DumpLists()
+        {
+            GameSpriteManager pMan = privGetInstance();
+            Debug.Assert(pMan != null);
 
+            Debug.WriteLine("------ GameSprite Manager Lists ------");
+            pMan.baseDumpLists();
+        }
         //----------------------------------------------------------------------
         // 4 Override Abstract Methods (From Base Manager)
         //----------------------------------------------------------------------
@@ -532,5 +542,7 @@ namespace SpaceInvaders
             GameSprite pNode = (GameSprite) pLink;
             pNode.WashNodeData();
         }
+
+
     }
 }

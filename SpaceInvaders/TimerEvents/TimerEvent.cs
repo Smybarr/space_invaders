@@ -8,8 +8,9 @@ namespace SpaceInvaders
         public enum Name
         {
             SpriteAnimation,
+            BombAnimation,
+            Blank,
 
-            Blank
         }
 
         // Data: ---------------

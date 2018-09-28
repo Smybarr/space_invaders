@@ -6,10 +6,14 @@ namespace SpaceInvaders
     public class PCSTree
     {
         //Nested Objects -----------------------------------------------------
-        // Name and PCSRootNode : PCSNode
         public enum Name
         {
-            Root,
+            RootTree,
+            MissileTree,
+            AlienGridTree,
+            AlienColumnTree,
+            BombTree,
+            WallTree,
             Not_Initialized
         }
         //nested class = PCSRootNode;
@@ -24,6 +28,7 @@ namespace SpaceInvaders
                 : base()
             {
                 this.name = treeName;
+                //root index will always be zero
                 this.index = _index;
             }
             public override int GetIndex()
@@ -47,12 +52,12 @@ namespace SpaceInvaders
         // constructor
         public PCSTree()
         {
-            this.pRoot = null;
             this.maxNodeCount = 0;
             this.numNodes = 0;
 
-            // create the root
-            PCSNode pcsRoot = new PCSRootNode(PCSTree.Name.Root);
+            // create the root node
+            PCSNode pcsRoot = new PCSRootNode(PCSTree.Name.RootTree);
+            //parent is null since inserting root;
             this.Insert(pcsRoot, null);
         }
 
@@ -74,7 +79,7 @@ namespace SpaceInvaders
             Debug.Assert(inNode != null);
 
             // insert to root
-            if (null == pParent)
+            if (pParent == null)
             {
                 this.pRoot = inNode;
                 inNode.pChild = null;

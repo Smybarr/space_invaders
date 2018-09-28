@@ -16,7 +16,7 @@ namespace SpaceInvaders
 
             if (isTest)
             {
-                TestGame testGame = new TestGame();
+                TestGameTwo testGame = new TestGameTwo();
                 Debug.Assert(testGame != null);
 
                 testGame.Run();

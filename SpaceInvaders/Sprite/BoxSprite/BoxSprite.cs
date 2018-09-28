@@ -14,34 +14,51 @@ namespace SpaceInvaders
          *      - Dump/Print methods for debugging
          */
 
-        public enum Name
-        {
-            TestBox,
+        //public enum Name
+        //{
+        //    Box, 
 
-            Box,
+        //    Squid,
+        //    Crab,
+        //    Octopus,
+        //    Column, 
 
-            AlienBox,
-            ColumBox,
-            GridBox,
+        //    //AlienUFO,
 
-            WallBox,
+        //    //AlienExplosion,
 
-            HeroShipBox,
+        //    //Ship,
 
-            BombBox,
-    
-            NullObject,
-            Blank,
+        //    //Wall,
+
+        //    //Missile,
+
+        //    //RollingAlienBomb,
+        //    //ZigZagAlienBomb,
+        //    //CrossAlienBomb,
+
+        //    //ShieldBrick,
+
+        //    //ShieldBrickLeft_Top0,
+        //    //ShieldBrickLeft_Top1,
+        //    //ShieldBrickLeft_Bottom,
+
+        //    //ShieldBrickRight_Top0,
+        //    //ShieldBrickRight_Top1,
+        //    //ShieldBrickRight_Bottom,
 
 
-        }
+        //    NullObject,
+        //    Blank,
+
+        //}
 
         // Static Data: ------------------------------------
         private static Azul.Rect pPrivScreenRect = new Azul.Rect(0, 0, 1, 1);
         private static Azul.Color defaultBoxColor_Red = new Azul.Color(1, 0, 0);
 
         // Data: -------------------------------------------
-        private Name name;
+        private GameSprite.Name name;
 
         //pulled from sprite base due to proxy pattern;
         public float x;
@@ -57,13 +74,14 @@ namespace SpaceInvaders
         public BoxSprite()
         {
             //set the name;
-            this.name = Name.Blank;
+            this.name = GameSprite.Name.Blank;
 
             Debug.Assert(pPrivScreenRect != null);
             Debug.Assert(defaultBoxColor_Red != null);
 
-            //initialize line color
+            //initialize default line color of all sprite box objects
             this.poLineColor = new Azul.Color(defaultBoxColor_Red);
+
             Debug.Assert(this.poLineColor != null);
 
             //initialize screen coordinates
@@ -87,7 +105,7 @@ namespace SpaceInvaders
 #if (TRACK_DESTRUCTOR)
             Debug.WriteLine("~BoxSprite():{0} ", this.GetHashCode());
 #endif
-            this.name = Name.Blank;
+            this.name = GameSprite.Name.Blank;
             this.poLineColor = null;
             this.poScreenRect = null;
             this.poAzulSpriteBox = null;
@@ -98,7 +116,7 @@ namespace SpaceInvaders
         public void WashNodeData()
         {
             //wash name and data;
-            this.name = Name.Blank;
+            this.name = GameSprite.Name.Blank;
 
             Debug.Assert(pPrivScreenRect != null);
             Debug.Assert(defaultBoxColor_Red != null);
@@ -120,7 +138,9 @@ namespace SpaceInvaders
             this.sy = poAzulSpriteBox.sy;
             this.angle = poAzulSpriteBox.angle;
         }
-        public void Set(Name boxName, Azul.Rect pScreenRect, Azul.Color pColor)
+
+
+        public void Set(GameSprite.Name boxName, Azul.Rect pScreenRect, Azul.Color pColor)
         {
             //null checks
             Debug.Assert(pScreenRect != null);
@@ -154,9 +174,10 @@ namespace SpaceInvaders
             this.angle = poAzulSpriteBox.angle;
 
         }
-        public void Set(Name boxName, float x, float y, float width, float height)
+        public void Set(GameSprite.Name boxName, Azul.Rect pScreenRect)
         {
-            Debug.Assert(pPrivScreenRect != null);
+            //null checks
+            Debug.Assert(pScreenRect != null);
             Debug.Assert(defaultBoxColor_Red != null);
             Debug.Assert(this.poAzulSpriteBox != null);
             Debug.Assert(this.poScreenRect != null);
@@ -164,8 +185,61 @@ namespace SpaceInvaders
             //set the name
             this.name = boxName;
 
+            Debug.Assert(pPrivScreenRect != null);
+
+            //set either a default color or a color input;
+            //if (pColor == null)
+            //{
+            //    //set to static red (default)
+            //    this.poLineColor.Set(defaultBoxColor_Red);
+            //}
+            //else
+            //{
+            //    this.poLineColor.Set(pColor);
+            //}
+
+            this.poAzulSpriteBox.Swap(pScreenRect, this.poLineColor);
+            Debug.Assert(this.poAzulSpriteBox != null);
+
+            this.x = poAzulSpriteBox.x;
+            this.y = poAzulSpriteBox.y;
+            this.sx = poAzulSpriteBox.sx;
+            this.sy = poAzulSpriteBox.sy;
+            this.angle = poAzulSpriteBox.angle;
+
+        }
+
+
+        //this set function is where the box sprite color is set!
+        public void Set(GameSprite.Name spriteName, float x, float y, float width, float height, Azul.Color color = null)
+        {
+            Debug.Assert(pPrivScreenRect != null);
+            Debug.Assert(defaultBoxColor_Red != null);
+            Debug.Assert(this.poAzulSpriteBox != null);
+            Debug.Assert(this.poScreenRect != null);
+
+            //set the name
+            this.name = spriteName;
+
             //set the default color and screen rect coordinates
-            this.poLineColor.Set(defaultBoxColor_Red);
+
+
+            //TODO Fix the box sprite color issue!!!! this is where color for boxes are set! 
+            //todo create a color switcher method based on the box name;
+           // this.poLineColor.Set(0, 1, 0);
+
+            privSetBoxColor(spriteName);
+
+            //if (color == null)
+            //{
+            //    //this.poLineColor.Set(defaultBoxColor_Red);
+            //    this.poLineColor.Set(1.0f, 1.0f, 0.0f);
+            //}
+            //else
+            //{
+            //    this.poLineColor.Set(color);
+            //}
+
             this.poScreenRect.Set(x, y, width, height);
 
             this.poAzulSpriteBox.Swap(this.poScreenRect, this.poLineColor);
@@ -178,11 +252,109 @@ namespace SpaceInvaders
             this.sy = poAzulSpriteBox.sy;
             this.angle = poAzulSpriteBox.angle;
         }
-        public BoxSprite.Name GetName()
+
+        private void privSetBoxColor(GameSprite.Name spriteBoxName)
+        {
+            switch (spriteBoxName)
+            {
+                case GameSprite.Name.NullObject:
+                    //this.poLineColor = new Azul.Color(0.0f, 0.0f, 0.0f, 0.0f);
+                    this.poLineColor.Set(255, 255, 255, 0.8f);
+                    break;
+
+                case GameSprite.Name.AlienGrid:
+                    this.poLineColor.Set(0.8f, 0.7f, 0.4f, 1.0f);
+                    break;
+
+                case GameSprite.Name.AlienColumn:
+                    this.poLineColor.Set(1.0f, 1.0f, 1.0f, 1.0f);
+                    break;
+
+                case GameSprite.Name.Squid:
+                    this.poLineColor.Set(0.0f, 0.0f, 1.0f, 1.0f);
+                    break;
+
+                case GameSprite.Name.Octopus:
+                    this.poLineColor.Set(1.0f, 0.0f, 0.0f, 1.0f);
+                    break;
+
+                case GameSprite.Name.CrossAlienBomb:
+                    this.poLineColor.Set(1.0f, 1.0f, 0.0f, 1.0f);
+                    break;
+
+                case GameSprite.Name.ZigZagAlienBomb:
+                    this.poLineColor.Set(1.0f, 1.0f, 0.0f, 1.0f);
+                    break;
+
+                case GameSprite.Name.RollingAlienBomb:
+                    this.poLineColor.Set(1.0f, 1.0f, 0.0f, 1.0f);
+                    break;
+
+                case GameSprite.Name.HorizontalWall:
+                    this.poLineColor.Set(1.0f, 0.0f, 1.0f, 1.0f);
+                    break;
+
+                case GameSprite.Name.VerticalWall:
+                    this.poLineColor.Set(1.0f, 0.0f, 1.0f, 1.0f);
+                    break;
+
+                default:
+                    this.poLineColor.Set(defaultBoxColor_Red);
+                    break;
+            }
+        }
+
+
+        //todo refactor print to be dependent on known color constants
+        private string privPrintBoxColor(GameSprite.Name spriteBoxName)
+        {
+            switch (spriteBoxName)
+            {
+                case GameSprite.Name.NullObject:
+                    //this.poLineColor = new Azul.Color(0.0f, 0.0f, 0.0f, 0.0f);
+                    return "null";
+
+                case GameSprite.Name.AlienGrid:
+                    return "tan";
+
+                case GameSprite.Name.AlienColumn:
+                    return "white";
+
+                case GameSprite.Name.Squid:
+                    return "blue";
+
+                case GameSprite.Name.Crab:
+                    return "green";
+
+                case GameSprite.Name.Octopus:
+                    return "red";
+
+                case GameSprite.Name.CrossAlienBomb:
+                    return "yellow";
+
+                case GameSprite.Name.ZigZagAlienBomb:
+                    return "yellow";
+
+                case GameSprite.Name.RollingAlienBomb:
+                    return "yellow";
+
+                case GameSprite.Name.HorizontalWall:
+                    return "pink";
+
+                case GameSprite.Name.VerticalWall:
+                    return "pink";
+
+                default:
+                    return "red";
+            }
+        }
+
+
+        public GameSprite.Name GetName()
         {
             return this.name;
         }
-        public void SetName(Name inName)
+        public void SetName(GameSprite.Name inName)
         {
             this.name = inName;
         }
@@ -240,7 +412,20 @@ namespace SpaceInvaders
             }
 
             // Print Unique Node Data:         
-            
+
+            Debug.WriteLine("  Box Name:  {0}", this.name);
+
+            if (this.poLineColor == null)
+            {
+                Debug.WriteLine("  Color: Null or No Color");
+            }
+            else
+            {
+                Debug.WriteLine("  Box Color: " + privPrintBoxColor(this.name));
+
+            }
+            Debug.WriteLine("");
+            Debug.WriteLine("------------------------");
         }
 
 
@@ -261,8 +446,8 @@ namespace SpaceInvaders
         }
         public override void Draw()
         {
-            //only draw sprite boxes if render flag is true;
-            if (SpriteBatchManager.renderBoxes)
+            //only draw sprite boxes if render flag is true AND if not a root object (null)
+            if (SpriteBatchManager.renderBoxes && this.name != GameSprite.Name.NullObject)
             {
                 this.poAzulSpriteBox.Render();
             }
@@ -370,20 +555,21 @@ namespace SpaceInvaders
         //----------------------------------------------------------------------
 
         //EDIT THE FOLLOWING METHODS---------------------
-        public static BoxSprite Add(BoxSprite.Name name, Azul.Rect pScreenRect, Azul.Color pColor = null)
-        {
-            BoxSpriteManager pMan = privGetInstance();
-            Debug.Assert(pMan != null);
+        //public static BoxSprite Add(BoxSprite.Name name, Azul.Rect pScreenRect)
+        //{
+        //    BoxSpriteManager pMan = privGetInstance();
+        //    Debug.Assert(pMan != null);
 
-            BoxSprite pNode = (BoxSprite)pMan.baseAddToFront();
-            Debug.Assert(pNode != null);
+        //    BoxSprite pNode = (BoxSprite)pMan.baseAddToFront();
+        //    Debug.Assert(pNode != null);
 
-            // set the data
-            pNode.Set(name, pScreenRect, pColor);
+        //    pNode.Set(name, pScreenRect);
 
-            return pNode;
-        }
-        public static BoxSprite Add(BoxSprite.Name spriteName, float x, float y, float width, float height)
+        //    return pNode;
+        //}
+
+        
+        public static BoxSprite Add(GameSprite.Name spriteName, float x, float y, float width, float height, Azul.Color lineColor = null)
         {
             BoxSpriteManager pMan = BoxSpriteManager.privGetInstance();
             Debug.Assert(pMan != null);
@@ -392,10 +578,10 @@ namespace SpaceInvaders
             Debug.Assert(pNode != null);
 
             // wash it
-            pNode.Set(spriteName, x, y, width, height);
+            pNode.Set(spriteName, x, y, width, height, lineColor);
             return pNode;
         }
-        public static BoxSprite Find(BoxSprite.Name name)
+        public static BoxSprite Find(GameSprite.Name name)
         {
             //get the singleton
             BoxSpriteManager pMan = privGetInstance();
@@ -441,6 +627,14 @@ namespace SpaceInvaders
             Debug.WriteLine("------ BoxSprite Manager Stats ------");
             pMan.baseDumpStats();
         }
+        public static void DumpLists()
+        {
+            BoxSpriteManager pMan = privGetInstance();
+            Debug.Assert(pMan != null);
+
+            Debug.WriteLine("------ BoxSprite Manager Lists ------");
+            pMan.baseDumpLists();
+        }
         //----------------------------------------------------------------------
         // Override Abstract methods
         //----------------------------------------------------------------------
@@ -482,5 +676,7 @@ namespace SpaceInvaders
             BoxSprite pNode = (BoxSprite) pLink;
             pNode.WashNodeData();
         }
+
+
     }
 }

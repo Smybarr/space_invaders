@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace SpaceInvaders
 {
-    class PCSTreeForwardIterator : Iterator
+    public class PCSTreeForwardIterator : Iterator
     {
         public PCSTreeForwardIterator(GameObject rootNode)
         {

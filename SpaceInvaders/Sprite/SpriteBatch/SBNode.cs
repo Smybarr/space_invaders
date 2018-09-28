@@ -51,47 +51,48 @@ namespace SpaceInvaders
             return this.pSpriteBase;
         }
 
+        /*
+                public void Set(GameSprite.Name targetSpriteName, SBNodeManager _pSBNodeMan, Boolean render = true)
+                {
+                    // Go find it
+                    this.pSpriteBase = GameSpriteManager.Find(targetSpriteName);
 
-        public void Set(GameSprite.Name targetSpriteName, SBNodeManager _pSBNodeMan, Boolean render = true)
-        {
-            // Go find it
-            this.pSpriteBase = GameSpriteManager.Find(targetSpriteName);
+                    Debug.Assert(_pSBNodeMan != null);
+                    this.pSBNodeManager = _pSBNodeMan;
 
-            Debug.Assert(_pSBNodeMan != null);
-            this.pSBNodeManager = _pSBNodeMan;
+                    Debug.Assert(this.pSpriteBase != null);
 
-            Debug.Assert(this.pSpriteBase != null);
+                    //set whether to render the sprite
+                    this.pSpriteBase.render = render;
+                }
+                //todo verify that setting the render value for sprite base to default as true screws anything up
+                public void Set(BoxSprite.Name targetBoxName, SBNodeManager _pSBNodeMan, Boolean render = true)
+                {
+                    // Go find it
+                    this.pSpriteBase = BoxSpriteManager.Find(targetBoxName);
 
-            //set whether to render the sprite
-            this.pSpriteBase.render = render;
-        }
-        //todo verify that setting the render value for sprite base to default as true screws anything up
-        public void Set(BoxSprite.Name targetBoxName, SBNodeManager _pSBNodeMan, Boolean render = true)
-        {
-            // Go find it
-            this.pSpriteBase = BoxSpriteManager.Find(targetBoxName);
+                    Debug.Assert(_pSBNodeMan != null);
+                    this.pSBNodeManager = _pSBNodeMan;
 
-            Debug.Assert(_pSBNodeMan != null);
-            this.pSBNodeManager = _pSBNodeMan;
+                    Debug.Assert(this.pSpriteBase != null);
 
-            Debug.Assert(this.pSpriteBase != null);
-
-            //set whether to render the box sprite
-            this.pSpriteBase.render = render;
-        }
+                    //set whether to render the box sprite
+                    this.pSpriteBase.render = render;
+                }
+ 
         public void Set(ProxySprite pNode, SBNodeManager _pSBNodeMan)
-        {
-            // associate it
-            Debug.Assert(pNode != null);
+                {
+                    // associate it
+                    Debug.Assert(pNode != null);
 
-            // Should verify that (pNode) its real and active?
-            this.pSpriteBase = pNode;
-            Debug.Assert(this.pSpriteBase != null);
+                    // Should verify that (pNode) its real and active?
+                    this.pSpriteBase = pNode;
+                    Debug.Assert(this.pSpriteBase != null);
 
-            Debug.Assert(_pSBNodeMan != null);
-            this.pSBNodeManager = _pSBNodeMan;
-        }
-
+                    Debug.Assert(_pSBNodeMan != null);
+                    this.pSBNodeManager = _pSBNodeMan;
+                }
+        */
         public void Set(SpriteBase pNode, SBNodeManager _pSBNodeMan)
         {
             Debug.Assert(pNode != null);
@@ -242,7 +243,7 @@ namespace SpaceInvaders
         //----------------------------------------------------------------------
         // Unique Private helper methods
         //----------------------------------------------------------------------
-
+        /*
         public SBNode Attach(GameSprite.Name name)
         {
             // Go to Man, get a node from reserve, add to active, return it
@@ -276,6 +277,7 @@ namespace SpaceInvaders
 
         //    return pSBNode;
         //}
+        */
         public SBNode Add(SpriteBase pNode)
         {
             // Go to Man, get a node from reserve, add to active, return it

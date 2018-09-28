@@ -82,13 +82,6 @@ namespace SpaceInvaders
             pSBNode.Set(pNode, this.pSBNodeMan);
         }
 
-        //public SBNode Attach(ProxySprite pNode)
-        //{
-        //    // Go to Man, get a node from reserve, add to active, return it
-        //    Debug.Assert(this.pSBNodeMan != null);
-        //    SBNode pSBNode = this.pSBNodeMan.Add(pNode);
-        //    return pSBNode;
-        //}
 
         public void Draw()
         {
@@ -158,7 +151,7 @@ namespace SpaceInvaders
          *
          */
 
-        public static Boolean renderBoxes = true;
+        public static Boolean renderBoxes = false;
         private static SpriteBatch pSpriteBatchRef = new SpriteBatch();
         private static SpriteBatchManager pInstance = null;
 
@@ -227,6 +220,8 @@ namespace SpaceInvaders
             return (SpriteBatch)this.baseGetActive();
         }
 
+
+
         //most of Draw is now handled by each individual sprite batch
         public static void Draw()
         {
@@ -241,6 +236,9 @@ namespace SpaceInvaders
                 pSpriteBatch = (SpriteBatch)pSpriteBatch.pMNext;
             }
         }
+
+
+
 
         public static SpriteBatch Add(SpriteBatch.Name name, int startReserveSize = 3, int refillSize = 1)
         {
@@ -311,6 +309,16 @@ namespace SpaceInvaders
             Debug.WriteLine("------ SpriteBatch Manager Stats------");
             pMan.baseDumpStats();
         }
+
+        public static void DumpLists()
+        {
+            SpriteBatchManager pMan = privGetInstance();
+            Debug.Assert(pMan != null);
+
+            Debug.WriteLine("------ SpriteBatch Manager Lists------");
+            pMan.baseDumpLists();
+        }
+
         //----------------------------------------------------------------------
         // 4 Override Abstract Methods (From Base Manager)
         //----------------------------------------------------------------------
@@ -357,6 +365,8 @@ namespace SpaceInvaders
             SpriteBatch pNode = (SpriteBatch)pLink;
             pNode.WashSpriteBatchData();
         }
+
+
     }
 
 

@@ -186,6 +186,18 @@ namespace SpaceInvaders
             return pInstance;
         }
 
+        public static void LoadTextures()
+        {
+            //-----------------------------------------------
+            //Texture Load
+
+            //load texture sheets: images will be cut from these sheets
+            TextureManager.Add(Texture.Name.SpaceInvadersMono4, "SpaceInvadersMono4.tga");
+            TextureManager.Add(Texture.Name.GameSprites, "SpaceInvaderSprites_14x14.tga");
+            TextureManager.Add(Texture.Name.Shields, "Shield.tga");
+
+        }
+
         ~TextureManager()
         {
 #if (TRACK_DESTRUCTOR)
@@ -271,6 +283,15 @@ namespace SpaceInvaders
             pMan.baseDumpStats();
         }
 
+        public static void DumpLists()
+        {
+            TextureManager pMan = privGetInstance();
+            Debug.Assert(pMan != null);
+
+            Debug.WriteLine("------ Texture Manager Dump Lists------");
+            pMan.baseDumpLists();
+        }
+
         //----------------------------------------------------------------------
         // Override Abstract methods
         //----------------------------------------------------------------------
@@ -312,5 +333,7 @@ namespace SpaceInvaders
             Texture pNode = (Texture) pLink;
             pNode.WashNodeData();
         }
+
+
     }
 }

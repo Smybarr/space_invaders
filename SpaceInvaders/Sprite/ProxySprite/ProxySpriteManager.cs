@@ -78,7 +78,7 @@ namespace SpaceInvaders
         {
             ProxySpriteManager pMan = ProxySpriteManager.privGetInstance();
             Debug.Assert(pMan != null);
-
+            //todo look into edge case for null game sprite name - create a null game sprite to add?
             ProxySprite pNode = (ProxySprite)pMan.baseAddToFront();
             Debug.Assert(pNode != null);
 
@@ -125,6 +125,14 @@ namespace SpaceInvaders
 
             Debug.WriteLine("------ ProxySprite Manager Stats ------");
             pMan.baseDumpStats();
+        }
+        public static void DumpLists()
+        {
+            ProxySpriteManager pMan = ProxySpriteManager.privGetInstance();
+            Debug.Assert(pMan != null);
+
+            Debug.WriteLine("------ ProxySprite Manager Lists ------");
+            pMan.baseDumpLists();
         }
         //----------------------------------------------------------------------
         // Override Abstract methods

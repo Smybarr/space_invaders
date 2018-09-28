@@ -191,7 +191,14 @@ namespace SpaceInvaders
             Debug.WriteLine("------ DeathNode Manager Stats ------");
             pMan.baseDumpStats();
         }
+        public static void DumpLists()
+        {
+            DeathManager pMan = privGetInstance();
+            Debug.Assert(pMan != null);
 
+            Debug.WriteLine("------ DeathNode Manager Lists ------");
+            pMan.baseDumpLists();
+        }
         //----------------------------------------------------------------------
         // Override Abstract methods
         //----------------------------------------------------------------------
@@ -252,5 +259,7 @@ namespace SpaceInvaders
             DeathNode pNode = (DeathNode) pLink;
             pNode.WashNodeData();
         }
+
+
     }
 }

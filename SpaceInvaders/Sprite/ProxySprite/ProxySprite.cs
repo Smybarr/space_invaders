@@ -21,6 +21,8 @@ namespace SpaceInvaders
         public Name name;
         public float x;
         public float y;
+        public float sx;
+        public float sy;
         public GameSprite pSprite;
 
         public override Enum GetSpriteName()
@@ -37,6 +39,9 @@ namespace SpaceInvaders
             this.x = 0.0f;
             this.y = 0.0f;
 
+            this.sx = 1.0f;
+            this.sy = 1.0f;
+
             this.pSprite = null;
         }
         public ProxySprite(GameSprite.Name name)
@@ -45,6 +50,9 @@ namespace SpaceInvaders
 
             this.x = 0.0f;
             this.y = 0.0f;
+
+            this.sx = 1.0f;
+            this.sy = 1.0f;
 
             this.pSprite = GameSpriteManager.Find(name);
             Debug.Assert(this.pSprite != null);
@@ -61,10 +69,20 @@ namespace SpaceInvaders
 
         public void Set(GameSprite.Name name)
         {
-            this.name = ProxySprite.Name.Proxy;
+            if (name == GameSprite.Name.NullObject)
+            {
+                this.name = ProxySprite.Name.NullObject;
+            }
+            else
+            {
+                this.name = ProxySprite.Name.Proxy;
+            }
 
             this.x = 0.0f;
             this.y = 0.0f;
+
+            this.sx = 1.0f;
+            this.sy = 1.0f;
 
             this.pSprite = GameSpriteManager.Find(name);
 
@@ -83,7 +101,7 @@ namespace SpaceInvaders
             //this.privPushToReal();
             //this.pSprite.Update();
 
-            //Due to proxy sprite, do push in render
+            //Due to proxy sprite, do update in draw
         }
 
         private void privPushToReal()
@@ -93,6 +111,9 @@ namespace SpaceInvaders
 
             this.pSprite.x = this.x;
             this.pSprite.y = this.y;
+
+            this.pSprite.sx = this.sx;
+            this.pSprite.sy = this.sy;
         }
 
         public override void Draw()
@@ -103,7 +124,13 @@ namespace SpaceInvaders
             // update and draw real sprite 
             // Seems redundant - Real Sprite might be stale
             this.pSprite.Update();
-            this.pSprite.Draw();
+
+            //todo figure out better way to NOT draw NullObjects pink default texture dot            
+            if (this.name != Name.NullObject)
+            {
+                this.pSprite.Draw();
+            }
+
         }
 
 

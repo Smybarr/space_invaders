@@ -25,8 +25,6 @@ namespace SpaceInvaders
 
         }
 
-
-
         //placeholder data - will eventually change
         protected Type alienType;
 
@@ -48,6 +46,10 @@ namespace SpaceInvaders
         {
             return this.alienType;
         }
+
+
+        public abstract void DropBomb();
+
 
     }
 }

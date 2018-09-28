@@ -71,6 +71,82 @@ namespace SpaceInvaders
         }
 
 
+        public static void LoadAlienAnimations()
+        {
+            //----------------------
+            //Animated Sprite (Attached to TimerManager
+            //Each animation is a TimerEvent following command pattern;
+
+            // Create alien animation sprites
+            AnimationSprite pAnim_Squid = new AnimationSprite(GameSprite.Name.Squid);
+            AnimationSprite pAnim_Crab = new AnimationSprite(GameSprite.Name.Crab);
+            AnimationSprite pAnim_Octo = new AnimationSprite(GameSprite.Name.Octopus);
+
+            // attach to death manager for garbage collection management
+            DeathManager.Attach(pAnim_Squid);
+            DeathManager.Attach(pAnim_Crab);
+            DeathManager.Attach(pAnim_Octo);
+
+            // attach alternating images to animation cycle
+
+            pAnim_Squid.Attach(Image.Name.SquidClosed);
+            pAnim_Squid.Attach(Image.Name.SquidOpen);
+
+
+            pAnim_Crab.Attach(Image.Name.CrabClosed);
+            pAnim_Crab.Attach(Image.Name.CrabOpen);
+
+
+            pAnim_Octo.Attach(Image.Name.OctopusClosed);
+            pAnim_Octo.Attach(Image.Name.OctopusOpen);
+
+            // add AnimationSprite to timer
+
+            //set the interval between events and add sprite animation event objects to timer manager;
+            float animInterval = 1.0f;
+            TimerEventManager.Add(TimerEvent.Name.SpriteAnimation, pAnim_Squid, animInterval);
+            TimerEventManager.Add(TimerEvent.Name.SpriteAnimation, pAnim_Crab, animInterval);
+            TimerEventManager.Add(TimerEvent.Name.SpriteAnimation, pAnim_Octo, animInterval);
+
+        }
+
+        public static void LoadBombAnimations()
+        {
+            //-----------------
+
+            // Create bomb animation sprites
+            AnimationSprite pAnim_CrossAlienBomb = new AnimationSprite(GameSprite.Name.CrossAlienBomb);
+            AnimationSprite pAnim_ZigZagAlienBomb = new AnimationSprite(GameSprite.Name.ZigZagAlienBomb);
+            AnimationSprite pAnim_RollingAlienBomb = new AnimationSprite(GameSprite.Name.RollingAlienBomb);
+
+            // attach to death manager for garbage collection management
+            DeathManager.Attach(pAnim_CrossAlienBomb);
+            DeathManager.Attach(pAnim_ZigZagAlienBomb);
+            DeathManager.Attach(pAnim_RollingAlienBomb);
+
+            // attach alternating images to animation cycle
+
+            pAnim_CrossAlienBomb.Attach(Image.Name.AlienBombCross_Two);
+            pAnim_CrossAlienBomb.Attach(Image.Name.AlienBombCross_Three);
+            pAnim_CrossAlienBomb.Attach(Image.Name.AlienBombCross_Four);
+            pAnim_CrossAlienBomb.Attach(Image.Name.AlienBombCross_One);
+
+            pAnim_ZigZagAlienBomb.Attach(Image.Name.AlienBombZigZag_Two);
+            pAnim_ZigZagAlienBomb.Attach(Image.Name.AlienBombZigZag_Three);
+            pAnim_ZigZagAlienBomb.Attach(Image.Name.AlienBombZigZag_Four);
+            pAnim_ZigZagAlienBomb.Attach(Image.Name.AlienBombZigZag_One);
+
+            pAnim_RollingAlienBomb.Attach(Image.Name.AlienBombRolling_Three);
+            pAnim_RollingAlienBomb.Attach(Image.Name.AlienBombRolling_Two);
+
+            //set the interval between events and add sprite animation event objects to timer manager;
+            float animInterval = 0.01f;
+            TimerEventManager.Add(TimerEvent.Name.BombAnimation, pAnim_CrossAlienBomb, animInterval);
+            TimerEventManager.Add(TimerEvent.Name.BombAnimation, pAnim_ZigZagAlienBomb, animInterval);
+            TimerEventManager.Add(TimerEvent.Name.BombAnimation, pAnim_RollingAlienBomb, animInterval);
+
+        }
+
         //----------------------------------------------------------------------
         // Methods
         //----------------------------------------------------------------------
@@ -134,6 +210,15 @@ namespace SpaceInvaders
             Debug.WriteLine("------ TimerEvent Manager Stats ------");
             pMan.baseDumpStats();
         }
+        public static void DumpLists()
+        {
+            TimerEventManager pMan = TimerEventManager.privGetInstance();
+            Debug.Assert(pMan != null);
+
+            Debug.WriteLine("------ TimerEvent Manager Lists ------");
+            pMan.baseDumpLists();
+        }
+
         public static float GetCurrTime()
         {
             // Get the instance
@@ -226,7 +311,6 @@ namespace SpaceInvaders
         //----------------------------------------------------------------------
         // Private methods
         //----------------------------------------------------------------------
-
 
 
     }

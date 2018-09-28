@@ -3,13 +3,13 @@ using System.Diagnostics;
 
 namespace SpaceInvaders
 {
-    public class CollisionObject
+    public class ColObject
     {
         //Data---------------------------------------------
         public BoxSprite pColSprite;
-        public CollisionRect poColRect;
+        public ColRect poColRect;
 
-        public CollisionObject(ProxySprite pProxySprite)
+        public ColObject(ProxySprite pProxySprite)
         {
             Debug.Assert(pProxySprite != null);
 
@@ -20,16 +20,28 @@ namespace SpaceInvaders
             Debug.Assert(pSprite != null);
 
             // Origin is in the UPPER RIGHT 
-            this.poColRect = new CollisionRect(pSprite.GetScreenRect());
+            this.poColRect = new ColRect(pSprite.GetScreenRect());
             Debug.Assert(this.poColRect != null);
 
-            // Create the sprite
-            this.pColSprite = BoxSpriteManager.Add(BoxSprite.Name.Box, this.poColRect);
-            Debug.Assert(this.pColSprite != null);
+            // Create the box sprite
+
+            //WORKING
+            //this.pColSprite = BoxSpriteManager.Add(GameSprite.Name.Box, this.poColRect.x, this.poColRect.y, this.poColRect.width, this.poColRect.height);
+
+            //TEST
+            this.pColSprite = BoxSpriteManager.Add(pProxySprite.pSprite.GetName(), this.poColRect.x, this.poColRect.y, this.poColRect.width, this.poColRect.height);
+
+
+            ////get the box name from the matching sprite name;
+            //BoxSprite.Name colBoxName = (BoxSprite.Name) pProxySprite.pSprite.GetName();
+            //Debug.Assert(colBoxName != null);
+            //this.pColSprite = BoxSpriteManager.Find(colBoxName);
+            //this.pColSprite.SetScreenRect(this.poColRect.x, this.poColRect.y, this.poColRect.width, this.poColRect.height);
+            //Debug.Assert(this.pColSprite != null);
 
             this.pColSprite.SetLineColor(1.0f, 1.0f, 0.0f);
-
         }
+
 
         //Rename to PushPosition?
         public void UpdatePos(float x, float y)
