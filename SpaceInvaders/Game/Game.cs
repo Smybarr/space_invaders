@@ -174,6 +174,11 @@ namespace SpaceInvaders
             //octopus game sprite
             GameSpriteManager.Add(GameSprite.Name.Octopus, Image.Name.OctopusOpen, octo_sX, octo_sY, const_AlienSpriteSize, const_AlienSpriteSize);
 
+            //alien explosion (for explosion animation after alien is destroyed)
+            GameSpriteManager.Add(GameSprite.Name.AlienExplosion, Image.Name.AlienExplosionPop, 0, 0, const_AlienSpriteSize, const_AlienSpriteSize);
+
+
+
             //----------------------
             //alien bombs (initial sprites only)
 
@@ -218,12 +223,12 @@ namespace SpaceInvaders
 
             GameSpriteManager.Add(GameSprite.Name.AlienUFO, Image.Name.AlienUFO, 0, 0, ufoSpriteWidth, ufoSpriteHeight);
 
-
-
-
-
             //----------------------
             //BoxSprites are added in the CollisionObject constructor depending on the sprite!
+
+
+
+
 
             //-----------------------------------------------
             //Load the Animations (TimerEvents)
@@ -232,11 +237,18 @@ namespace SpaceInvaders
             TimerEventManager.LoadBombAnimations();
 
 
+
+
+
             //-----------------------------------------------
             //Set the Game Simulation State;
 
-
             Simulation.SetState(Simulation.State.Realtime);
+
+
+
+
+
 
 
             //-----------------------------------------------
@@ -250,7 +262,6 @@ namespace SpaceInvaders
 
             //check the tree
             rootGamObjTree.DumpTree();
-            /*     */
 
             //------------------------------------------------
             // Create Missile Tree
@@ -446,37 +457,106 @@ namespace SpaceInvaders
             // Associate and Create Collision Pairs
             ColPair pColPair = null;
 
-            // associate object roots in a collision pair, then associated observers that react to collision
+            // IMPORTANT: At LEAST two steps when establishing the collision pairs
+            // 1) associate object roots in a collision pair,
+            // 2) then attach all relevent Observer objects that will execute their specified response to collision
+            //todo create an observerObject manager that pools all of these observer objects!
 
-            //missile_wall collision
+            //---------------------------------------------------------------------------------------------
+            //Missile CollisionPairs
+
+            //Missile vs Wall (Top) Collision
+
             // associate object roots in a collision pair
             pColPair = ColPairManager.Add(ColPair.Name.Missile_Wall, pMissileRoot, pWallRoot);
-            //associate the observers that will act on the collision
+            //attach all observers that will react to collision
             pColPair.Attach(new ShipReadyObserver());
             pColPair.Attach(new ShipRemoveMissileObserver());
 
+            //--------------------
+            // Missile vs Shield collision
 
-
-            //missile_alien collision 
             // associate object roots in a collision pair
-            ColPairManager.Add(ColPair.Name.Alien_Missile, pMissileRoot, pGrid);
-
-
-
-            // Bomb_bottomWall bottom
-            pColPair = ColPairManager.Add(ColPair.Name.Bomb_Wall, pBombRoot, pWallRoot);
-            //attach all observers that will react to collision
-            pColPair.Attach(new BombObserver());
-            //todo debug this test bomb reset observer
-            pColPair.Attach(new RemoveBombObserver());
-
-
-            // Missile vs Shield
             pColPair = ColPairManager.Add(ColPair.Name.Misslie_Shield, pMissileRoot, pShieldRoot);
             //attach all observers that will react to this collision
             pColPair.Attach(new RemoveMissileObserver());
+            //pColPair.Attach(new DegradeBrickSpriteObserver());
             pColPair.Attach(new RemoveBrickObserver());
             pColPair.Attach(new ShipReadyObserver());
+
+
+            //--------------------
+            //Missile vs AlienGrid collision
+
+            // associate object roots in a collision pair
+            pColPair = ColPairManager.Add(ColPair.Name.Alien_Missile, pMissileRoot, pGrid);
+            //attach all observers that will react to collision
+            pColPair.Attach(new RemoveMissileObserver());
+            pColPair.Attach(new ShipReadyObserver());
+            pColPair.Attach(new AnimateAlienExplosionObserver());
+            pColPair.Attach(new RemoveAlienObserver());
+            //pColPair.Attach(new AlienDeathSoundObserver());
+            //pColPair.Attach(new AlienScoreUpdateObserver());
+
+            //---------------------------------------------------------------------------------------------
+            //Bomb CollisionPairs
+
+
+            //Bomb vs Wall (Bottom) Collision
+
+            // associate object roots in a collision pair
+            pColPair = ColPairManager.Add(ColPair.Name.Bomb_Wall, pBombRoot, pWallRoot);
+            //attach all observers that will react to collision
+            //pColPair.Attach(new BombObserver());
+            pColPair.Attach(new RemoveBombObserver());
+
+
+            //todo broken collision - fix
+            //--------------------
+            //Bomb vs Shield Collision
+
+            // associate object roots in a collision pair
+            pColPair = ColPairManager.Add(ColPair.Name.Bomb_Shield, pBombRoot, pShieldRoot);
+            //attach all observers that will react to collision
+            pColPair.Attach(new RemoveBombObserver());
+            pColPair.Attach(new RemoveBrickObserver());
+
+            //todo need to implement collision reaction for bomb v ship
+            ////--------------------
+            ////Bomb vs Ship Collision
+
+            //// associate object roots in a collision pair
+            //pColPair = ColPairManager.Add(ColPair.Name.Bomb_Ship, pBombRoot, shipRoot);
+            ////attach all observers that will react to collision
+            //pColPair.Attach(new RemoveBombObserver());
+            ////pColPair.Attach(new ShipExplosionSoundObserver());
+            ////pColPair.Attach(new TriggerGameOverStateObserver());
+
+
+            //todo need to implement collision reaction for grid v wall, grid vs shield;
+            //---------------------------------------------------------------------------------------------
+            //AlienGrid/Column CollisionPairs
+
+            ////AlienGrid vs Walls
+
+            //// associate object roots in a collision pair
+            //pColPair = ColPairManager.Add(ColPair.Name.Alien_Wall, pGrid, pWallRoot);
+            ////attach all observers that will react to collision
+            //pColPair.Attach(new AlienGridPivotObserver());
+
+            //--------------------
+            //AlienColumn vs Shield Collision
+
+            //// associate object roots in a collision pair
+            //pColPair = ColPairManager.Add(ColPair.Name.Alien_Shield, pGrid, pShieldRoot);
+            ////attach all observers that will react to collision
+            //pColPair.Attach(new RemoveShieldBrickObserver());
+
+
+            //---------------------------------------------------------------------------------------------
+            //Ship CollisionPairs
+
+
 
 
 

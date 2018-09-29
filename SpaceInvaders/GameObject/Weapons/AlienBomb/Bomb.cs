@@ -66,17 +66,6 @@ namespace SpaceInvaders
             this.pStrategy.Fall(this);
         }
 
-
-
-        public override void Accept(ColVisitor other)
-        {
-            // Important: at this point we have an Alien
-            // Call the appropriate collision reaction            
-            other.VisitBomb(this);
-        }
-
-
-
         public void SetPos(float xPos, float yPos)
         {
             this.x = xPos;
@@ -93,5 +82,17 @@ namespace SpaceInvaders
         }
 
 
+
+
+        //--------------------------------------------------------------------------
+        //collisions
+
+
+        public override void Accept(ColVisitor other)
+        {
+            // Important: at this point we have an Alien
+            // Call the appropriate collision reaction            
+            other.VisitBomb(this);
+        }
     }
 }

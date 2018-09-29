@@ -130,8 +130,10 @@
     <Compile Include="Image\Image.cs" />
     <Compile Include="Image\ImageHolder.cs" />
     <Compile Include="Image\NullImage.cs" />
+    <Compile Include="Observers\AnimateAlienExplosionObserver.cs" />
     <Compile Include="Observers\BombObserver.cs" />
     <Compile Include="Observers\GridObserver.cs" />
+    <Compile Include="Observers\RemoveAlienObserver.cs" />
     <Compile Include="Observers\RemoveBombObserver.cs" />
     <Compile Include="Observers\RemoveBrickObserver.cs" />
     <Compile Include="Observers\RemoveMissileObserver.cs" />

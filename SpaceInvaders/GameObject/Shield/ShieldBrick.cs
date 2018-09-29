@@ -52,6 +52,14 @@ namespace SpaceInvaders
         }
 
 
+        public override void VisitBomb(Bomb b)
+        {
+            //Bomb vs ShieldBrick
+            //Debug.WriteLine(" -------> END COLLISION: AlienBomb vs ShieldBrick <---------");
+            ColPair collisionPair = ColPairManager.GetActiveColPair();
+            collisionPair.SetCollision(b, this);
+            collisionPair.NotifyListeners();
+        }
 
     }
 }

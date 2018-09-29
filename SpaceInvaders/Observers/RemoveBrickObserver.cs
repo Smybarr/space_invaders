@@ -5,6 +5,9 @@ namespace SpaceInvaders
 {
     public class RemoveBrickObserver : ColObserver
     {
+        // Data: ---------------
+        private GameObject pBrick;
+
 
         public RemoveBrickObserver()
         {
@@ -16,6 +19,9 @@ namespace SpaceInvaders
             Debug.Assert(b != null);
             this.pBrick = b.pBrick;
         }
+
+
+
 
         public override void Notify()
         {
@@ -33,6 +39,8 @@ namespace SpaceInvaders
                 DelayedObjectManager.Attach(pObserver);
             }
         }
+
+
 
         public override void Execute()
         {
@@ -57,6 +65,9 @@ namespace SpaceInvaders
             }
         }
 
+
+
+
         private bool privCheckParent(GameObject pObj)
         {
             if (pObj.pChild == null)
@@ -67,8 +78,7 @@ namespace SpaceInvaders
             return false;
         }
 
-        // data
-        private GameObject pBrick;
+
     }
 }
 

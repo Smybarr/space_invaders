@@ -82,10 +82,16 @@ namespace SpaceInvaders
             AnimationSprite pAnim_Crab = new AnimationSprite(GameSprite.Name.Crab);
             AnimationSprite pAnim_Octo = new AnimationSprite(GameSprite.Name.Octopus);
 
+            //explosion animation 
+            AnimationSprite pAnim_AlienExplosion_Pop = new AnimationSprite(GameSprite.Name.AlienExplosion);
+
+
             // attach to death manager for garbage collection management
             DeathManager.Attach(pAnim_Squid);
             DeathManager.Attach(pAnim_Crab);
             DeathManager.Attach(pAnim_Octo);
+
+            DeathManager.Attach(pAnim_AlienExplosion_Pop);
 
             // attach alternating images to animation cycle
 
@@ -146,6 +152,8 @@ namespace SpaceInvaders
             TimerEventManager.Add(TimerEvent.Name.BombAnimation, pAnim_RollingAlienBomb, animInterval);
 
         }
+
+
 
         //----------------------------------------------------------------------
         // Methods

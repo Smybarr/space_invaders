@@ -9,6 +9,9 @@ namespace SpaceInvaders
         // Data: ---------------
         private float delta;
         private float total;
+
+        private float marchSpeed;
+
         private int numColumns;
 
         public Grid(GameObject.Name name, GameSprite.Name spriteName, int index, float posX, float posY)
@@ -86,12 +89,10 @@ namespace SpaceInvaders
                 Debug.Assert(firstColumn != null);
                 firstColumn.DropBomb();
             }
-
-
-
-
         }
 
+
+        //todo: FIX THE LINKS WHEN THE ALIEN COLUMN IS REMOVED!!!!
         private AlienType privGetRandomColumn(int columnIndex)
         {
             GameObject randomChildColumn = (GameObject)this.pChild;
@@ -127,7 +128,17 @@ namespace SpaceInvaders
 
 
 
-
+        public void IncreaseAlienMarchSpeed()
+        {
+            if (this.marchSpeed > 0.23f)
+            {
+                this.marchSpeed -= 0.02f;
+            }
+            else
+            {
+                this.marchSpeed -= 0.01f;
+            }
+        }
 
 
         public void MoveGrid()

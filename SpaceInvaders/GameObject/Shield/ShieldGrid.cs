@@ -47,6 +47,10 @@ namespace SpaceInvaders
             ColPair.Collide(m, (GameObject)this.pChild);
         }
 
-
+        public override void VisitBomb(Bomb b)
+        {
+            //AlienBomb vs ShieldGrid
+            ColPair.Collide(b, (GameObject)this.pChild);
+        }
     }
 }

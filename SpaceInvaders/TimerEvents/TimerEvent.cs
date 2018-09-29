@@ -9,6 +9,11 @@ namespace SpaceInvaders
         {
             SpriteAnimation,
             BombAnimation,
+
+            AlienExplosionAnimation,
+
+            ShipExplosionAnimation,
+
             Blank,
 
         }

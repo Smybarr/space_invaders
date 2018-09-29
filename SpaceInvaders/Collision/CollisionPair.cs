@@ -22,15 +22,16 @@ namespace SpaceInvaders
             Alien_Wall,
 
             Missile_Wall,
-
-            Bomb_Wall,
-
             Misslie_Shield,
 
+            Bomb_Wall,
             Bomb_Shield,
+            Bomb_Ship,
+
 
             NullObject,
-            Blank
+            Blank,
+
         }
 
         // Data: ---------------
