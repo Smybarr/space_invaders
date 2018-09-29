@@ -210,7 +210,10 @@ namespace SpaceInvaders
 
             // Set ColTotal to first child
             GameObject pGameObj = (GameObject)pNode;
-
+            
+            //todo add an AlienRoot to continue game after all aliens are destroyed
+            //without a semi-permenant alien root, system breaks after last alien/column is destroyed,
+            //thus destroying the grid and returning a null game object here;
             ColRect ColTotal = this.poColObj.poColRect;
             ColTotal.Set(pGameObj.GetColObject().poColRect);
 

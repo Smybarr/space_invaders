@@ -46,20 +46,27 @@ namespace SpaceInvaders
         {
             //  if this brick removed the last child in the column, then remove column
             // Debug.WriteLine(" brick {0}  parent {1}", this.pBrick, this.pBrick.pParent);
-            GameObject pA = (GameObject)this.pBrick;
-            GameObject pB = (GameObject)pA.pParent;
+            GameObject targetBrick = (GameObject)this.pBrick;
+            GameObject parentColumn = (GameObject)targetBrick.pParent;
 
-            pA.Remove();
+            targetBrick.Remove();
 
             // TODO: Need a better way... 
-            if (privCheckParent(pB) == true)
+            //check if last brick in the column
+            if (privIsLastChildOf(parentColumn) == true)
             {
-                GameObject pC = (GameObject)pB.pParent;
-                pB.Remove();
+                //if so, remove the parent column;
 
-                if (privCheckParent(pC) == true)
+                //get the grid pointer before removing the column (in case this is the last column)
+                GameObject parentShieldGrid = (GameObject)parentColumn.pParent;
+                parentColumn.Remove();
+
+
+                //check if the last column in the grid
+                if (privIsLastChildOf(parentShieldGrid) == true)
                 {
-                    pC.Remove();
+                    //if so, remove the grid pointer
+                    parentShieldGrid.Remove();
                 }
 
             }
@@ -67,8 +74,8 @@ namespace SpaceInvaders
 
 
 
-
-        private bool privCheckParent(GameObject pObj)
+        //check if this is the last child
+        private bool privIsLastChildOf(GameObject pObj)
         {
             if (pObj.pChild == null)
             {

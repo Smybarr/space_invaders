@@ -12,14 +12,12 @@ namespace SpaceInvaders
 
             Grid,
             Column,
+
             Squid,
             Crab,
             Octopus,
 
-
-            BombRoot,
-            Bomb,
-
+            AlienUFO,
 
 
             ShipRoot,
@@ -28,12 +26,16 @@ namespace SpaceInvaders
             MissileRoot,
             Missile,
 
+            BombRoot,
+            Bomb,
+
             ShieldRoot,
             ShieldGrid,
             ShieldColumn,
             ShieldBrick,
 
             WallRoot,
+
             WallTop,
             WallRight,
             WallLeft,
@@ -46,12 +48,17 @@ namespace SpaceInvaders
 
         // Data: ---------------
         private Name name;
-        public int index;
-        public bool markForDeath;
-        public float x;
-        public float y;
         public ProxySprite pProxySprite;
         protected ColObject poColObj;
+        public int index;
+
+        public float x;
+        public float y;
+
+        public bool markForDeath;
+
+
+
 
         protected GameObject(GameObject.Name objName, GameSprite.Name spriteName, int _index)
         {
@@ -117,22 +124,20 @@ namespace SpaceInvaders
         {
             Debug.WriteLine("REMOVE GAME OBJECT: {0}", this);
 
-            // Remove from SpriteBatch
+            // Remove proxy sprite from SpriteBatch
             Debug.Assert(this.pProxySprite != null);
             SBNode pSBNode = this.pProxySprite.GetSBNode();
 
             Debug.Assert(pSBNode != null);
             SpriteBatchManager.Remove(pSBNode);
 
-            // Remove collision sprite from spriteBatch
+            // Remove collision sprite box from spriteBatch
             Debug.Assert(this.poColObj != null);
             Debug.Assert(this.poColObj.pColSprite != null);
             pSBNode = this.poColObj.pColSprite.GetSBNode();
 
             Debug.Assert(pSBNode != null);
             SpriteBatchManager.Remove(pSBNode);
-
-
 
             // Remove from GameObjectMan
             GameObjectManager.Remove(this);

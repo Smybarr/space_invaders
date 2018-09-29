@@ -493,6 +493,7 @@ namespace SpaceInvaders
             //attach all observers that will react to collision
             pColPair.Attach(new RemoveMissileObserver());
             pColPair.Attach(new ShipReadyObserver());
+            //todo alien explosion animation isn't working
             pColPair.Attach(new AnimateAlienExplosionObserver());
             pColPair.Attach(new RemoveAlienObserver());
             //pColPair.Attach(new AlienDeathSoundObserver());

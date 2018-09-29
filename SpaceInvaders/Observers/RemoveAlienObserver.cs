@@ -23,7 +23,7 @@ namespace SpaceInvaders
         }
 
 
-
+        
         public override void Notify()
         {
             //Delete Alien
@@ -54,10 +54,16 @@ namespace SpaceInvaders
         {
             //if the alien that was removed was the last one in the column, delete the column it was assigned to!
             //Debug.WriteLine("alien {0} parentColumn {1}", this.pAlien, this.pAlien.pParent);
-            GameObject parentA = (GameObject)this.alien;
-            GameObject parentB = (GameObject)parentA.pParent;
 
-            parentA.Remove();
+            GameObject targetAlien = (GameObject)this.alien;
+            GameObject parentColumn = (GameObject)targetAlien.pParent;
+
+            //make sure the parent is a column;
+            Debug.Assert(parentColumn.GetName() == GameObject.Name.Column);
+
+            //GameObject pAlienGridObj = GameObjectManager.Find()
+
+            targetAlien.Remove();
 
             ////find the AlienGrid game object to increase the march speed;
             //alienGrid.IncreaseAlienMarchSpeed();
@@ -71,24 +77,39 @@ namespace SpaceInvaders
             //Debug.WriteLine("Dead AlienCount: {0}", AlienGrid.deadAlienCount);
 
 
-            //TODO: Need a better way... 
-            if (CheckNullChildObject(parentB) == true)
+            //TODO: Need a better way to check if this is last alien in column/last column in grid;
+            //check if last alien in the column
+             if (privIsLastChildOf(parentColumn) == true)
             {
-                GameObject parentC = (GameObject)parentB.pParent;
+                //if so, remove the parent column;
 
-                parentB.Remove();
+                //get the grid pointer before removing the column (in case this is the last column)
+                GameObject parentAlienGrid = (GameObject)parentColumn.pParent;
+                parentColumn.Remove();
 
-                if (CheckNullChildObject(parentC) == true)
+                //double check that parentAlienGrid is actually an alien grid
+                Debug.Assert(parentAlienGrid.GetName() == GameObject.Name.Grid);
+
+                //cast to a grid object and decrement the number of columns;
+                Grid alienGrid = (Grid) parentAlienGrid;
+                alienGrid.DecrementColumnCount();
+  
+
+                //check if the last column in the grid
+                if (privIsLastChildOf(parentAlienGrid) == true)
                 {
-
-                    parentC.Remove();
+                    //todo - place a next level reload or reward for beating the level here!!!
+                    //if so, remove the grid and trigger a reaction
+                    parentAlienGrid.Remove();
                 }
             }
         }
 
-        private bool CheckNullChildObject(GameObject parentObject)
+        //check if this is the last child
+        private bool privIsLastChildOf(GameObject parentObject)
         {
-            //if child gameObject of parent is null return true;
+            //if this is the last child;
+            //here that would be last alien in a column or last column in the grid;
             if (parentObject.pChild == null)
             {
                 return true;
