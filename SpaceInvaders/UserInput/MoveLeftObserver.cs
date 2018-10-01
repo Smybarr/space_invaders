@@ -8,7 +8,7 @@ namespace SpaceInvaders
         public override void Notify()
         {
             // Debug.WriteLine("Move Left");
-            Ship pShip = ShipManager.GetShip();
+            Ship pShip = ShipManager.GetCurrentShip();
             pShip.MoveLeft();
         }
     }

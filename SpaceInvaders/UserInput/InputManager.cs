@@ -10,31 +10,37 @@ namespace SpaceInvaders
         private static InputManager pInstance = null;
 
         //for tracking key history
-        private bool privSpaceKeyPrev;
-        private bool privCKeyPrev;
+        private bool privKeyPrev_Space;
+        private bool privKeyPrev_C;
+        private bool privKeyPrev_T;
+
+
         ////left/right keys shouldn't keep history - allows for long key press
         //private bool privLetKeyPrev;
         //private bool privRightKeyPrev;
 
 
-        private InputSubject pSubjectSpace;
-        private InputSubject pSubjectArrowLeft;
-        private InputSubject pSubjectArrowRight;
-        private InputSubject pSubjectCKey;
+        private InputSubject pSubjectKey_Space;
+        private InputSubject pSubjectKey_ArrowLeft;
+        private InputSubject pSubjectKey_ArrowRight;
+        private InputSubject pSubjectKey_C;
 
+        //test key (for testing certain actions, usually observer actions)
+        private InputSubject pSubjectKey_T;
 
 
 
         private InputManager()
         {
-            this.pSubjectArrowLeft = new InputSubject();
-            this.pSubjectArrowRight = new InputSubject();
-            this.pSubjectSpace = new InputSubject();
+            this.pSubjectKey_ArrowLeft = new InputSubject();
+            this.pSubjectKey_ArrowRight = new InputSubject();
+            this.pSubjectKey_Space = new InputSubject();
 
-            this.pSubjectCKey = new InputSubject();
-            
+            this.pSubjectKey_C = new InputSubject();
+            this.pSubjectKey_T = new InputSubject();
+                     
 
-            this.privSpaceKeyPrev = false;
+            this.privKeyPrev_Space = false;
         }
         private static InputManager privGetInstance()
         {
@@ -80,6 +86,15 @@ namespace SpaceInvaders
             inputSubject.Attach(pToggleBoxSprites);
             DeathManager.Attach(pToggleBoxSprites);
 
+
+            //T Key - TestObserver allows debugging certain game actions by pressing the 't' key
+            //call any functions within the TestObserver class
+            //example: press T key to test pulling a new ship after old one is destroyed and/or triggering a game over;
+            inputSubject = InputManager.GetTKeySubject();
+            TestInputObserver pTestObserverAction = new TestInputObserver();
+            inputSubject.Attach(pTestObserverAction);
+            DeathManager.Attach(pTestObserverAction);
+
         }
 
 
@@ -88,30 +103,36 @@ namespace SpaceInvaders
             InputManager pMan = InputManager.privGetInstance();
             Debug.Assert(pMan != null);
 
-            return pMan.pSubjectArrowRight;
+            return pMan.pSubjectKey_ArrowRight;
         }
         public static InputSubject GetArrowLeftSubject()
         {
             InputManager pMan = InputManager.privGetInstance();
             Debug.Assert(pMan != null);
 
-            return pMan.pSubjectArrowLeft;
+            return pMan.pSubjectKey_ArrowLeft;
         }
         public static InputSubject GetSpaceSubject()
         {
             InputManager pMan = InputManager.privGetInstance();
             Debug.Assert(pMan != null);
 
-            return pMan.pSubjectSpace;
+            return pMan.pSubjectKey_Space;
         }
         public static InputSubject GetCKeySubject()
         {
             InputManager pMan = InputManager.privGetInstance();
             Debug.Assert(pMan != null);
 
-            return pMan.pSubjectCKey;
+            return pMan.pSubjectKey_C;
         }
+        public static InputSubject GetTKeySubject()
+        {
+            InputManager pMan = InputManager.privGetInstance();
+            Debug.Assert(pMan != null);
 
+            return pMan.pSubjectKey_T;
+        }
 
 
 
@@ -123,19 +144,31 @@ namespace SpaceInvaders
 
             // SpaceKey: (Fire Hero Missile) (with key history) -----------------------------------------------------------
             bool spaceKeyCurr = Azul.Input.GetKeyState(Azul.AZUL_KEY.KEY_SPACE);
-            if (spaceKeyCurr == true && pMan.privSpaceKeyPrev == false)
+            if (spaceKeyCurr == true && pMan.privKeyPrev_Space == false)
             {
-                pMan.pSubjectSpace.Notify();
+                pMan.pSubjectKey_Space.Notify();
             }
-            pMan.privSpaceKeyPrev = spaceKeyCurr;
+            pMan.privKeyPrev_Space = spaceKeyCurr;
 
             // C Key (Toggle Collision Box Render): (with key history) -----------------------------------------------------------
             bool cKeyCurr = Azul.Input.GetKeyState(Azul.AZUL_KEY.KEY_C);
-            if (cKeyCurr == true && pMan.privCKeyPrev == false)
+            if (cKeyCurr == true && pMan.privKeyPrev_C == false)
             {
-                pMan.pSubjectCKey.Notify();
+                pMan.pSubjectKey_C.Notify();
             }
-            pMan.privCKeyPrev = cKeyCurr;
+            pMan.privKeyPrev_C = cKeyCurr;
+
+
+            // C Key (Test Various Game Actions): (with key history) -----------------------------------------------------------
+            bool tKeyCurr = Azul.Input.GetKeyState(Azul.AZUL_KEY.KEY_T);
+            if (tKeyCurr == true && pMan.privKeyPrev_T == false)
+            {
+                pMan.pSubjectKey_T.Notify();
+            }
+            pMan.privKeyPrev_T = tKeyCurr;
+
+
+
 
 
             //Note that having no key input history allows for continuous movement
@@ -144,13 +177,13 @@ namespace SpaceInvaders
             // RightKey: (no history) -----------------------------------------------------------
             if (Azul.Input.GetKeyState(Azul.AZUL_KEY.KEY_ARROW_RIGHT) == true)
             {
-                pMan.pSubjectArrowRight.Notify();
+                pMan.pSubjectKey_ArrowRight.Notify();
             }
 
             // RightKey: (no history) -----------------------------------------------------------
             if (Azul.Input.GetKeyState(Azul.AZUL_KEY.KEY_ARROW_LEFT) == true)
             {
-                pMan.pSubjectArrowLeft.Notify();
+                pMan.pSubjectKey_ArrowLeft.Notify();
             }
 
 

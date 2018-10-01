@@ -3,12 +3,16 @@ using System.Diagnostics;
 
 namespace SpaceInvaders
 {
+    //DelayedObjectManager holds all observers and 'Delays' their executions
+    //after executing observers on its list it removes them
     public class DelayedObjectManager
     {        
         
         // Data: ------------------------
         private ColObserver pHeadColObserver;
         private static DelayedObjectManager pInstance = null;
+
+
 
         private DelayedObjectManager()
         {
@@ -51,6 +55,8 @@ namespace SpaceInvaders
                 pDelayMan.pHeadColObserver = observer;
             }
         }
+
+
         private void privDetach(ColObserver node, ref ColObserver head)
         {
             // protection
@@ -70,31 +76,41 @@ namespace SpaceInvaders
                 node.pMNext.pMPrev = node.pMPrev;
             }
         }
+
+        //process any observers in the update loop of main game
         static public void Process()
         {
+            //get the manager instance
             DelayedObjectManager pDelayMan = DelayedObjectManager.privGetInstance();
 
+            //First - Fire off all the observers currently on the list
+
+            //get the head observer
             ColObserver pNode = pDelayMan.pHeadColObserver;
 
+            //iterate through the observer list
             while (pNode != null)
             {
                 // Fire off listener
                 pNode.Execute();
 
+                //get the next observer
                 pNode = (ColObserver)pNode.pMNext;
             }
 
 
-            // remove
+            //done executing all observers - now remove them
             pNode = pDelayMan.pHeadColObserver;
             ColObserver pTmp = null;
 
+            //iterate through the observer list
             while (pNode != null)
             {
+                //hold current observer in pTmp for reference after removal
                 pTmp = pNode;
                 pNode = (ColObserver)pNode.pMNext;
 
-                // remove
+                // remove observer
                 pDelayMan.privDetach(pTmp, ref pDelayMan.pHeadColObserver);
             }
         }

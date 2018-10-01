@@ -23,6 +23,14 @@ namespace SpaceInvaders
             #endif
         }
 
+
+        public override void Remove()
+        {
+            base.Remove();
+        }
+
+
+
         //called from column ( (GameObject)this.pParent );
         public override void DropBomb()
         {

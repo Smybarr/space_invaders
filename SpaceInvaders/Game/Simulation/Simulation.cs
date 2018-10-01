@@ -13,6 +13,23 @@ namespace SpaceInvaders
             Pause
         };
 
+
+        // data:
+
+        private static Simulation pInstance;
+
+        private State state;
+
+        private float stopWatch_tic;
+        private float stopWatch_toc;
+        private float totalWatch;
+        private float timeStep;
+
+        private const int SIM_NUM_WAKE_CYCLES = 0;
+        private const float SIM_SINGLE_TIME_STEP = 0.016666f;
+
+        private static bool oldKey = false;
+
         // singleton access
         private static Simulation privGetInstance()
         {
@@ -82,28 +99,35 @@ namespace SpaceInvaders
             // ------------------------------------------------------------------
 
             if (Azul.Input.GetKeyState(Azul.AZUL_KEY.KEY_G) == true)
-            {
+            {  
                 this.privSetState(State.FixedStep);
+                Debug.WriteLine("Game Simulation State: {0}", privGetState());
             }
             else if (Azul.Input.GetKeyState(Azul.AZUL_KEY.KEY_H) == true)
             {
+                //return to real time running (normal game run)
                 this.privSetState(State.Realtime);
+                Debug.WriteLine("Game Simulation State: {0}", privGetState());
             }
 
             if (Azul.Input.GetKeyState(Azul.AZUL_KEY.KEY_S) && (oldKey == false))
             {
                 // Do only once "a single step"
                 this.privSetState(State.SingleStep);
+                Debug.WriteLine("Game Simulation State: {0}", privGetState());
             }
 
             if (Azul.Input.GetKeyState(Azul.AZUL_KEY.KEY_D) == true)
             {
                 // repeating "a single step"
                 this.privSetState(State.SingleStep);
+                Debug.WriteLine("Game Simulation State: {0}", privGetState());
             }
 
 
             oldKey = Azul.Input.GetKeyState(Azul.AZUL_KEY.KEY_S);
+
+
 
         }
 
@@ -132,13 +156,15 @@ namespace SpaceInvaders
 
             return pSim.privGetState();
         }
-        public static float getTimeStep()
+        //returns the amount of time passed between last update and this update call
+        public static float GetTimeStep()
         {
             Simulation pSim = Simulation.privGetInstance();
             Debug.Assert(pSim != null);
             return pSim.timeStep;
         }
-        public static float getTotalTime()
+        //returns the total amount of time passed since simulation started
+        public static float GetTotalTime()
         {
             Simulation pSim = Simulation.privGetInstance();
             Debug.Assert(pSim != null);
@@ -158,20 +184,5 @@ namespace SpaceInvaders
 
 
 
-        // data:
-
-        private static Simulation pInstance;
-
-        private State state;
-
-        private float stopWatch_tic;
-        private float stopWatch_toc;
-        private float totalWatch;
-        private float timeStep;
-
-        private const int SIM_NUM_WAKE_CYCLES = 0;
-        private const float SIM_SINGLE_TIME_STEP = 0.016666f;
-
-        private static bool oldKey = false;
     }
 }

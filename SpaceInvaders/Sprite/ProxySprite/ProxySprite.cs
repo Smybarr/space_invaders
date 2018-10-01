@@ -14,8 +14,6 @@ namespace SpaceInvaders
         }
 
 
-        // Static Data: ------------------------------------
-
         // Data: -----------------------------------
 
         public Name name;
@@ -67,8 +65,11 @@ namespace SpaceInvaders
             this.name = ProxySprite.Name.Blank;
         }
 
+        //set the name of this proxy and attach sprite;
         public void Set(GameSprite.Name name)
         {
+
+            //todo find a better naming convention
             if (name == GameSprite.Name.NullObject)
             {
                 this.name = ProxySprite.Name.NullObject;
@@ -84,12 +85,19 @@ namespace SpaceInvaders
             this.sx = 1.0f;
             this.sy = 1.0f;
 
+
             this.pSprite = GameSpriteManager.Find(name);
 
-            ////COMMENT THIS OUT AND IT STILL RUNS
-            //// See 
             Debug.Assert(this.pSprite != null);
         }
+        public void ChangeImage(Image.Name imageName)
+        {
+            Image pImage = ImageManager.Find(imageName);
+
+            this.pSprite.ChangeImage(pImage);
+        }
+
+
         public void Wash()
         {
 
@@ -116,6 +124,7 @@ namespace SpaceInvaders
             this.pSprite.sy = this.sy;
         }
 
+
         public override void Draw()
         {
             // move the values over to Real GameSprite
@@ -125,7 +134,7 @@ namespace SpaceInvaders
             // Seems redundant - Real Sprite might be stale
             this.pSprite.Update();
 
-            //todo figure out better way to NOT draw NullObjects pink default texture dot            
+            //todo Find better way to block the render of the devilish 'pink' dot in place of the root! maybe don't call ActivateGameSprites(spritbatch) on roots?         
             if (this.name != Name.NullObject)
             {
                 this.pSprite.Draw();

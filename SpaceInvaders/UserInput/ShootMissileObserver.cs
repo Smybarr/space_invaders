@@ -8,19 +8,8 @@ namespace SpaceInvaders
         public override void Notify()
         {
             Debug.WriteLine("Shoot Missile Observer");
-            Ship pShip = ShipManager.GetShip();
+            Ship pShip = ShipManager.GetCurrentShip();
             pShip.ShootMissile();
-
-
-            //TEST - drop bomb on trigger;
-            
-           //get the grid as a game object
-            GameObject gridGameObj = GameObjectManager.Find(GameObject.Name.Grid);
-            //cast to an alien to drop the bomb
-            AlienType alienGrid = (AlienType) gridGameObj;
-
-            //drop the bomb - function cascades to first child of first column
-            alienGrid.DropBomb();
 
 
         }

@@ -16,6 +16,7 @@ namespace SpaceInvaders
             Squid,
             Crab,
             Octopus,
+            ExplodingAlien,
 
             AlienUFO,
 
@@ -44,6 +45,7 @@ namespace SpaceInvaders
 
             NullObject,
             Blank,
+
         }
 
         // Data: ---------------
@@ -104,6 +106,12 @@ namespace SpaceInvaders
             this.poColObj.pColSprite.SetLineColor(red, green, blue);
         }
 
+        public void ChangeImage(Image.Name imageName)
+        {
+            this.pProxySprite.ChangeImage(imageName);
+        }
+
+
         public override int GetIndex()
         {
             return this.index;
@@ -146,6 +154,7 @@ namespace SpaceInvaders
             GhostManager.Add(this);
 
         }
+
 
 
         public void ActivateGameSprite(SpriteBatch pSpriteBatch)

@@ -7,7 +7,7 @@ namespace SpaceInvaders
     {
         public override void Notify()
         {
-            Ship pShip = ShipManager.GetShip();
+            Ship pShip = ShipManager.GetCurrentShip();
             pShip.SetState(ShipManager.State.Ready);
         }
 

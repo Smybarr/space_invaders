@@ -27,6 +27,25 @@ namespace SpaceInvaders
             base.Update();
         }
 
+        ////TEST----NOT GURANTEED TO WORK!!
+        //public override void Remove()
+        //{
+        //    // Since the Root object is being drawn
+        //    // 1st set its size to zero
+        //    this.poColObj.poColRect.Set(0, 0, 0, 0);
+        //    this.x = 0.0f;
+        //    this.y = 0.0f;
+        //    //this.SetState(ShipManager.State.End);
+        //    base.Update();
+
+        //    // Update the parent (Ship root)
+        //    GameObject pParent = (GameObject)this.pParent;
+        //    pParent.Update();
+
+        //    // Now remove it
+        //    base.Remove();
+        //}
+
         public override void Accept(ColVisitor other)
         {
             // Important: at this point we have an Bomb

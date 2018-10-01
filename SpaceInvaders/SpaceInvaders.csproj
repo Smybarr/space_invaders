@@ -87,6 +87,8 @@
     <Compile Include="Font\Font.cs" />
     <Compile Include="Font\Glyph.cs" />
     <Compile Include="GameObject\Aliens\AlienType.cs" />
+    <Compile Include="GameObject\Aliens\ExplodingAlien.cs" />
+    <Compile Include="GameObject\Aliens\GridManager.cs" />
     <Compile Include="GameObject\Factories\AlienFactory.cs" />
     <Compile Include="GameObject\Aliens\Column.cs" />
     <Compile Include="GameObject\Aliens\Crab.cs" />
@@ -101,12 +103,12 @@
     <Compile Include="GameObject\Shield\ShieldRoot.cs" />
     <Compile Include="GameObject\Shield\ShieldType.cs" />
     <Compile Include="GameObject\Ship\Ship.cs" />
-    <Compile Include="GameObject\Ship\ShipEndState.cs" />
+    <Compile Include="GameObject\Ship\ShipStates\ShipEndState.cs" />
     <Compile Include="GameObject\Ship\ShipManager.cs" />
-    <Compile Include="GameObject\Ship\ShipMissileFiredState.cs" />
-    <Compile Include="GameObject\Ship\ShipReadyState.cs" />
+    <Compile Include="GameObject\Ship\ShipStates\ShipMissileFiredState.cs" />
+    <Compile Include="GameObject\Ship\ShipStates\ShipReadyState.cs" />
     <Compile Include="GameObject\Ship\ShipRoot.cs" />
-    <Compile Include="GameObject\Ship\ShipState.cs" />
+    <Compile Include="GameObject\Ship\ShipStates\ShipState.cs" />
     <Compile Include="GameObject\Ship\ShipType.cs" />
     <Compile Include="GameObject\Wall\WallBottom.cs" />
     <Compile Include="GameObject\Wall\WallLeft.cs" />
@@ -140,6 +142,8 @@
     <Compile Include="Observers\ShipReadyObserver.cs" />
     <Compile Include="Observers\ShipRemoveMissileObserver.cs" />
     <Compile Include="Observers\SoundObserver.cs" />
+    <Compile Include="Observers\TestObservers\TestColObserver.cs" />
+    <Compile Include="Observers\TestObservers\TestInputObserver.cs" />
     <Compile Include="Sprite\AnimatedSprite.cs" />
     <Compile Include="BaseManagement\Containers\CLink.cs" />
     <Compile Include="BaseManagement\Containers\Container.cs" />

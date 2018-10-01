@@ -24,6 +24,11 @@ namespace SpaceInvaders
         }
 
 
+        public override void Remove()
+        {
+            base.Remove();
+        }
+
         //called from column ( (GameObject)this.pParent );
         public override void DropBomb()
         {
@@ -103,7 +108,6 @@ namespace SpaceInvaders
 
             // AlienOctopus vs Missile
             ColPair.Collide((GameObject)m.pChild, this);
-
         }
 
         public override void VisitMissile(Missile m)

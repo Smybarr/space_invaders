@@ -12,12 +12,12 @@ namespace SpaceInvaders
 
         public override void MoveRight(Ship pShip)
         {
-            pShip.x += pShip.shipSpeed;
+            //pShip.x += pShip.shipSpeed;
         }
 
         public override void MoveLeft(Ship pShip)
         {
-            pShip.x -= pShip.shipSpeed;
+            //pShip.x -= pShip.shipSpeed;
         }
 
         public override void ShootMissile(Ship pShip)

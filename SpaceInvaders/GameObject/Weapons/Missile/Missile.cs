@@ -5,6 +5,11 @@ namespace SpaceInvaders
 {
     public class Missile : MissileCategory
     {
+
+        // Data
+        //private bool enable;
+        public float delta;
+
         public Missile(GameObject.Name name, GameSprite.Name spriteName, int index, float posX, float posY)
             : base(name, spriteName, index, MissileCategory.Type.Missile)
         {
@@ -28,6 +33,14 @@ namespace SpaceInvaders
             // Now remove it
             base.Remove();
         }
+
+
+
+        ////prototype state pattern with missiles...
+        //public void SetActive(bool state)
+        //{
+        //    this.enable = state;
+        //}
 
         public override void Update()
         {
@@ -56,14 +69,9 @@ namespace SpaceInvaders
             this.y = yPos;
         }
 
-        //public void SetActive(bool state)
-        //{
-        //    this.enable = state;
-        //}
 
-        // Data
-        //private bool enable;
-        public float delta;
+
+
     }
 
 }

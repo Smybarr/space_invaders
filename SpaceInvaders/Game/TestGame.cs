@@ -298,7 +298,7 @@ namespace SpaceInvaders.Test
 
                 //create the ship manager that handles all the ship's states
                 //ShipManager.Create();
-                ShipManager.CreateShipTree();
+                ShipManager.CreateShipManager();
 
                 //check the tree
                 rootGamObjTree.DumpTree();
@@ -503,12 +503,12 @@ namespace SpaceInvaders.Test
                 InputManager.Update();
 
                 // Run based on simulation stepping
-                if (Simulation.getTimeStep() > 0.0f)
+                if (Simulation.GetTimeStep() > 0.0f)
                 {
                     // Fire off the timer events
 
                     //with simulator timer
-                    TimerEventManager.Update(Simulation.getTotalTime());
+                    TimerEventManager.Update(Simulation.GetTotalTime());
                     ////no simulator timer
                     //TimerEventManager.Update(this.GetTime());
 

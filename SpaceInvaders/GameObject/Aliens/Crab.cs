@@ -18,10 +18,16 @@ namespace SpaceInvaders
 
         ~Crab()
         {
-            #if(TRACK_DESTRUCTOR)
+            #if (TRACK_DESTRUCTOR)
             Debug.WriteLine("~Crab():{0}", this.GetHashCode());
             #endif
         }
+
+        public override void Remove()
+        {
+            base.Remove();
+        }
+
 
         //called from column ( (GameObject)this.pParent );
         public override void DropBomb()
@@ -101,7 +107,6 @@ namespace SpaceInvaders
 
             // AlienCrab vs Missile
             ColPair.Collide((GameObject)m.pChild, this);
-
         }
 
         public override void VisitMissile(Missile m)

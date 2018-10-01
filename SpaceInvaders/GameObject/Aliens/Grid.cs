@@ -59,14 +59,17 @@ namespace SpaceInvaders
             ColPair.Collide(this, (GameObject)w.pChild);
         }
 
+
         public override void DropBomb()
         {
+
+            //get the total time passed
+         
             //get a random existing column;
             //needs to create a new random every time to
             //keep up with current number of columns;
             Random r = new Random();
             int randomColumnIndex = r.Next(0, this.numColumns);
-
 
             ////check that the child exists - can't drop a bomb if no columns/aliens!
             //Debug.Assert(randomChildColumn != null);

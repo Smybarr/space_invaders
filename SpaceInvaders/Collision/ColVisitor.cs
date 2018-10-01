@@ -72,7 +72,12 @@ namespace SpaceInvaders
             Debug.WriteLine("Visit by Octopus not implemented");
             Debug.Assert(false);
         }
-
+        public virtual void VisitExplodingAlien(ExplodingAlien a)
+        {
+            // no differed to subcass
+            Debug.WriteLine("Visit by ExplodingAlien not implemented");
+            Debug.Assert(false);
+        }
         //-----------------------------------------------------------------------------------------
         //visit alien ship
         //-------------------------------------

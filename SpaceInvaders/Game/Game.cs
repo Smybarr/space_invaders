@@ -269,7 +269,7 @@ namespace SpaceInvaders
             MissileRoot pMissileRoot = new MissileRoot(GameObject.Name.MissileRoot, GameSprite.Name.NullObject, 0, 0.0f, 0.0f);
 
             rootGamObjTree.Insert(pMissileRoot, null);
-            pMissileRoot.ActivateCollisionSprite(pSB_Boxes);
+            //pMissileRoot.ActivateCollisionSprite(pSB_Boxes);
 
             //GameObjectManager.AttachTree(pMissileRoot, rootGamObjTree);
             GameObjectManager.AttachTree(pMissileRoot);
@@ -290,7 +290,7 @@ namespace SpaceInvaders
 
             ShipRoot shipRoot = new ShipRoot(GameObject.Name.ShipRoot, GameSprite.Name.NullObject, 0, 0.0f, 0.0f);
             DeathManager.Attach(shipRoot);
-            shipRoot.ActivateCollisionSprite(pSB_Boxes);
+
 
             //check the tree
             rootGamObjTree.DumpTree();
@@ -301,19 +301,12 @@ namespace SpaceInvaders
             //check the tree
             rootGamObjTree.DumpTree();
 
-            ////attach a ship to the ship root;
-            //Ship ship = new Ship(GameObject.Name.Ship, GameSprite.Name.Ship, 0, 0.0f, 0.0f);
-            //rootGamObjTree.Insert(ship, shipRoot);
-            //ship.ActivateCollisionSprite(pSB_Boxes);
-            //ship.ActivateGameSprite(pSB_GameSprites);
-
             //attach the shipRoot to the root game object tree
             //GameObjectManager.AttachTree(shipRoot, rootGamObjTree);
             GameObjectManager.AttachTree(shipRoot);
 
             //create the ship manager that handles all the ship's states
-            //ShipManager.Create();
-            ShipManager.CreateShipTree();
+            ShipManager.CreateShipManager();
 
             //check the tree
             rootGamObjTree.DumpTree();
@@ -492,12 +485,12 @@ namespace SpaceInvaders
             pColPair = ColPairManager.Add(ColPair.Name.Alien_Missile, pMissileRoot, pGrid);
             //attach all observers that will react to collision
             pColPair.Attach(new RemoveMissileObserver());
-            pColPair.Attach(new ShipReadyObserver());
             //todo alien explosion animation isn't working
             pColPair.Attach(new AnimateAlienExplosionObserver());
             pColPair.Attach(new RemoveAlienObserver());
             //pColPair.Attach(new AlienDeathSoundObserver());
             //pColPair.Attach(new AlienScoreUpdateObserver());
+            pColPair.Attach(new ShipReadyObserver());
 
             //---------------------------------------------------------------------------------------------
             //Bomb CollisionPairs
@@ -623,6 +616,10 @@ namespace SpaceInvaders
         //-----------------------------------------------------------------------------
         public override void Update()
         {
+            //check time;
+            //Debug.WriteLine("Simulation.GetTimeStep()  = {0}", Simulation.GetTimeStep());
+            //Debug.WriteLine("Simulation.GetTotalTime() = {0}", Simulation.GetTotalTime());
+
 
 
             //Update game simulation
@@ -633,12 +630,12 @@ namespace SpaceInvaders
             InputManager.Update();
 
             // Run based on simulation stepping
-            if (Simulation.getTimeStep() > 0.0f)
+            if (Simulation.GetTimeStep() > 0.0f)
             {
                 // Fire off the timer events
 
                 //with simulator timer
-                TimerEventManager.Update(Simulation.getTotalTime());
+                TimerEventManager.Update(Simulation.GetTotalTime());
                 ////no simulator timer
                 //TimerEventManager.Update(this.GetTime());
 
@@ -650,9 +647,8 @@ namespace SpaceInvaders
                 // remember each game object has a proxy sprite attached
                 GameObjectManager.Update();
 
+                GridManager.UpdateBombDrop();
 
-                // Delete any objects here...
-                DelayedObjectManager.Process();
             }
 
 
@@ -690,6 +686,9 @@ namespace SpaceInvaders
 
             //draw all the sprites attached to sprite batches
             SpriteBatchManager.Draw();
+
+            // Delete any objects here...
+            DelayedObjectManager.Process();
         }
 
         //-----------------------------------------------------------------------------

@@ -5,6 +5,14 @@ namespace SpaceInvaders
 {
     public class ColSubject
     {
+
+        // Data: ------------------------
+        private ColObserver pHead;
+
+        public GameObject pObjA;
+        public GameObject pObjB;
+
+
         public ColSubject()
         {
             this.pObjB = null;
@@ -16,8 +24,7 @@ namespace SpaceInvaders
         {
             this.pObjB = null;
             this.pObjA = null;
-            // ToDo
-            // Need to walk and nuke the list
+            // ToDo Need to walk and nuke the list
             this.pHead = null;
         }
 
@@ -44,7 +51,14 @@ namespace SpaceInvaders
 
         }
 
+        public void Detach()
+        {
 
+
+        }
+
+        //subject notifies all the observers watching it
+        //this will trigger their reaction via Execute() function
         public void Notify()
         {
             ColObserver pNode = this.pHead;
@@ -59,15 +73,10 @@ namespace SpaceInvaders
 
         }
 
-        public void Detach()
-        {
-        }
 
 
-        // Data: ------------------------
-        private ColObserver pHead;
-        public GameObject pObjA;
-        public GameObject pObjB;
+
+
 
 
     }

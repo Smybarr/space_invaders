@@ -6,8 +6,6 @@ namespace SpaceInvaders
     public class Column : AlienType
     {
 
-
-
         public Column(GameObject.Name name, GameSprite.Name spriteName, int index, float posX, float posY)
             : base(name, spriteName, index, AlienType.Type.AlienGridColumn)
         {

@@ -5,6 +5,7 @@ namespace SpaceInvaders
 {
     public abstract class ColObserver : MLink
     {
+
         public ColSubject pSubject;
 
 

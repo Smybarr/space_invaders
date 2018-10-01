@@ -10,7 +10,7 @@ namespace SpaceInvaders
             //Debug.WriteLine("Move Right");
 
             //move the ship to the right
-            Ship pShip = ShipManager.GetShip();
+            Ship pShip = ShipManager.GetCurrentShip();
             pShip.MoveRight();
         }
     }

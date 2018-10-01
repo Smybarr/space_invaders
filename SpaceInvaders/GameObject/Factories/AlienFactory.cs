@@ -67,6 +67,8 @@ namespace SpaceInvaders
                     //it will not render a sprite since the image is a null image object
                     pAlien = new Grid(gameObjectName, GameSprite.Name.AlienGrid, index, posX, posY);
                     //GameObjectManager.AttachTree(pAlien);
+                    //todo refactor GridManager to handle at least two grids;
+                    GridManager.CreateGridManager((Grid)pAlien);
                     break;
 
                 case AlienType.Type.AlienGridColumn:

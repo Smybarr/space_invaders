@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace SpaceInvaders
 {
-    class BombObserver : ColObserver
+    public class BombObserver : ColObserver
     {
 
         public override void Notify()
